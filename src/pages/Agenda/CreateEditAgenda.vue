@@ -119,12 +119,13 @@
                   class="self-end py-[10px]"
                   text="Hari ini"
                 />
-                <p
+                <!-- Currently backdate is enabled. note: uncomment this when backdate is disabled  -->
+                <!-- <p
                   v-show="isDateHasPassed"
                   class="text-sm text-red-600 col-span-2"
                 >
                   Tanggal tidak valid
-                </p>
+                </p> -->
               </div>
               <div class="col-span-2 gap-x-6 gap-y-1 grid grid-cols-2">
                 <div class="flex flex-col gap-1">
@@ -459,13 +460,20 @@ export default {
 
       const startHour = this.form.start_hour.split(':');
       const endHour = this.form.end_hour.split(':');
-      const isStartHourHasPassed = isToday(this.selectedDate) && minutesDifference(new Date().setHours(...startHour), new Date()) < 0;
+      // Currently backdate is enabled. note: uncomment this to disable backdate
+      // const isStartHourHasPassed = isToday(this.selectedDate) && minutesDifference(new Date().setHours(...startHour), new Date()) < 0;
       const isEndHourHasPassed = minutesDifference(new Date().setHours(...startHour), new Date().setHours(...endHour)) >= 0;
 
-      return this.isDateHasPassed || isStartHourHasPassed || isEndHourHasPassed;
+      return isEndHourHasPassed;
+      // Currently backdate is enabled. note: uncomment this to disable backdate
+      // this.isDateHasPassed ||
+      // isStartHourHasPassed ||
     },
     isFormValid() {
-      return this.isInputValid && !this.isDateHasPassed && !this.isTimeHasPassed;
+      return this.isInputValid
+      // Currently backdate is enabled. note: uncomment this to disable backdate
+      // && !this.isDateHasPassed
+        && !this.isTimeHasPassed;
     },
   },
   watch: {
