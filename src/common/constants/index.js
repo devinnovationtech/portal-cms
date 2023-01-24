@@ -5,6 +5,12 @@ export const NAVIGATION_MENU = [
     icon: 'DashboardIcon',
   },
   {
+    link: '/landing-page',
+    label: 'Landing Page',
+    icon: 'LandingPageIcon',
+    arrow: true,
+  },
+  {
     link: '/layanan',
     label: 'Layanan',
     icon: 'ServiceIcon',
@@ -213,6 +219,37 @@ export const MEMBER_TABLE_HEADER = [
     key: 'status',
     text: 'Status',
     // sortable: true,
+  },
+  {
+    key: 'action',
+    text: 'Aksi',
+  },
+];
+
+export const POPUP_BANNER_TABLE_HEADER = [
+  {
+    key: 'title',
+    text: 'Judul Banner',
+  },
+  {
+    key: 'preview',
+    text: 'Preview',
+  },
+  {
+    key: 'link',
+    text: 'Link Button',
+  },
+  {
+    key: 'duration',
+    text: 'Durasi Penayangan',
+  },
+  {
+    key: 'start_date',
+    text: 'Waktu Mulai Penayangan',
+  },
+  {
+    key: 'status',
+    text: 'Status',
   },
   {
     key: 'action',

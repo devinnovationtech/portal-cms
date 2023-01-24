@@ -20,6 +20,14 @@ export default [
     },
   },
   {
+    path: '/landing-page',
+    name: 'Landing Page',
+    component: () => import('@/pages/LandingPage'),
+    meta: {
+      layout: 'AppLayoutPrivate',
+    },
+  },
+  {
     path: '/layanan',
     name: 'Layanan',
     component: () => import('@/pages/Home'),
