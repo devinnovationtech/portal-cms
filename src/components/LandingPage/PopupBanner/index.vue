@@ -28,6 +28,7 @@
             :loading="loading"
             :meta="meta"
             class="min-w-[1000px]"
+            @update:pagination="onUpdatePagination($event)"
           />
         </div>
       </div>
@@ -38,51 +39,9 @@
 <script>
 import PopupBannerTable from '@/components/LandingPage/PopupBanner/PopupBannerTable';
 import LinkButton from '@/common/components/LinkButton';
+import { RepositoryFactory } from '@/repositories/RepositoryFactory';
 
-const dummyData = [
-  {
-    id: 1,
-    title: 'BIAN',
-    image: {
-      desktop: 'https://picsum.photos/200/300',
-      mobile: 'https://picsum.photos/200/300',
-    },
-    link: 'https://unsplash.com',
-    duration: 3,
-    start_date: '2023-01-24',
-    status: 'ACTIVE',
-    created_at: '2023-01-24T07:56:37Z',
-    updated_at: '2023-01-24T07:56:37Z',
-  },
-  {
-    id: 2,
-    title: 'BIAN 2',
-    image: {
-      desktop: 'https://picsum.photos/200/300',
-      mobile: 'https://picsum.photos/200/300',
-    },
-    link: 'https://unsplash.com',
-    duration: 3,
-    start_date: '2023-01-24',
-    status: 'NON-ACTIVE',
-    created_at: '2023-01-24T07:56:37Z',
-    updated_at: '2023-01-24T07:56:37Z',
-  },
-  {
-    id: 3,
-    title: 'BIAN 3',
-    image: {
-      desktop: 'https://picsum.photos/200/300',
-      mobile: 'https://picsum.photos/200/300',
-    },
-    link: 'https://unsplash.com',
-    duration: 3,
-    start_date: '2023-01-24',
-    status: 'NON-ACTIVE',
-    created_at: '2023-01-24T07:56:37Z',
-    updated_at: '2023-01-24T07:56:37Z',
-  },
-];
+const popupBannerRepository = RepositoryFactory.get('popupBanner');
 
 export default {
   name: 'Agenda',
@@ -92,14 +51,18 @@ export default {
   },
   data() {
     return {
-      // @todo: change banner data with real data
-      banners: dummyData,
+      banners: [],
       loading: false,
       meta: {
         total_count: 0,
         total_page: 0,
         current_page: 1,
-        per_page: 10,
+        per_page: 5,
+      },
+      params: {
+        per_page: 5,
+        page: 1,
+        q: '',
       },
     };
   },
@@ -108,14 +71,30 @@ export default {
   },
   methods: {
     async fetchBanners() {
-      // @todo: fetch banner data from API
-      this.loading = true;
+      try {
+        this.loading = true;
+        const response = await popupBannerRepository.getBanners(this.params);
+        const { data, meta } = response.data;
 
-      setTimeout(() => {
+        this.banners = data;
+        this.meta = meta;
+      } catch (error) {
+        this.$toast({
+          type: 'error',
+          message: 'Gagal mendapatkan data Pop-up Banner, silakan coba beberapa saat lagi',
+        });
+      } finally {
         this.loading = false;
-      }, 2000);
+      }
+    },
+    setParams(data) {
+      const newParams = { ...this.params, ...data };
+      this.params = { ...newParams };
+    },
+    onUpdatePagination(data) {
+      this.setParams(data);
+      this.fetchBanners();
     },
   },
-
 };
 </script>
