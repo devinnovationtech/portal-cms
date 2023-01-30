@@ -25,14 +25,12 @@
     <div class="bg-white p-[18px] rounded-lg border border-gray-200 shadow-xl">
       <ul class="flex flex-col gap-4">
         <li>
-          <a
+          <router-link
+            :to="`/landing-page/detail/${item.id}`"
             class="font-lato text-sm leading-4 text-gray-800"
-            href="#"
-            target="_blank"
-            rel="noopener"
           >
             Detail
-          </a>
+          </router-link>
         </li>
 
         <!-- Edit Action -->

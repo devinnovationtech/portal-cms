@@ -6,6 +6,7 @@
 
         <BaseButton
           class="border-red-500 hover:bg-red-50 font-lato text-sm text-red-500"
+          @click="showDeleteModal"
         >
           <template #icon-left>
             <JdsIcon
@@ -19,8 +20,10 @@
 
         <!-- Update Button -->
 
-        <BaseButton
-          class="border-green-700 hover:bg-green-50 font-lato text-sm text-green-700"
+        <LinkButton
+          :href="linkBannerUpdate"
+          variant="secondary"
+          class="hover:bg-green-50 font-lato text-sm font-bold text-green-700"
         >
           <template #icon-left>
             <JdsIcon
@@ -29,10 +32,8 @@
               class="h-4 text-green-700"
             />
           </template>
-          <p>
-            Ubah Data
-          </p>
-        </BaseButton>
+          Ubah Data
+        </LinkButton>
       </div>
     </HeaderMenu>
 
@@ -40,7 +41,7 @@
       <!-- Title Section -->
 
       <div class="flex flex-row justify-between">
-        <h1 class="font-roboto font-medium text-[21px] leading-[34px] text-bule-gray-600">
+        <h1 class="font-roboto font-medium text-[21px] leading-[34px] text-blue-gray-600">
           Detail Banner Pop-up
         </h1>
         <div class="flex flex-row gap-[15px]">
@@ -76,7 +77,7 @@
           >
             <img
               class="object-cover w-full"
-              :src="imageDesktop"
+              :src="banners?.image.desktop || defaultImageDesktop "
               width="1082"
               height="444"
               alt=""
@@ -127,7 +128,7 @@
                       <div class="flex justify-center overflow-y-auto min-w-full max-h-full">
                         <img
                           class="w-auto h-auto object-contain"
-                          :src="imageMobile"
+                          :src="banners?.image.mobile || defaultImageMobile"
                           alt=""
                           width="255"
                           height="443"
@@ -215,7 +216,6 @@
                   }"
                   :href="link === '-' ? '' : link"
                   target="_blank"
-                  disabled
                 >
                   {{ link }}
                 </a>
@@ -288,18 +288,70 @@
         </JdsSimpleTable>
       </div>
     </section>
+
+    <!-- Delete Action Prompt -->
+    <BaseModal
+      :open="isDeleteModalOpen"
+      @close="showDeleteModal"
+    >
+      <div class="w-full h-full">
+        <h1 class="font-roboto text-xl leading-8 font-medium text-green-700 mb-6">
+          Hapus Banner
+        </h1>
+        <p class="font-lato text-sm text-gray-800 mb-2">
+          Apakah Anda yakin ingin menghapus banner ini?
+        </p>
+        <h2 class="font-lato text-md font-bold text-gray-800">
+          {{ banners.title }}
+        </h2>
+      </div>
+      <template #footer>
+        <div class="flex gap-4 justify-end">
+          <BaseButton
+            class="border-green-700 hover:bg-green-50 text-sm text-green-700"
+            @click="showDeleteModal"
+          >
+            Batal
+          </BaseButton>
+          <BaseButton
+            class="bg-red-500 hover:bg-red-400 text-sm text-white"
+            :disabled="deleteLoading"
+            @click="deleteBanner(banners.id)"
+          >
+            <p v-if="!deleteLoading">
+              Ya, saya yakin
+            </p>
+            <p
+              v-else
+              class="flex gap-2 items-center text-gray-500"
+            >
+              <JdsSpinner
+                size="16"
+                foreground="#757575"
+              />
+              Loading...
+            </p>
+          </BaseButton>
+        </div>
+      </template>
+    </BaseModal>
   </main>
 </template>
 
 <script>
 import HeaderMenu from '@/common/components/HeaderMenu';
 import BaseButton from '@/common/components/BaseButton';
+import LinkButton from '@/common/components/LinkButton';
+import BaseModal from '@/common/components/BaseModal';
 import { formatDate, addDay, getHour, getMinute } from '@/common/helpers/date';
 
 export default {
   name: 'PopupBannerDetail',
   components: {
-    BaseButton, HeaderMenu,
+    BaseButton,
+    HeaderMenu,
+    BaseModal,
+    LinkButton,
   },
   props: {
     banners: {
@@ -325,6 +377,18 @@ export default {
     loading: {
       type: Boolean,
       default: false,
+    },
+    isDeleteModalOpen: {
+      type: Boolean,
+      default: false,
+    },
+    deleteLoading: {
+      type: Boolean,
+      default: false,
+    },
+    linkBannerUpdate: {
+      type: String,
+      default: '',
     },
   },
   data() {
@@ -353,15 +417,8 @@ export default {
     title() {
       return this.banners?.title || '-';
     },
-    imageDesktop() {
-      return this.banners?.image.desktop || this.defaultImageDesktop;
-    },
-    imageMobile() {
-      return this.banners?.image.mobile || this.defaultImageMobile;
-    },
     titleButton() {
-      const title = 'Kunjungi Link';
-      return title || '-';
+      return this.banners?.button_label || '-';
     },
     link() {
       return this.banners?.link || '-';
@@ -413,6 +470,12 @@ export default {
     },
     showContentMobile() {
       this.$emit('showContentMobile');
+    },
+    showDeleteModal() {
+      this.$emit('showDeleteModal');
+    },
+    deleteBanner(id) {
+      this.$emit('deleteBanner', id);
     },
   },
 };

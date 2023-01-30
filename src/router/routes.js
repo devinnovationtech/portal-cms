@@ -28,6 +28,14 @@ export default [
     },
   },
   {
+    path: '/landing-page/detail/:id',
+    name: 'Landing Page',
+    component: () => import('@/pages/LandingPage/PopupBannerDetailPage'),
+    meta: {
+      layout: 'AppLayoutPrivate',
+    },
+  },
+  {
     path: '/layanan',
     name: 'Layanan',
     component: () => import('@/pages/Home'),
