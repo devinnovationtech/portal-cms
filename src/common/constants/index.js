@@ -256,3 +256,26 @@ export const POPUP_BANNER_TABLE_HEADER = [
     text: 'Aksi',
   },
 ];
+
+export const POPUP_BANNER_SCHEDULE_OPTIONS = [
+  {
+    label: '2 Hari',
+    value: 2,
+  },
+  {
+    label: '5 Hari',
+    value: 5,
+  },
+  {
+    label: '7 Hari',
+    value: 7,
+  },
+  {
+    label: '14 Hari',
+    value: 14,
+  },
+  {
+    label: '30 Hari',
+    value: 30,
+  },
+];

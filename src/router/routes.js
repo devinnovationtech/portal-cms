@@ -28,6 +28,15 @@ export default [
     },
   },
   {
+    path: '/popup-banner/tambah',
+    name: 'Tambah Pop-up Banner',
+    component: () => import('@/pages/LandingPage/CreateEditPopupBanner.vue'),
+    meta: {
+      mode: 'create',
+      layout: 'AppLayoutPrivate',
+    },
+  },
+  {
     path: '/landing-page/detail/:id',
     name: 'Landing Page',
     component: () => import('@/pages/LandingPage/PopupBannerDetailPage'),
