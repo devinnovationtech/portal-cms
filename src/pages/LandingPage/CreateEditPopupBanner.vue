@@ -1,6 +1,9 @@
 <template>
   <main class="pb-14">
-    <ValidationObserver ref="form">
+    <ValidationObserver
+      ref="form"
+      v-slot="{ invalid }"
+    >
       <form
         class="popup-banner__form"
         @submit.prevent="onSubmit"
@@ -11,6 +14,7 @@
             <BaseButton
               type="submit"
               class="bg-green-700 hover:bg-green-600 font-lato text-sm text-white"
+              :disabled="invalid"
             >
               <p>
                 Simpan Data
@@ -37,24 +41,32 @@
               <ValidationProvider
                 ref="desktopImageUploader"
                 v-slot="{ errors }"
-                rules="required|image|size:5000"
+                rules="required|image|maxdimensions:2837,1667|size:2000"
               >
                 <Dropzone
                   :is-error="errors.length > 0"
-                  :disabled="false"
-                  @change="handleUploadImage($event, 'DESKTOP')"
+                  :disabled="!!imageDesktopFile"
+                  @change="handleUploadByType($event, 'DESKTOP')"
                 >
                   <template #description>
                     <span class="mt-auto text-sm text-blue-gray-300 text-center">
-                      Ukuran Maksimal file upload 5 Mb dengan resolusi 2837 x 1667. <br>
+                      Ukuran Maksimal file upload 2 Mb dengan resolusi 2837 x 1667. <br>
                       (.jpg dan.png )
                     </span>
                   </template>
                 </Dropzone>
                 <span class="font-lato text-[13px] text-red-700 mt-3">{{ errors[0] }}</span>
               </ValidationProvider>
+              <transition name="slide-fade">
+                <DropzoneUploadProgress
+                  v-if="!!imageDesktopFile"
+                  :file="imageDesktopFile"
+                  :progress="imageDesktopUploadProgress"
+                  :status="imageDesktopUploadStatus"
+                  class="mt-4"
+                />
+              </transition>
             </div>
-
             <div>
               <div class="flex items-center justify-center mb-6">
                 <span class="text-blue-gray-800 text-[15px] whitespace-nowrap">
@@ -65,24 +77,34 @@
               <ValidationProvider
                 ref="mobileImageUploader"
                 v-slot="{ errors }"
-                rules="required|image|size:2000"
+                rules="required|image|maxdimensions:1503,2419|size:1000"
               >
                 <Dropzone
                   :is-error="errors.length > 0"
-                  :disabled="false"
-                  @change="handleUploadImage($event, 'MOBILE')"
+                  :disabled="!!imageMobileFile"
+                  @change="handleUploadByType($event, 'MOBILE')"
                 >
                   <template #description>
                     <span class="mt-auto text-sm text-blue-gray-300 text-center">
-                      Ukuran Maksimal file upload 2 Mb dengan resulosi 1503 x 2419. <br>
+                      Ukuran Maksimal file upload 1 Mb dengan resulosi 1503 x 2419. <br>
                       (.jpg dan.png )
                     </span>
                   </template>
                 </Dropzone>
                 <span class="font-lato text-[13px] text-red-700 mt-3">{{ errors[0] }}</span>
               </ValidationProvider>
+              <transition name="slide-fade">
+                <DropzoneUploadProgress
+                  v-if="!!imageMobileFile"
+                  :file="imageMobileFile"
+                  :progress="imageMobileUploadProgress"
+                  :status="imageMobileUploadStatus"
+                  class="mt-4"
+                />
+              </transition>
             </div>
           </section>
+
           <!-- Title -->
           <section>
             <ValidationProvider
@@ -95,7 +117,6 @@
                 >
                   Judul Pop-up
                 </label>
-
                 <JdsInputText
                   v-model.trim="form.title"
                   placeholder="Masukkan judul pop-up"
@@ -104,7 +125,8 @@
               </div>
             </ValidationProvider>
           </section>
-          <!-- Customize button -->
+
+          <!-- Customize Button -->
           <section>
             <div class="flex items-center py-6">
               <h2 class="font-lato font-medium text-sm leading-6 text-green-800 whitespace-nowrap">
@@ -165,6 +187,7 @@
               </div>
             </ValidationProvider>
           </section>
+
           <!-- Schedule -->
           <section class="grid grid-cols-2 gap-x-8">
             <div class="flex items-center py-6 col-span-2">
@@ -233,40 +256,29 @@
 
 <script>
 import Dropzone from '@/common/components/Dropzone';
+import DropzoneUploadProgress from '@/common/components/DropzoneUploadProgress';
 import HeaderMenu from '@/common/components/HeaderMenu';
 import BaseButton from '@/common/components/BaseButton';
-import { ValidationProvider, ValidationObserver, extend } from 'vee-validate';
-import { required, image, size } from 'vee-validate/dist/rules';
+
+import '@/common/helpers/vee-validate.js';
+import { ValidationProvider, ValidationObserver } from 'vee-validate';
 import { POPUP_BANNER_SCHEDULE_OPTIONS } from '@/common/constants';
+import { RepositoryFactory } from '@/repositories/RepositoryFactory';
 
-extend('required', {
-  ...required,
-  message: 'Field ini wajib diisi!',
-});
+const mediaRepository = RepositoryFactory.get('media');
 
-extend('image', {
-  ...image,
-  message: 'File yang anda pilih bukan gambar!',
-});
-
-extend('size', {
-  ...size,
-  message: 'File yang anda masukan melebihi size batas maksimal!',
-});
-
-extend('url', {
-  validate(value) {
-    // eslint-disable-next-line no-useless-escape
-    const urlPattern = new RegExp(/^(https?:\/\/.)[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)$/g);
-    return urlPattern.test(value);
-  },
-  message: 'Link yang anda masukkan salah!',
+const IMAGE_UPLOAD_STATUS = Object.freeze({
+  NONE: 'NONE',
+  UPLOADING: 'UPLOADING',
+  SUCCESS: 'SUCCESS',
+  ERROR: 'ERROR',
 });
 
 export default {
   name: 'CreateEditPopupBanner',
   components: {
     Dropzone,
+    DropzoneUploadProgress,
     HeaderMenu,
     BaseButton,
     ValidationProvider,
@@ -275,8 +287,10 @@ export default {
   data() {
     return {
       form: {
-        imageDesktop: '',
-        imageMobile: '',
+        image: {
+          desktop: '',
+          mobile: '',
+        },
         title: '',
         customButton: {
           label: '',
@@ -287,6 +301,12 @@ export default {
           startDate: '',
         },
       },
+      imageDesktopFile: null,
+      imageMobileFile: null,
+      imageDesktopUploadProgress: 0,
+      imageDesktopUploadStatus: IMAGE_UPLOAD_STATUS.NONE,
+      imageMobileUploadProgress: 0,
+      imageMobileUploadStatus: IMAGE_UPLOAD_STATUS.NONE,
       isCustomizeButton: true,
       isScheduled: true,
       scheduleOptions: POPUP_BANNER_SCHEDULE_OPTIONS,
@@ -311,6 +331,67 @@ export default {
     });
   },
   methods: {
+    async handleUploadByType(file, type) {
+      const isValid = await this.validateSelectedImage(file, type);
+
+      if (!isValid) return;
+
+      if (type === 'DESKTOP') {
+        this.uploadDesktopImage(file);
+      }
+
+      if (type === 'MOBILE') {
+        this.uploadMobileImage(file);
+      }
+    },
+    async uploadDesktopImage(file) {
+      const formData = new FormData();
+      formData.append('file', file, file.name);
+
+      try {
+        this.imageDesktopFile = file;
+        this.imageDesktopUploadProgress = 0;
+        this.imageDesktopUploadStatus = IMAGE_UPLOAD_STATUS.UPLOADING;
+
+        const response = await mediaRepository.uploadMediaWithProgress(formData, (progress) => {
+          this.imageDesktopUploadProgress = progress;
+        });
+
+        this.imageDesktopUploadStatus = IMAGE_UPLOAD_STATUS.SUCCESS;
+
+        if (response.status === 201) {
+          const { data } = response;
+          this.form.image.desktop = data.file_download_uri;
+        }
+      } catch (error) {
+        this.imageDesktopUploadStatus = IMAGE_UPLOAD_STATUS.ERROR;
+        this.form.image.desktop = '';
+      }
+    },
+    async uploadMobileImage(file) {
+      const formData = new FormData();
+      formData.append('file', file, file.name);
+
+      try {
+        this.imageMobileFile = file;
+        this.imageMobileUploadProgress = 0;
+        this.imageMobileUploadStatus = IMAGE_UPLOAD_STATUS.UPLOADING;
+
+        const response = await mediaRepository.uploadMediaWithProgress(formData, (progress) => {
+          this.imageMobileUploadProgress = progress;
+        });
+
+        this.imageMobileUploadStatus = IMAGE_UPLOAD_STATUS.SUCCESS;
+
+        if (response.status === 201) {
+          const { data } = response;
+          this.form.image.mobile = data.file_download_uri;
+        }
+      } catch (error) {
+        this.imageMobileUploadStatus = IMAGE_UPLOAD_STATUS.ERROR;
+        this.form.image.mobile = '';
+      }
+    },
     async validateSelectedImage(file, type) {
       if (type === 'DESKTOP') {
         const { valid } = await this.$refs.desktopImageUploader.validate(file);
@@ -323,12 +404,6 @@ export default {
       }
 
       return false;
-    },
-    async handleUploadImage(file, type) {
-      const isValid = await this.validateSelectedImage(file, type);
-
-      // @todo: add upload functionality
-      console.log({ isValid });
     },
     onSubmit() {
       this.$refs.form.validate().then((success) => {
@@ -343,6 +418,19 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.slide-fade-enter-active {
+  transition: all .3s ease;
+}
+.slide-fade-leave-active {
+  transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+.slide-fade-enter, .slide-fade-leave-to {
+  transform: translateY(10px);
+  opacity: 0;
+}
+</style>
 
 <style>
 /**

@@ -15,4 +15,19 @@ export default {
       },
     });
   },
+
+  uploadMediaWithProgress(formData, callback) {
+    const config = {
+      onUploadProgress(progressEvent) {
+        const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+        callback(progress);
+      },
+    };
+    return Repository.post(`${resource}/upload`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+      ...config,
+    });
+  },
 };
