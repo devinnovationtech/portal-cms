@@ -28,4 +28,14 @@ export default {
   getBannerById(id = null) {
     return Repository.get(`${resource}/${id}`);
   },
+
+  /**
+   * Delete Pop-up banners data by banner ID
+   * @param {number, string} id - ID of the banner
+   *
+   * @returns {Promise}
+   */
+  deleteBannerById(id = null) {
+    return Repository.delete(`${resource}/${id}`);
+  },
 };
