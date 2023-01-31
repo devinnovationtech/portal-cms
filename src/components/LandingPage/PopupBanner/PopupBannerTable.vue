@@ -68,6 +68,7 @@
       <template #item.action="{item}">
         <PopupBannerTableAction
           :item="item"
+          @delete="$emit('delete', $event)"
         />
       </template>
     </JdsDataTable>

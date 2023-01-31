@@ -243,12 +243,12 @@ export default {
         await popupBannerRepository.deleteBannerById(id);
         this.$toast({
           type: 'success',
-          message: 'Data agenda telah berhasil dihapus',
+          message: 'Data banner telah berhasil dihapus',
         });
       } catch (error) {
         this.$toast({
           type: 'error',
-          message: 'Data agenda gagal dihapus',
+          message: 'Data banner gagal dihapus',
         });
       } finally {
         this.deleteLoading = false;
