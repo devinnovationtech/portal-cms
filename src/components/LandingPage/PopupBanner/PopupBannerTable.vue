@@ -14,7 +14,7 @@
       <!-- eslint-disable-next-line vue/valid-v-slot -->
       <template #item.title="{item}">
         <p
-          class="line-clamp-2 w-[230px]"
+          class="line-clamp-2"
           :title="item.title"
         >
           {{ item.title }}
@@ -48,7 +48,9 @@
 
       <!-- eslint-disable-next-line vue/valid-v-slot -->
       <template #item.duration="{item}">
-        <p>{{ item.duration }} hari</p>
+        <p>
+          {{ getDurationLabel(item.duration) }}
+        </p>
       </template>
 
       <!-- eslint-disable-next-line vue/valid-v-slot -->
@@ -172,6 +174,15 @@ export default {
         page: this.pagination.currentPage,
         per_page: this.pagination.itemsPerPage,
       });
+    },
+    getDurationLabel(duration) {
+      const durationValue = +duration;
+
+      if (durationValue === -1) {
+        return 'Tanpa batas waktu';
+      }
+
+      return `${durationValue} hari`;
     },
   },
 };
