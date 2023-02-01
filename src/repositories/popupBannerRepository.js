@@ -38,4 +38,18 @@ export default {
   deleteBannerById(id = null) {
     return Repository.delete(`${resource}/${id}`);
   },
+
+  /** Create Banner
+   * @param {Object} body
+   *
+   * @property {Object} image - contain property { dekstop, mobile }
+   * @property {string} title
+   * @property {Object} custom_button - contain property { label, link }
+   * @property {Object} scheduler - contain property { duration, start_date }
+   *
+   * @returns {Promise}
+   */
+  createBanner(body) {
+    return Repository.post(`${resource}`, body);
+  },
 };

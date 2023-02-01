@@ -6,7 +6,7 @@
     >
       <form
         class="popup-banner__form"
-        @submit.prevent="onSubmit"
+        @submit.prevent="onConfirmation"
       >
         <!-- Submit -->
         <HeaderMenu>
@@ -34,7 +34,7 @@
             <div>
               <div class="flex items-center justify-center mb-6">
                 <span class="text-blue-gray-800 text-[15px] whitespace-nowrap">
-                  Banner Dekstop
+                  Banner Desktop
                 </span>
                 <span class="w-full h-[2px] ml-4 bg-gray-300" />
               </div>
@@ -105,11 +105,32 @@
             </div>
           </section>
 
+          <section>
+            <ValidationProvider
+              rules="required"
+            >
+              <input
+                v-model="form.image.desktop"
+                hidden
+                type="text"
+              >
+            </ValidationProvider>
+            <ValidationProvider
+              rules="required"
+            >
+              <input
+                v-model="form.image.mobile"
+                hidden
+                type="text"
+              >
+            </ValidationProvider>
+          </section>
+
           <!-- Title -->
           <section>
             <ValidationProvider
               v-slot="{ errors }"
-              rules="required"
+              rules="required|max:50"
             >
               <div class="flex flex-col">
                 <label
@@ -180,7 +201,7 @@
                 </label>
                 <JdsInputText
                   v-model="form.customButton.link"
-                  placeholder="Masukkan judul pop-up"
+                  placeholder="contoh: https://"
                   :disabled="!isCustomizeButton"
                   :error-message="errors[0]"
                 />
@@ -225,25 +246,39 @@
                 />
               </div>
             </ValidationProvider>
+
             <ValidationProvider
-              v-slot="{ errors }"
+              v-slot="{ errors, classes }"
               :rules="{
-                'required': isScheduled
+                'required': isScheduled,
+                'nobackdate': true
               }"
             >
               <div class="flex flex-col">
                 <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
                   Waktu Penayangan
                 </label>
-                <div class="date-input flex items-center">
-                  <JdsDateInput
-                    v-model="form.scheduler.startDate"
-                    :error-message="errors[0]"
-                    :disabled="!isScheduled"
-                  />
-                  <p class="min-w-[150px] ml-4 whitespace-nowrap text-gray-500 text-[15px]">
-                    hingga <span class="text-gray-800">99/99/99</span>
-                  </p>
+                <div class="date-input flex items-start">
+                  <div class="w-full">
+                    <JdsDateInput
+                      v-model="form.scheduler.startDate"
+                      :class="classes"
+                    />
+                    <p
+                      v-show="errors[0]"
+                      class="font-lato text-[13px] leading-6 text-[#D32F2F]"
+                    >
+                      {{ errors[0] }}
+                    </p>
+                  </div>
+                  <div class="min-w-[150px] ml-4 mt-2 ">
+                    <p
+                      v-show="isScheduled"
+                      class="whitespace-nowrap text-gray-500 text-[15px]"
+                    >
+                      hingga <strong class="text-gray-800">{{ endDate }}</strong>
+                    </p>
+                  </div>
                 </div>
               </div>
             </ValidationProvider>
@@ -251,6 +286,70 @@
         </div>
       </form>
     </ValidationObserver>
+
+    <!-- Confirmation Popup -->
+    <BaseModal :open="submitStatus === 'CONFIRMATION'">
+      <div class="w-full h-full px-2 pb-4">
+        <h1 class="font-roboto font-medium text-green-700 text-[21px] leading-[34px] mb-6">
+          Simpan Banner
+        </h1>
+        <div class="flex items-center gap-4">
+          <p class="text-sm leading-6 to-blue-gray-800">
+            Apakah Anda ingin menyimpan agenda ini terlebih dahulu?
+          </p>
+        </div>
+      </div>
+      <template #footer>
+        <div class="flex w-full h-full items-center justify-end gap-4 p-2">
+          <BaseButton
+            class="border border-green-700 hover:bg-green-50 text-sm text-green-700"
+            @click="onCancel"
+          >
+            Tidak
+          </BaseButton>
+          <BaseButton
+            class="bg-green-700 hover:bg-green-600 text-sm text-white"
+            @click="submitForm"
+          >
+            Ya, simpan banner
+          </BaseButton>
+        </div>
+      </template>
+    </BaseModal>
+
+    <!-- Submit Progress -->
+    <ProgressModal
+      :open="submitStatus === 'LOADING'"
+      :value="submitProgress"
+    />
+
+    <!-- Success/Error Message -->
+    <BaseModal :open="submitStatus === 'SUCCESS' || submitStatus === 'ERROR'">
+      <div class="w-full h-full px-2 pb-4">
+        <h1 class="font-roboto font-medium text-green-700 text-[21px] leading-[34px] mb-6">
+          {{ messageTitle }}
+        </h1>
+        <div class="flex items-center gap-4">
+          <JdsIcon
+            :name="messageIconName"
+            :class="messageIconClassName"
+          />
+          <p class="text-sm leading-6 to-blue-gray-800">
+            {{ messageBody }}
+          </p>
+        </div>
+      </div>
+      <template #footer>
+        <div class="flex w-full h-full items-center justify-center gap-4 p-2">
+          <BaseButton
+            class="bg-green-700 hover:bg-green-600 text-sm text-white"
+            @click="messageAction"
+          >
+            Saya Mengerti
+          </BaseButton>
+        </div>
+      </template>
+    </BaseModal>
   </main>
 </template>
 
@@ -259,17 +358,29 @@ import Dropzone from '@/common/components/Dropzone';
 import DropzoneUploadProgress from '@/common/components/DropzoneUploadProgress';
 import HeaderMenu from '@/common/components/HeaderMenu';
 import BaseButton from '@/common/components/BaseButton';
+import BaseModal from '@/common/components/BaseModal';
+import ProgressModal from '@/common/components/ProgressModal';
 
+import { formatDate, addDay } from '@/common/helpers/date.js';
 import '@/common/helpers/vee-validate.js';
 import { ValidationProvider, ValidationObserver } from 'vee-validate';
 import { POPUP_BANNER_SCHEDULE_OPTIONS } from '@/common/constants';
 import { RepositoryFactory } from '@/repositories/RepositoryFactory';
 
 const mediaRepository = RepositoryFactory.get('media');
+const bannerRepository = RepositoryFactory.get('popupBanner');
 
 const IMAGE_UPLOAD_STATUS = Object.freeze({
   NONE: 'NONE',
   UPLOADING: 'UPLOADING',
+  SUCCESS: 'SUCCESS',
+  ERROR: 'ERROR',
+});
+
+const FORM_SUBMIT_STATUS = Object.freeze({
+  NONE: 'NONE',
+  CONFIRMATION: 'CONFIRMATION',
+  LOADING: 'LOADING',
   SUCCESS: 'SUCCESS',
   ERROR: 'ERROR',
 });
@@ -281,6 +392,8 @@ export default {
     DropzoneUploadProgress,
     HeaderMenu,
     BaseButton,
+    BaseModal,
+    ProgressModal,
     ValidationProvider,
     ValidationObserver,
   },
@@ -297,7 +410,7 @@ export default {
           link: '',
         },
         scheduler: {
-          duration: 5,
+          duration: 2,
           startDate: '',
         },
       },
@@ -310,7 +423,55 @@ export default {
       isCustomizeButton: true,
       isScheduled: true,
       scheduleOptions: POPUP_BANNER_SCHEDULE_OPTIONS,
+      todayDate: formatDate(new Date(), 'dd/MM/yyyy'),
+      submitStatus: FORM_SUBMIT_STATUS.NONE,
+      submitProgress: 0,
+      successMessage: {
+        title: '',
+        body: '',
+      },
+      errorMessage: {
+        title: '',
+        body: '',
+      },
     };
+  },
+  computed: {
+    endDate() {
+      const { duration, startDate } = this.form.scheduler;
+
+      if (duration && startDate) {
+        // normalized date because JdsDateInput doesn't return a valid date format
+        const normalizedStartDate = this.normalizeDate(startDate);
+
+        const endDate = addDay(normalizedStartDate, duration);
+        return formatDate(endDate);
+      }
+
+      return null;
+    },
+    messageTitle() {
+      return this.submitStatus === 'SUCCESS' ? this.successMessage.title : this.errorMessage.title;
+    },
+    messageBody() {
+      return this.submitStatus === 'SUCCESS' ? this.successMessage.body : this.errorMessage.body;
+    },
+    messageIconName() {
+      return this.submitStatus === 'SUCCESS' ? 'check-mark-circle' : 'warning';
+    },
+    messageIconClassName() {
+      return this.submitStatus === 'SUCCESS' ? 'text-green-600' : 'text-red-600';
+    },
+  },
+  watch: {
+    isScheduled(value) {
+      if (value === false) {
+        this.form.scheduler.duration = -1; // -1 is a value of infinite duration
+        this.form.scheduler.startDate = formatDate(new Date(), 'dd/MM/yyyy'); // get today's date
+      } else {
+        this.form.scheduler.duration = 2; // set to default value
+      }
+    },
   },
   mounted() {
     /**
@@ -331,6 +492,23 @@ export default {
     });
   },
   methods: {
+    normalizeDate(initialDate) {
+      if (!initialDate) return null;
+
+      const date = initialDate.split('/');
+      const year = date[2];
+      const month = date[1] - 1;
+      const day = date[0];
+
+      return new Date(year, month, day);
+    },
+    messageAction() {
+      if (this.submitStatus === FORM_SUBMIT_STATUS.SUCCESS) {
+        this.$router.push('/landing-page');
+      } else {
+        this.resetSubmitState();
+      }
+    },
     async handleUploadByType(file, type) {
       const isValid = await this.validateSelectedImage(file, type);
 
@@ -405,15 +583,66 @@ export default {
 
       return false;
     },
-    onSubmit() {
-      this.$refs.form.validate().then((success) => {
-        if (!success) {
-          return;
-        }
+    onCancel() {
+      this.submitStatus = FORM_SUBMIT_STATUS.NONE;
+    },
+    onConfirmation() {
+      this.submitStatus = FORM_SUBMIT_STATUS.CONFIRMATION;
+    },
+    async submitForm() {
+      try {
+        this.submitStatus = FORM_SUBMIT_STATUS.LOADING;
+        this.submitProgress = 25;
+        const formData = this.generateFormData();
 
-        // @todo: add submit form functionality
-        console.log({ success });
-      });
+        const response = await bannerRepository.createBanner(formData);
+
+        if (response.status === 201) {
+          // Add timeout to prevent progress bar too fast
+          setTimeout(() => {
+            this.submitProgress = 75;
+
+            setTimeout(() => {
+              this.successMessage = {
+                title: 'Tambah Agenda Berhasil',
+                body: 'Agenda yang Anda buat berhasil ditambahkan.',
+              };
+              this.submitStatus = FORM_SUBMIT_STATUS.SUCCESS;
+            }, 150);
+          }, 150);
+        }
+      } catch (error) {
+        this.errorMessage = {
+          title: 'Tambah Banner Gagal',
+          body: 'Banner yang Anda buat gagal ditambahkan.',
+        };
+        this.submitStatus = FORM_SUBMIT_STATUS.ERROR;
+      }
+    },
+    resetSubmitState() {
+      this.submitStatus = FORM_SUBMIT_STATUS.NONE;
+      this.submitProgress = 0;
+      this.successMessage.title = '';
+      this.successMessage.body = '';
+      this.errorMessage.title = '';
+      this.errorMessage.body = '';
+    },
+    generateFormData() {
+      const normalizedStartDate = this.normalizeDate(this.form.scheduler.startDate);
+
+      const formData = {
+        ...this.form,
+        custom_button: {
+          label: this.form.customButton.label,
+          link: this.form.customButton.link,
+        },
+        scheduler: {
+          duration: this.form.scheduler.duration,
+          start_date: formatDate(normalizedStartDate, 'yyyy-MM-dd'),
+        },
+      };
+
+      return formData;
     },
   },
 };
@@ -445,11 +674,16 @@ export default {
 /**
  * Override default Jds-DateInput styling
  */
+ .popup-banner__form .date-input .jds-popover.invalid .jds-date-input__input {
+  border: 1px solid #D32F2F !important;
+ }
+
 .popup-banner__form .date-input .jds-popover,
 .popup-banner__form .date-input .jds-popover__activator,
 .popup-banner__form .date-input .jds-date-input {
   width: 100% !important;
 }
+
 .popup-banner__form .date-input .jds-date-input__input[disabled] {
   background: #eee !important;
 }
@@ -467,9 +701,11 @@ export default {
   background-color: white;
   z-index: 10 !important;
 }
+
 .popup-banner__form .date-input .jds-calendar {
   max-width: none !important;
 }
+
 .popup-banner__form .date-input .jds-calendar .jds-calendar__list-of-days,
 .popup-banner__form .date-input .jds-calendar .jds-calendar__days {
   display: grid !important;

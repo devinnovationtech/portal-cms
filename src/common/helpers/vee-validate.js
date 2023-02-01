@@ -1,5 +1,6 @@
 import { extend } from 'vee-validate';
-import { required, image, size } from 'vee-validate/dist/rules';
+import { required, image, size, max } from 'vee-validate/dist/rules';
+import { isAfter, isToday } from 'date-fns';
 
 extend('required', {
   ...required,
@@ -45,4 +46,35 @@ extend('maxdimensions', {
     return validateImageDimensions();
   },
   message: 'Resolusi gambar melebihi {width} x {height} pixel!',
+});
+
+extend('max', {
+  params: ['length'],
+  ...max,
+  message: 'Teks yang anda masukkan lebih dari {length} karakter',
+});
+
+extend('nobackdate', {
+  validate(value) {
+    const normalizeDate = (initialDate) => {
+      if (!initialDate) return null;
+
+      const date = initialDate.split('/');
+      const year = date[2];
+      const month = date[1] - 1;
+      const day = date[0];
+
+      return new Date(year, month, day);
+    };
+
+    const today = new Date();
+    const selectedDate = normalizeDate(value);
+
+    return new Promise((resolve) => {
+      resolve({
+        valid: isToday(selectedDate) || isAfter(selectedDate, today),
+      });
+    });
+  },
+  message: 'Tanggal yang anda pilih sudah lewat!',
 });
