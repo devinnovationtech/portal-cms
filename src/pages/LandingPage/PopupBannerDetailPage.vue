@@ -230,6 +230,7 @@ export default {
     },
     showPreviewImage(item) {
       this.selectedPreview = item.name;
+      if (item.name === 'Mobile') this.isContentMobile = true;
     },
     showContentMobile() {
       this.isContentMobile = !this.isContentMobile;

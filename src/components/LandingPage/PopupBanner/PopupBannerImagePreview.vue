@@ -2,10 +2,10 @@
   <transition name="iphone">
     <img
       v-if="isSelected === 'Desktop'"
-      class="object-cover w-full"
+      class="w-full h-[397px] object-contain"
       :src="imageDesktop"
       width="1082"
-      height="444"
+      height="576"
       alt=""
     >
     <div

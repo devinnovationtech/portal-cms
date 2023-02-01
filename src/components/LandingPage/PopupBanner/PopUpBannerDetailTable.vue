@@ -113,7 +113,7 @@
       </tr>
       <tr>
         <td class="font-lato text-blue-gray-500 font-bold text-sm">
-          Update terakhir
+          Update Terakhir
         </td>
         <td class="font-lato text-blue-gray-500 text-sm">
           <div
