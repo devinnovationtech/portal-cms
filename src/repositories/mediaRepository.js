@@ -30,4 +30,21 @@ export default {
       ...config,
     });
   },
+
+  /**
+   * Delete media
+   * @param {Object} formData
+   *
+   * @property {string} key - media key/name
+   * @property {string} domain - media domain
+   *
+   * @returns {Promise}
+   */
+  deleteMedia(formData) {
+    return Repository.delete(`${resource}/delete`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+  },
 };

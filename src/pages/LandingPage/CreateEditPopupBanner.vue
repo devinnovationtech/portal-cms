@@ -65,6 +65,7 @@
                   :status="imageDesktopUploadStatus"
                   class="mt-4"
                   @retry="handleRetryUpload('DESKTOP')"
+                  @delete="handleDeleteUpload('DESKTOP')"
                 />
               </transition>
             </div>
@@ -102,6 +103,7 @@
                   :status="imageMobileUploadStatus"
                   class="mt-4"
                   @retry="handleRetryUpload('MOBILE')"
+                  @delete="handleDeleteUpload('MOBILE')"
                 />
               </transition>
             </div>
@@ -403,8 +405,16 @@ export default {
     return {
       form: {
         image: {
-          desktop: '',
-          mobile: '',
+          desktop: {
+            url: '',
+            fileName: '',
+            size: 0,
+          },
+          mobile: {
+            url: '',
+            fileName: '',
+            size: 0,
+          },
         },
         title: '',
         customButton: {
@@ -425,7 +435,6 @@ export default {
       isCustomizeButton: true,
       isScheduled: true,
       scheduleOptions: POPUP_BANNER_SCHEDULE_OPTIONS,
-      todayDate: formatDate(new Date(), 'dd/MM/yyyy'),
       submitStatus: FORM_SUBMIT_STATUS.NONE,
       submitProgress: 0,
       successMessage: {
@@ -541,11 +550,15 @@ export default {
 
         if (response.status === 201) {
           const { data } = response;
-          this.form.image.desktop = data.file_download_uri;
+          this.form.image.desktop.url = data.file_download_uri;
+          this.form.image.desktop.fileName = data.file_name;
+          this.form.image.desktop.size = data.size;
         }
       } catch (error) {
         this.imageDesktopUploadStatus = IMAGE_UPLOAD_STATUS.ERROR;
-        this.form.image.desktop = '';
+        this.form.image.desktop.url = '';
+        this.form.image.desktop.fileName = '';
+        this.form.image.desktop.size = 0;
       }
     },
     async uploadMobileImage(file) {
@@ -565,11 +578,31 @@ export default {
 
         if (response.status === 201) {
           const { data } = response;
-          this.form.image.mobile = data.file_download_uri;
+          this.form.image.mobile.url = data.file_download_uri;
+          this.form.image.mobile.fileName = data.file_name;
+          this.form.image.mobile.size = data.size;
         }
       } catch (error) {
         this.imageMobileUploadStatus = IMAGE_UPLOAD_STATUS.ERROR;
-        this.form.image.mobile = '';
+        this.form.image.mobile.url = '';
+        this.form.image.mobile.fileName = '';
+        this.form.image.mobile.size = 0;
+      }
+    },
+    async deleteUploadedImage(fileName) {
+      try {
+        const response = await mediaRepository.deleteMedia({
+          key: fileName,
+          domain: 'pop-up-banners',
+        });
+
+        return new Promise((resolve) => {
+          resolve(response);
+        });
+      } catch (error) {
+        return new Promise(() => {
+          throw new Error(error);
+        });
       }
     },
     async validateSelectedImage(file, type) {
@@ -590,6 +623,27 @@ export default {
         this.uploadDesktopImage(this.imageDesktopFile);
       } else {
         this.uploadMobileImage(this.imageMobileFile);
+      }
+    },
+    async handleDeleteUpload(type) {
+      try {
+        if (type === 'DESKTOP') {
+          await this.deleteUploadedImage(this.form.image.desktop.fileName);
+          this.resetDesktopImageState();
+        } else {
+          await this.deleteUploadedImage(this.form.image.mobile.fileName);
+          this.resetMobileImageState();
+        }
+
+        this.$toast({
+          type: 'success',
+          message: 'Berhasil menghapus media',
+        });
+      } catch (error) {
+        this.$toast({
+          type: 'error',
+          message: 'Gagal menghapus media!',
+        });
       }
     },
     onCancel() {
@@ -636,11 +690,29 @@ export default {
       this.errorMessage.title = '';
       this.errorMessage.body = '';
     },
+    resetDesktopImageState() {
+      this.form.image.desktop.url = '';
+      this.form.image.desktop.fileName = '';
+      this.form.image.desktop.size = 0;
+      this.imageDesktopFile = null;
+      this.imageDesktopUploadStatus = IMAGE_UPLOAD_STATUS.NONE;
+    },
+    resetMobileImageState() {
+      this.form.image.mobile.url = '';
+      this.form.image.mobile.fileName = '';
+      this.form.image.mobile.size = 0;
+      this.imageMobileFile = null;
+      this.imageMobileUploadStatus = IMAGE_UPLOAD_STATUS.NONE;
+    },
     generateFormData() {
       const normalizedStartDate = this.normalizeDate(this.form.scheduler.startDate);
 
       const formData = {
         ...this.form,
+        image: {
+          desktop: this.form.image.desktop.url,
+          mobile: this.form.image.mobile.url,
+        },
         custom_button: {
           label: this.form.customButton.label,
           link: this.form.customButton.link,
@@ -659,10 +731,10 @@ export default {
 
 <style scoped>
 .slide-fade-enter-active {
-  transition: all .3s ease;
+  transition: all .2s ease;
 }
 .slide-fade-leave-active {
-  transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+  transition: all .2s cubic-bezier(1.0, 0.5, 0.8, 1.0);
 }
 .slide-fade-enter, .slide-fade-leave-to {
   transform: translateY(10px);
