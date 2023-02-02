@@ -64,6 +64,7 @@
                   :progress="imageDesktopUploadProgress"
                   :status="imageDesktopUploadStatus"
                   class="mt-4"
+                  @retry="handleRetryUpload('DESKTOP')"
                 />
               </transition>
             </div>
@@ -100,6 +101,7 @@
                   :progress="imageMobileUploadProgress"
                   :status="imageMobileUploadStatus"
                   class="mt-4"
+                  @retry="handleRetryUpload('MOBILE')"
                 />
               </transition>
             </div>
@@ -582,6 +584,13 @@ export default {
       }
 
       return false;
+    },
+    handleRetryUpload(type) {
+      if (type === 'DESKTOP') {
+        this.uploadDesktopImage(this.imageDesktopFile);
+      } else {
+        this.uploadMobileImage(this.imageMobileFile);
+      }
     },
     onCancel() {
       this.submitStatus = FORM_SUBMIT_STATUS.NONE;
