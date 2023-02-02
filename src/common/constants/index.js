@@ -279,3 +279,11 @@ export const POPUP_BANNER_SCHEDULE_OPTIONS = [
     value: 30,
   },
 ];
+
+export const STATUS_MODAL = {
+  NONE: 'NONE',
+  CONFIRMATION: 'CONFIRMATION',
+  LOADING: 'LOADING',
+  SUCCESS: 'SUCCESS',
+  ERROR: 'ERROR',
+};

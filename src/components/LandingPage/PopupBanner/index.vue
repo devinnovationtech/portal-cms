@@ -81,6 +81,44 @@
         </div>
       </template>
     </BaseModal>
+
+    <!-- Submit Progress -->
+
+    <ProgressModal
+      :open="deleteStatus === 'LOADING'"
+      :value="progressValue"
+    />
+
+    <!-- Success or Erros Message Modal -->
+
+    <BaseModal
+      :open="(deleteStatus === 'SUCCESS' || deleteStatus === 'FAILED') || !(deleteStatus === 'NONE')"
+    >
+      <div class="w-full h-full px-2 pb-4">
+        <h1 class="font-roboto font-medium text-green-700 text-[21px] leading-[34px] mb-6">
+          {{ messageTitle }}
+        </h1>
+        <div class="flex items-center gap-4">
+          <JdsIcon
+            :name="messageIconName"
+            :class="messageIconClassName"
+          />
+          <p class="text-sm leading-6 text-gray-800">
+            {{ messageBody }}
+          </p>
+        </div>
+      </div>
+      <template #footer>
+        <div class="flex w-full h-full items-center justify-center gap-4 p-2">
+          <BaseButton
+            class="bg-green-700 hover:bg-green-600 text-sm text-white"
+            @click="messageAction"
+          >
+            Saya Mengerti
+          </BaseButton>
+        </div>
+      </template>
+    </BaseModal>
   </main>
 </template>
 
@@ -89,6 +127,8 @@ import PopupBannerTable from '@/components/LandingPage/PopupBanner/PopupBannerTa
 import LinkButton from '@/common/components/LinkButton';
 import BaseModal from '@/common/components/BaseModal';
 import BaseButton from '@/common/components/BaseButton';
+import ProgressModal from '@/common/components/ProgressModal';
+import { STATUS_MODAL } from '@/common/constants/index';
 import { RepositoryFactory } from '@/repositories/RepositoryFactory';
 
 const popupBannerRepository = RepositoryFactory.get('popupBanner');
@@ -100,6 +140,7 @@ export default {
     LinkButton,
     BaseModal,
     BaseButton,
+    ProgressModal,
   },
   data() {
     return {
@@ -119,7 +160,31 @@ export default {
       bannerDetail: {},
       isModalDelete: false,
       deleteLoading: false,
+      progressValue: 0,
+      deleteStatus: STATUS_MODAL.NONE,
+      successMessage: {
+        title: '',
+        body: '',
+      },
+      errorMessage: {
+        title: '',
+        body: '',
+      },
     };
+  },
+  computed: {
+    messageTitle() {
+      return this.deleteStatus === 'SUCCESS' ? this.successMessage.title : this.errorMessage.title;
+    },
+    messageBody() {
+      return this.deleteStatus === 'SUCCESS' ? this.successMessage.body : this.errorMessage.body;
+    },
+    messageIconName() {
+      return this.deleteStatus === 'SUCCESS' ? 'check-mark-circle' : 'warning';
+    },
+    messageIconClassName() {
+      return this.deleteStatus === 'SUCCESS' ? 'text-green-600' : 'text-red-600';
+    },
   },
   async mounted() {
     await this.fetchBanners();
@@ -158,9 +223,46 @@ export default {
       this.bannerDetail = { ...filterBanner };
       this.showDeleteModal();
     },
-    deleteBannerById() {
-      // @TODO: create event delete banner by ID
-      this.isModalDelete = !this.isModalDelete;
+    async deleteBannerById(id) {
+      try {
+        this.deleteLoading = true;
+        const response = await popupBannerRepository.deleteBannerById(id);
+        if (response.status === 204) {
+          this.deleteStatus = STATUS_MODAL.LOADING;
+          this.progressValue = 25;
+          setTimeout(() => {
+            this.progressValue = 75;
+            setTimeout(() => {
+              this.successMessage = {
+                title: 'Berhasil dihapus!',
+                body: `Banner ${this.bannerDetail.title} berhasil hapus.`,
+              };
+              this.deleteStatus = STATUS_MODAL.SUCCESS;
+            }, 150);
+          }, 150);
+        }
+      } catch {
+        this.errorMessage = {
+          title: 'Hapus Banner Gagal',
+          body: 'Banner yang Anda buat gagal dihapus.',
+        };
+        this.deleteStatus = STATUS_MODAL.ERROR;
+      } finally {
+        this.deleteLoading = false;
+        this.showDeleteModal();
+      }
+    },
+    resetSubmitState() {
+      this.deleteStatus = STATUS_MODAL.NONE;
+      this.progressValue = 0;
+      this.successMessage.title = '';
+      this.successMessage.body = '';
+      this.errorMessage.title = '';
+      this.errorMessage.body = '';
+    },
+    messageAction() {
+      this.resetSubmitState();
+      this.fetchBanners();
     },
   },
 };
