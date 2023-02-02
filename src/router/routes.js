@@ -37,8 +37,8 @@ export default [
     },
   },
   {
-    path: '/landing-page/detail/:id',
-    name: 'Landing Page',
+    path: '/popup-banner/detail/:id',
+    name: 'Pop-up Banner Detail',
     component: () => import('@/pages/LandingPage/PopupBannerDetailPage'),
     meta: {
       layout: 'AppLayoutPrivate',

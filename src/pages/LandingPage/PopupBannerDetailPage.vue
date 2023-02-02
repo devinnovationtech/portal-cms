@@ -6,7 +6,7 @@
 
         <BaseButton
           class="border-red-500 hover:bg-red-50 font-lato text-sm text-red-500"
-          @click="showDeleteModal"
+          @click="showDeleteConfirmationModal"
         >
           <template #icon-left>
             <JdsIcon
@@ -89,10 +89,9 @@
       </div>
     </section>
 
-    <!-- Delete Action Prompt -->
+    <!-- Delete Action Modal -->
     <BaseModal
-      :open="isModalDelete"
-      @close="showDeleteModal"
+      :open="modalStatus === 'CONFIRMATION'"
     >
       <div class="w-full h-full">
         <h1 class="font-roboto text-xl leading-8 font-medium text-green-700 mb-6">
@@ -109,7 +108,7 @@
         <div class="flex gap-4 justify-end">
           <BaseButton
             class="border-green-700 hover:bg-green-50 text-sm text-green-700"
-            @click="showDeleteModal"
+            @click="onCancel"
           >
             Batal
           </BaseButton>
@@ -135,6 +134,44 @@
         </div>
       </template>
     </BaseModal>
+
+    <!-- Delete Progress -->
+
+    <ProgressModal
+      :open="modalStatus === 'LOADING'"
+      :value="progressValue"
+    />
+
+    <!-- Success or Erros Message Modal -->
+
+    <BaseModal
+      :open="modalStatus === 'SUCCESS' || modalStatus === 'ERROR'"
+    >
+      <div class="w-full h-full px-2 pb-4">
+        <h1 class="font-roboto font-medium text-green-700 text-[21px] leading-[34px] mb-6">
+          {{ messageTitle }}
+        </h1>
+        <div class="flex items-center gap-4">
+          <JdsIcon
+            :name="messageIconName"
+            :class="messageIconClassName"
+          />
+          <p class="text-sm leading-6 text-gray-800">
+            {{ messageBody }}
+          </p>
+        </div>
+      </div>
+      <template #footer>
+        <div class="flex w-full h-full items-center justify-center gap-4 p-2">
+          <BaseButton
+            class="bg-green-700 hover:bg-green-600 text-sm text-white"
+            @click="messageAction"
+          >
+            Saya Mengerti
+          </BaseButton>
+        </div>
+      </template>
+    </BaseModal>
   </main>
 </template>
 
@@ -143,6 +180,8 @@ import HeaderMenu from '@/common/components/HeaderMenu';
 import BaseButton from '@/common/components/BaseButton';
 import LinkButton from '@/common/components/LinkButton';
 import BaseModal from '@/common/components/BaseModal';
+import { STATUS_MODAL } from '@/common/constants/index';
+import ProgressModal from '@/common/components/ProgressModal';
 import { RepositoryFactory } from '@/repositories/RepositoryFactory';
 import PopUpBannerDetailTable from '@/components/LandingPage/PopupBanner/PopUpBannerDetailTable';
 import PopupBannerImagePreview from '@/components/LandingPage/PopupBanner/PopupBannerImagePreview';
@@ -155,6 +194,7 @@ export default {
     BaseButton,
     HeaderMenu,
     BaseModal,
+    ProgressModal,
     LinkButton,
     PopUpBannerDetailTable,
     PopupBannerImagePreview,
@@ -187,6 +227,16 @@ export default {
       isDesktopPreview: true,
       isModalDelete: false,
       deleteLoading: false,
+      progressValue: 0,
+      modalStatus: STATUS_MODAL.NONE,
+      successMessage: {
+        title: '',
+        body: '',
+      },
+      errorMessage: {
+        title: '',
+        body: '',
+      },
       // @TODO: change the right link to update banner page
       linkBannerUpdatePage: '/landing-page',
     };
@@ -207,6 +257,18 @@ export default {
         buttonLabel: this.banner?.button_label || '-',
         isContentMobile: this.isContentMobile,
       };
+    },
+    messageTitle() {
+      return this.modalStatus === 'SUCCESS' ? this.successMessage.title : this.errorMessage.title;
+    },
+    messageBody() {
+      return this.modalStatus === 'SUCCESS' ? this.successMessage.body : this.errorMessage.body;
+    },
+    messageIconName() {
+      return this.modalStatus === 'SUCCESS' ? 'check-mark-circle' : 'warning';
+    },
+    messageIconClassName() {
+      return this.modalStatus === 'SUCCESS' ? 'text-green-600' : 'text-red-600';
     },
   },
   async mounted() {
@@ -235,26 +297,53 @@ export default {
     showContentMobile() {
       this.isContentMobile = !this.isContentMobile;
     },
-    showDeleteModal() {
-      this.isModalDelete = !this.isModalDelete;
+    onCancel() {
+      this.modalStatus = STATUS_MODAL.NONE;
+    },
+    showDeleteConfirmationModal() {
+      this.modalStatus = STATUS_MODAL.CONFIRMATION;
+    },
+    resetDeleteState() {
+      this.modalStatus = STATUS_MODAL.NONE;
+      this.progressValue = 0;
+      this.successMessage.title = '';
+      this.successMessage.body = '';
+      this.errorMessage.title = '';
+      this.errorMessage.body = '';
     },
     async deleteBanner(id) {
       try {
         this.deleteLoading = true;
-        await popupBannerRepository.deleteBannerById(id);
-        this.$toast({
-          type: 'success',
-          message: 'Data banner telah berhasil dihapus',
-        });
-      } catch (error) {
-        this.$toast({
-          type: 'error',
-          message: 'Data banner gagal dihapus',
-        });
+        const response = await popupBannerRepository.deleteBannerById(id);
+        if (response.status === 204) {
+          this.modalStatus = STATUS_MODAL.LOADING;
+          this.progressValue = 25;
+          setTimeout(() => {
+            this.progressValue = 75;
+            setTimeout(() => {
+              this.successMessage = {
+                title: 'Berhasil dihapus!',
+                body: `Banner ${this.banner.title} berhasil hapus.`,
+              };
+              this.modalStatus = STATUS_MODAL.SUCCESS;
+            }, 150);
+          }, 150);
+        }
+      } catch {
+        this.errorMessage = {
+          title: 'Hapus Banner Gagal',
+          body: `Banner ${this.banner.title} gagal dihapus.`,
+        };
+        this.modalStatus = STATUS_MODAL.ERROR;
       } finally {
         this.deleteLoading = false;
-        this.showDeleteModal();
-        this.$router.back();
+      }
+    },
+    messageAction() {
+      if (this.modalStatus === STATUS_MODAL.SUCCESS) {
+        this.$router.push('/landing-page');
+      } else {
+        this.resetDeleteState();
       }
     },
   },

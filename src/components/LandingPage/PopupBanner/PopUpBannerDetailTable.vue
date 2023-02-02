@@ -170,11 +170,11 @@ export default {
     },
     duration() {
       const duration = this.banner?.duration || null;
-      if (duration) {
+      if (duration && duration !== -1) {
         return `${duration} hari`;
       }
 
-      return '-';
+      return 'Tanpa batas waktu';
     },
     broadcastTime() {
       const startDate = formatDate(this.banner?.start_date);

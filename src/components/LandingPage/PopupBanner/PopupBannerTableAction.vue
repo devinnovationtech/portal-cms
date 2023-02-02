@@ -26,7 +26,7 @@
       <ul class="flex flex-col gap-4">
         <li>
           <router-link
-            :to="`/landing-page/detail/${item.id}`"
+            :to="`/popup-banner/detail/${item.id}`"
             class="font-lato text-sm leading-4 text-gray-800"
           >
             Detail

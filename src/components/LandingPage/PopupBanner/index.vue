@@ -92,7 +92,7 @@
     <!-- Success or Erros Message Modal -->
 
     <BaseModal
-      :open="(deleteStatus === 'SUCCESS' || deleteStatus === 'FAILED') || !(deleteStatus === 'NONE')"
+      :open="(deleteStatus === 'SUCCESS' || deleteStatus === 'ERROR') || !(deleteStatus === 'NONE')"
     >
       <div class="w-full h-full px-2 pb-4">
         <h1 class="font-roboto font-medium text-green-700 text-[21px] leading-[34px] mb-6">
