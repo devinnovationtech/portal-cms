@@ -149,7 +149,7 @@ export default {
       return this.banner?.title || '-';
     },
     titleButton() {
-      return this.banner?.button_label || '-';
+      return this.banner?.button_label || 'Tutup';
     },
     link() {
       return this.banner?.link || '-';

@@ -254,7 +254,7 @@ export default {
       return {
         isSelected: this.selectedPreview,
         link: this.banner?.link || '-',
-        buttonLabel: this.banner?.button_label || '-',
+        buttonLabel: this.banner?.button_label || 'Tutup',
         isContentMobile: this.isContentMobile,
       };
     },

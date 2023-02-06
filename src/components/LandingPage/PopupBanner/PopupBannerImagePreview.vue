@@ -48,7 +48,7 @@
                   />
                 </button>
               </div>
-              <div class="bg-gray-50 p-1 rounded-[10px] min-h-[335px]">
+              <div class="bg-gray-50 p-1 rounded-[10px] min-h-[335px] flex flex-col justify-between">
                 <div class="flex justify-center overflow-y-auto min-w-full max-h-full">
                   <img
                     class="w-auto h-auto object-contain"
@@ -60,7 +60,7 @@
                 </div>
                 <div class="w-full bg-gray-50 flex items-center justify-center pt-2">
                   <a
-                    class="rounded-md bg-green-700 p-2 w-full text-[12px] leading-[20px] text-white text-center font-lato"
+                    class="rounded-md bg-green-700 py-1 px-2 w-full text-[12px] leading-[20px] text-white text-center font-lato"
                     :class="{
                       'pointer-events-none' : link === '-'
                     }"
@@ -89,7 +89,7 @@ export default {
     },
     buttonLabel: {
       type: String,
-      default: 'Kunjungi Link',
+      default: 'Tutup',
     },
     imageMobile: {
       type: String,
