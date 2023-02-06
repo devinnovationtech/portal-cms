@@ -130,7 +130,7 @@
 </template>
 
 <script>
-import { formatDate, addDay, getHour, getMinute } from '@/common/helpers/date';
+import { formatDate, getHour, getMinute } from '@/common/helpers/date';
 
 export default {
   name: 'PopUpBannerDetailTable',
@@ -178,12 +178,12 @@ export default {
     },
     broadcastTime() {
       const startDate = formatDate(this.banner?.start_date);
-      const endDate = formatDate(addDay(this.banner?.start_date, this.banner?.duration));
+      const endDate = formatDate(this.banner?.end_date);
 
-      if (this.banner?.start_date) {
-        return `${startDate} - ${endDate}`;
+      if (this.banner?.duration === -1) {
+        return `${startDate} - selesai`;
       }
-      return '-';
+      return `${startDate} - ${endDate}`;
     },
     lastUpdate() {
       const updateDate = formatDate(this.banner?.updated_at);
