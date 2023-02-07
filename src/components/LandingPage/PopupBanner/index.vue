@@ -29,23 +29,26 @@
             :meta="meta"
             class="min-w-[1000px]"
             @update:pagination="onUpdatePagination($event)"
-            @delete="deleteBanner($event)"
+            @delete="handleDeleteBanner($event)"
+            @change:status="handleUpdateStatus($event)"
           />
         </div>
       </div>
     </section>
 
-    <!-- Delete Action Prompt -->
+    <!-- Action Prompt -->
     <BaseModal
-      :open="isModalDelete"
-      @click="showDeleteModal"
+      :open="
+        modalState === 'DELETE_CONFIRMATION' ||
+          modalState === 'STATUS_ACTIVATE' ||
+          modalState === 'STATUS_DEACTIVATE'"
     >
       <div class="w-full h-full">
         <h1 class="font-roboto text-xl leading-8 font-medium text-green-700 mb-6">
-          Hapus Banner
+          {{ modalMessage.title }}
         </h1>
         <p class="font-lato text-sm text-gray-800 mb-2">
-          Apakah Anda yakin ingin menghapus banner ini?
+          {{ modalMessage.message }}
         </p>
         <h2 class="font-lato text-md font-bold text-gray-800">
           {{ bannerDetail.title }}
@@ -55,20 +58,17 @@
         <div class="flex gap-4 justify-end">
           <BaseButton
             class="border-green-700 hover:bg-green-50 text-sm text-green-700"
-            @click="showDeleteModal"
+            @click="handleCloseModal"
           >
             Batal
           </BaseButton>
           <BaseButton
             class="bg-red-500 hover:bg-red-400 text-sm text-white"
-            :disabled="deleteLoading"
-            @click="deleteBannerById(bannerDetail.id)"
+            :disabled="modalState === 'LOADING'"
+            @click="modalMessage.action(bannerDetail.id)"
           >
-            <p v-if="!deleteLoading">
-              Ya, saya yakin
-            </p>
             <p
-              v-else
+              v-if="modalState === 'LOADING'"
               class="flex gap-2 items-center text-gray-500"
             >
               <JdsSpinner
@@ -77,34 +77,119 @@
               />
               Loading...
             </p>
+            <p v-else>
+              Ya, saya yakin
+            </p>
           </BaseButton>
         </div>
       </template>
     </BaseModal>
 
-    <!-- Submit Progress -->
+    <!-- Swap Status Prompt -->
+    <BaseModal
+      v-if="modalState === 'STATUS_SWAP'"
+      :open="modalState === 'STATUS_SWAP'"
+    >
+      <div class="w-full h-full">
+        <h1 class="font-roboto text-xl leading-8 font-medium text-green-700 mb-6">
+          {{ modalMessage.title }}
+        </h1>
+        <p class="font-lato text-sm text-gray-800 mb-6">
+          {{ modalMessage.message }}
+        </p>
+        <div class="grid grid-cols-2 gap-6">
+          <div>
+            <h2 class="font-roboto text-base leading-6 text-[#627798]">
+              Banner Awal (Aktif)
+            </h2>
+            <p class="font-roboto text-base leading-6 text-blue-gray-800 mb-6">
+              {{ activeBanner.title }}
+            </p>
+            <div class="w-[220px] h-[120px] rounded-md overflow-hidden">
+              <img
+                :src="activeBanner.image?.desktop"
+                :alt="activeBanner.title"
+                class="w-full h-full object-cover"
+              >
+            </div>
+          </div>
+          <div>
+            <h2 class="font-roboto text-base leading-6 text-[#627798]">
+              Banner Baru:
+            </h2>
+            <p class="font-roboto text-base leading-6 text-blue-gray-800 mb-6">
+              {{ bannerDetail.title }}
+            </p>
+            <div class="w-[220px] h-[120px] rounded-md overflow-hidden">
+              <img
+                :src="bannerDetail.image?.desktop"
+                :alt="bannerDetail.title"
+                class="w-full h-full object-cover"
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+      <template #footer>
+        <div class="flex gap-4 justify-end">
+          <BaseButton
+            class="border-green-700 hover:bg-green-50 text-sm text-green-700"
+            @click="handleCloseModal"
+          >
+            Batal
+          </BaseButton>
+          <BaseButton
+            class="bg-green-600 hover:bg-green-700 text-sm text-white"
+            :disabled="modalState === 'LOADING'"
+            @click="modalMessage.action(bannerDetail.id)"
+          >
+            <p
+              v-if="modalState === 'LOADING'"
+              class="flex gap-2 items-center text-gray-500"
+            >
+              <JdsSpinner
+                size="16"
+                foreground="#757575"
+              />
+              Loading...
+            </p>
+            <p v-else>
+              Ya, saya yakin
+            </p>
+          </BaseButton>
+        </div>
+      </template>
+    </BaseModal>
 
+    <!-- Action Progress -->
     <ProgressModal
-      :open="deleteStatus === 'LOADING'"
+      v-if="modalState === 'LOADING'"
+      :open="modalState === 'LOADING'"
       :value="progressValue"
     />
 
     <!-- Success or Erros Message Modal -->
-
     <BaseModal
-      :open="(deleteStatus === 'SUCCESS' || deleteStatus === 'ERROR') || !(deleteStatus === 'NONE')"
+      v-if="modalState === 'ERROR' || modalState === 'SUCCESS'"
+      :open="modalState === 'ERROR' || modalState === 'SUCCESS'"
     >
       <div class="w-full h-full px-2 pb-4">
         <h1 class="font-roboto font-medium text-green-700 text-[21px] leading-[34px] mb-6">
-          {{ messageTitle }}
+          {{ modalMessage.title }}
         </h1>
         <div class="flex items-center gap-4">
           <JdsIcon
-            :name="messageIconName"
-            :class="messageIconClassName"
+            v-show="modalState === 'SUCCESS'"
+            name="check-mark-circle"
+            class="text-green-600"
+          />
+          <JdsIcon
+            v-show="modalState === 'ERROR'"
+            name="warning"
+            class="text-red-600"
           />
           <p class="text-sm leading-6 text-gray-800">
-            {{ messageBody }}
+            {{ modalMessage.message }}
           </p>
         </div>
       </div>
@@ -112,7 +197,7 @@
         <div class="flex w-full h-full items-center justify-center gap-4 p-2">
           <BaseButton
             class="bg-green-700 hover:bg-green-600 text-sm text-white"
-            @click="messageAction"
+            @click="handleCloseModal"
           >
             Saya Mengerti
           </BaseButton>
@@ -128,13 +213,23 @@ import LinkButton from '@/common/components/LinkButton';
 import BaseModal from '@/common/components/BaseModal';
 import BaseButton from '@/common/components/BaseButton';
 import ProgressModal from '@/common/components/ProgressModal';
-import { STATUS_MODAL } from '@/common/constants/index';
 import { RepositoryFactory } from '@/repositories/RepositoryFactory';
 
 const popupBannerRepository = RepositoryFactory.get('popupBanner');
 
+const MODAL_STATE = Object.freeze({
+  NONE: 'NONE',
+  LOADING: 'LOADING',
+  DELETE_CONFIRMATION: 'DELETE_CONFIRMATION',
+  STATUS_SWAP: 'STATUS_SWAP',
+  STATUS_ACTIVATE: 'STATUS_ACTIVATE',
+  STATUS_DEACTIVATE: 'STATUS_DEACTIVATE',
+  ERROR: 'ERROR',
+  SUCCESS: 'SUCCESS',
+});
+
 export default {
-  name: 'Agenda',
+  name: 'PopupBannerList',
   components: {
     PopupBannerTable,
     LinkButton,
@@ -145,6 +240,7 @@ export default {
   data() {
     return {
       banners: [],
+      activeBanner: null,
       loading: false,
       meta: {
         total_count: 0,
@@ -158,33 +254,14 @@ export default {
         q: '',
       },
       bannerDetail: {},
-      isModalDelete: false,
-      deleteLoading: false,
       progressValue: 0,
-      deleteStatus: STATUS_MODAL.NONE,
-      successMessage: {
+      modalState: MODAL_STATE.NONE,
+      modalMessage: {
         title: '',
-        body: '',
-      },
-      errorMessage: {
-        title: '',
-        body: '',
+        message: '',
+        action: null,
       },
     };
-  },
-  computed: {
-    messageTitle() {
-      return this.deleteStatus === 'SUCCESS' ? this.successMessage.title : this.errorMessage.title;
-    },
-    messageBody() {
-      return this.deleteStatus === 'SUCCESS' ? this.successMessage.body : this.errorMessage.body;
-    },
-    messageIconName() {
-      return this.deleteStatus === 'SUCCESS' ? 'check-mark-circle' : 'warning';
-    },
-    messageIconClassName() {
-      return this.deleteStatus === 'SUCCESS' ? 'text-green-600' : 'text-red-600';
-    },
   },
   async mounted() {
     await this.fetchBanners();
@@ -205,64 +282,140 @@ export default {
         });
       } finally {
         this.loading = false;
+        this.setActiveBanner();
       }
+    },
+    setActiveBanner() {
+      const activeBanner = this.banners.filter((banner) => banner.status === 'ACTIVE');
+      if (activeBanner.length === 0) return;
+
+      this.activeBanner = {
+        ...activeBanner[0],
+      };
     },
     setParams(data) {
       const newParams = { ...this.params, ...data };
       this.params = { ...newParams };
     },
+    setModalMessage(messageObj) {
+      this.modalMessage = { ...messageObj };
+    },
     onUpdatePagination(data) {
       this.setParams(data);
       this.fetchBanners();
     },
-    showDeleteModal() {
-      this.isModalDelete = !this.isModalDelete;
-    },
-    deleteBanner(id) {
+    handleDeleteBanner(id) {
       const filterBanner = this.banners.filter((banner) => banner.id === id)[0];
       this.bannerDetail = { ...filterBanner };
-      this.showDeleteModal();
+
+      this.modalState = MODAL_STATE.DELETE_CONFIRMATION;
+
+      this.setModalMessage({
+        title: 'Hapus Banner!',
+        message: 'Apakah Anda yakin ingin menghapus banner ini?',
+        action: () => this.deleteBannerById(id),
+      });
+    },
+    handleUpdateStatus(item) {
+      const filterBanner = this.banners.filter((banner) => banner.id === item.id)[0];
+      this.bannerDetail = { ...filterBanner };
+
+      if (this.activeBanner !== null && item.status === 'NON-ACTIVE') {
+        this.modalState = MODAL_STATE.STATUS_SWAP;
+
+        this.setModalMessage({
+          title: 'Konfirmasi Penggantian',
+          message: 'Apakah Anda yakin akan mengganti Banner Pop-up yang sedang aktif?',
+          action: () => this.updateBannerStatusById(this.bannerDetail.id, 'ACTIVE'),
+        });
+      }
+
+      if (this.activeBanner === null && item.status === 'NON-ACTIVE') {
+        this.modalState = MODAL_STATE.STATUS_ACTIVATE;
+
+        this.setModalMessage({
+          title: 'Konfirmasi Pengaktifan',
+          message: 'Apakah Anda yakin ingin mengaktifkan banner ini?',
+          action: () => this.updateBannerStatusById(this.bannerDetail.id, 'ACTIVE'),
+        });
+      }
+
+      if (item.status === 'ACTIVE') {
+        this.modalState = MODAL_STATE.STATUS_DEACTIVATE;
+
+        this.setModalMessage({
+          title: 'Konfirmasi Pengaktifan',
+          message: 'Apakah Anda yakin ingin menonaktifkan banner ini?',
+          action: () => this.updateBannerStatusById(this.bannerDetail.id, 'NON-ACTIVE'),
+        });
+      }
     },
     async deleteBannerById(id) {
       try {
-        this.deleteLoading = true;
+        this.modalState = MODAL_STATE.LOADING;
         const response = await popupBannerRepository.deleteBannerById(id);
         if (response.status === 204) {
-          this.deleteStatus = STATUS_MODAL.LOADING;
           this.progressValue = 25;
           setTimeout(() => {
             this.progressValue = 75;
             setTimeout(() => {
-              this.successMessage = {
+              this.setModalMessage({
                 title: 'Berhasil dihapus!',
-                body: `Banner ${this.bannerDetail.title} berhasil hapus.`,
-              };
-              this.deleteStatus = STATUS_MODAL.SUCCESS;
+                message: `Banner ${this.bannerDetail.title} berhasil hapus.`,
+              });
+              this.modalState = MODAL_STATE.SUCCESS;
             }, 150);
           }, 150);
         }
       } catch {
-        this.errorMessage = {
+        this.setModalMessage({
           title: 'Hapus Banner Gagal',
-          body: 'Banner yang Anda buat gagal dihapus.',
-        };
-        this.deleteStatus = STATUS_MODAL.ERROR;
-      } finally {
-        this.deleteLoading = false;
-        this.showDeleteModal();
+          message: 'Banner yang Anda buat gagal dihapus.',
+        });
+        this.modalState = MODAL_STATE.ERROR;
       }
     },
-    resetSubmitState() {
-      this.deleteStatus = STATUS_MODAL.NONE;
-      this.progressValue = 0;
-      this.successMessage.title = '';
-      this.successMessage.body = '';
-      this.errorMessage.title = '';
-      this.errorMessage.body = '';
+    async updateBannerStatusById(id, status) {
+      try {
+        this.modalState = MODAL_STATE.LOADING;
+
+        const response = await popupBannerRepository.updateBannerStatusById(id, {
+          status,
+        });
+
+        if (response.status === 200) {
+          this.progressValue = 25;
+          setTimeout(() => {
+            this.progressValue = 75;
+            setTimeout(() => {
+              this.setModalMessage({
+                title: 'Berhasil!',
+                message: `Banner berhasil ${status === 'ACTIVE' ? 'diaktifkan' : 'dinonaktifkan'}`,
+              });
+              this.modalState = MODAL_STATE.SUCCESS;
+            }, 150);
+          }, 150);
+        }
+      } catch (error) {
+        this.setModalMessage({
+          title: 'Update Gagal!',
+          message: 'Update status gagal, mohon coba beberapa saat lagi',
+        });
+        this.modalState = MODAL_STATE.ERROR;
+      }
     },
-    messageAction() {
-      this.resetSubmitState();
+    async handleCloseModal() {
+      this.resetModalState();
+      await this.$nextTick();
       this.fetchBanners();
+    },
+    resetModalState() {
+      this.modalState = MODAL_STATE.NONE;
+      this.progressValue = 0;
+      this.modalMessage.title = '';
+      this.modalMessage.body = '';
+      this.modalMessage.action = null;
+      this.activeBanner = null;
     },
   },
 };

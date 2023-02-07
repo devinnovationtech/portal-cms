@@ -14,7 +14,7 @@
 import TabBar from '@/common/components/TabBar';
 
 export default {
-  name: 'News',
+  name: 'LandingPage',
   components: {
     TabBar,
     PopupBanner: () => import('@/components/LandingPage/PopupBanner'),

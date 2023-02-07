@@ -52,4 +52,16 @@ export default {
   createBanner(body) {
     return Repository.post(`${resource}`, body);
   },
+
+  /** Update Banner Status by Id
+   * @param {number} id
+   * @param {Object} body
+   *
+   * @property {Object} status
+   *
+   * @returns {Promise}
+   */
+  updateBannerStatusById(id, body) {
+    return Repository.patch(`${resource}/${id}/status`, body);
+  },
 };

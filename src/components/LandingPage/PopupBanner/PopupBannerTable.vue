@@ -63,6 +63,7 @@
         <JdsToggle
           :label="getStatusLabel(item.status)"
           :checked="getStatusBool(item.status)"
+          @change="$emit('change:status', item)"
         />
       </template>
 
