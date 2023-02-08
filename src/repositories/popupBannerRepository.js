@@ -53,6 +53,21 @@ export default {
     return Repository.post(`${resource}`, body);
   },
 
+  /** Update Banner
+   * @param {number} id
+   * @param {Object} body
+   *
+   * @property {Object} image - contain property { dekstop, mobile }
+   * @property {string} title
+   * @property {Object} custom_button - contain property { label, link }
+   * @property {Object} scheduler - contain property { duration, start_date }
+   *
+   * @returns {Promise}
+   */
+  updateBanner(id, body) {
+    return Repository.put(`${resource}/${id}`, body);
+  },
+
   /** Update Banner Status by Id
    * @param {number} id
    * @param {Object} body

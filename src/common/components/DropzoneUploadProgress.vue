@@ -2,12 +2,19 @@
   <div
     :class="{
       'min-h-[110px] w-full rounded-md px-5 py-4 border border-blue-600': true,
-      'border-red-600': status === 'ERROR'
+      'border-red-600': status === 'ERROR',
     }"
   >
     <div class="grid grid-cols-[auto,1fr,auto] gap-x-6">
       <div class="relative w-[86px] h-[75px] overflow-hidden rounded-md">
+        <!-- Display image using url if has an url (for edit mode) -->
         <img
+          v-if="status === 'HASDEFAULT'"
+          :src="imageUrl"
+          class="w-full h-full object-cover"
+        >
+        <img
+          v-else
           :src="image"
           class="w-full h-full object-cover"
         >
@@ -21,7 +28,7 @@
       </div>
       <div class="flex flex-col justify-between">
         <div class="flex mb-3">
-          <p class="font-lato font-bold text-[15px] leading-6 line-clamp-2">
+          <p class="font-lato font-bold text-[15px] leading-6 line-clamp-1 break-all">
             {{ fileName }}
           </p>
           <span
@@ -57,12 +64,19 @@
           >
             Upload gagal, coba periksa koneksi anda kembali
           </p>
+          <!-- SIZE (for edit purposes) -->
+          <p
+            v-show="fileSize && status === 'HASDEFAULT'"
+            class="col-span-3 w-full font-lato text-sm text-gray-800"
+          >
+            {{ fileSize }}
+          </p>
         </div>
       </div>
       <div class="self-center">
         <!-- Delete Button -->
         <button
-          v-if="status === 'SUCCESS'"
+          v-if="status === 'SUCCESS' || status === 'HASDEFAULT'"
           type="button"
           class="w-7 h-7 flex items-center justify-center bg-red-50 rounded-full"
           @click="$emit('delete')"
@@ -114,11 +128,19 @@ export default {
       type: File,
       default: null,
     },
+    imageUrl: {
+      type: String,
+      default: '',
+    },
+    imageSize: {
+      type: Number,
+      default: 0,
+    },
     status: {
       type: String,
       validator(value) {
         // The value must match one of these strings
-        return ['NONE', 'UPLOADING', 'SUCCESS', 'ERROR'].includes(value);
+        return ['NONE', 'UPLOADING', 'SUCCESS', 'ERROR', 'HASDEFAULT'].includes(value);
       },
       default: 'NONE',
     },
@@ -131,6 +153,14 @@ export default {
   computed: {
     fileName() {
       return this.file ? this.file.name : '';
+    },
+    fileSize() {
+      if (this.imageSize === 0) {
+        return null;
+      }
+
+      const sizeToMB = this.imageSize / 1000000;
+      return `${sizeToMB.toFixed(2)} MB`;
     },
   },
   watch: {

@@ -37,6 +37,15 @@ export default [
     },
   },
   {
+    path: '/popup-banner/detail/:id/ubah',
+    name: 'Ubah Pop-up Banner',
+    component: () => import('@/pages/LandingPage/CreateEditPopupBanner.vue'),
+    meta: {
+      mode: 'edit',
+      layout: 'AppLayoutPrivate',
+    },
+  },
+  {
     path: '/popup-banner/detail/:id',
     name: 'Pop-up Banner Detail',
     component: () => import('@/pages/LandingPage/PopupBannerDetailPage'),

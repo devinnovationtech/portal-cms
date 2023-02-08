@@ -34,15 +34,13 @@
         </li>
 
         <!-- Edit Action -->
-        <li>
-          <a
+        <li v-if="item.status === 'NON-ACTIVE'">
+          <router-link
             class="font-lato text-sm leading-4 text-gray-800"
-            href="#"
-            target="_blank"
-            rel="noopener"
+            :to="`/popup-banner/detail/${item.id}/ubah`"
           >
             Ubah
-          </a>
+          </router-link>
         </li>
 
         <!-- Delete Action -->

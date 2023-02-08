@@ -63,6 +63,8 @@
                   :file="imageDesktopFile"
                   :progress="imageDesktopUploadProgress"
                   :status="imageDesktopUploadStatus"
+                  :image-url="form.image.desktop.url"
+                  :image-size="form.image.desktop.size"
                   class="mt-4"
                   @retry="handleRetryUpload('DESKTOP')"
                   @delete="handleDeleteUpload('DESKTOP')"
@@ -101,6 +103,8 @@
                   :file="imageMobileFile"
                   :progress="imageMobileUploadProgress"
                   :status="imageMobileUploadStatus"
+                  :image-url="form.image.mobile.url"
+                  :image-size="form.image.mobile.size"
                   class="mt-4"
                   @retry="handleRetryUpload('MOBILE')"
                   @delete="handleDeleteUpload('MOBILE')"
@@ -114,18 +118,18 @@
               rules="required"
             >
               <input
-                v-model="form.image.desktop"
-                hidden
+                v-model="form.image.desktop.url"
                 type="text"
+                hidden
               >
             </ValidationProvider>
             <ValidationProvider
               rules="required"
             >
               <input
-                v-model="form.image.mobile"
-                hidden
+                v-model="form.image.mobile.url"
                 type="text"
+                hidden
               >
             </ValidationProvider>
           </section>
@@ -257,6 +261,7 @@
                 'required': isScheduled,
                 'nobackdate': true
               }"
+              immediate
             >
               <div class="flex flex-col">
                 <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
@@ -299,7 +304,7 @@
         </h1>
         <div class="flex items-center gap-4">
           <p class="text-sm leading-6 to-blue-gray-800">
-            Apakah Anda ingin menyimpan agenda ini terlebih dahulu?
+            Apakah Anda ingin menyimpan banner ini terlebih dahulu?
           </p>
         </div>
       </div>
@@ -313,7 +318,7 @@
           </BaseButton>
           <BaseButton
             class="bg-green-700 hover:bg-green-600 text-sm text-white"
-            @click="submitForm"
+            @click="handleSubmit"
           >
             Ya, simpan banner
           </BaseButton>
@@ -379,6 +384,7 @@ const IMAGE_UPLOAD_STATUS = Object.freeze({
   UPLOADING: 'UPLOADING',
   SUCCESS: 'SUCCESS',
   ERROR: 'ERROR',
+  HASDEFAULT: 'HASDEFAULT',
 });
 
 const FORM_SUBMIT_STATUS = Object.freeze({
@@ -400,6 +406,25 @@ export default {
     ProgressModal,
     ValidationProvider,
     ValidationObserver,
+  },
+  async beforeRouteEnter(to, from, next) {
+    try {
+      if (to.meta.mode === 'create') {
+        next();
+      } else {
+        const { id } = to.params;
+        const response = await bannerRepository.getBannerById(id);
+        const { status } = response.data.data;
+
+        if (status === 'NON-ACTIVE') {
+          next();
+        } else {
+          next('/landing-page');
+        }
+      }
+    } catch (error) {
+      next('/landing-page');
+    }
   },
   data() {
     return {
@@ -448,6 +473,12 @@ export default {
     };
   },
   computed: {
+    mode() {
+      return this.$route.meta?.mode || 'create';
+    },
+    isEditMode() {
+      return this.mode === 'edit';
+    },
     endDate() {
       const { duration, startDate } = this.form.scheduler;
 
@@ -484,7 +515,20 @@ export default {
       }
     },
   },
-  mounted() {
+  async mounted() {
+    if (this.isEditMode) {
+      try {
+        const { id } = this.$route.params;
+        const response = await this.fetchData(id);
+        const { data } = response.data;
+        this.setInitialData(data);
+      } catch (error) {
+        this.$toast({
+          type: 'error',
+          message: 'Gagal mendapatkan data banner.',
+        });
+      }
+    }
     /**
      * Add disabled attribute manually because currently JdsDateInput
      * component doesn't have disabled state/functionality
@@ -518,6 +562,18 @@ export default {
         this.$router.push('/landing-page');
       } else {
         this.resetSubmitState();
+      }
+    },
+    async fetchData(id) {
+      try {
+        const response = await bannerRepository.getBannerById(id);
+        return new Promise((resolve) => {
+          resolve(response);
+        });
+      } catch (error) {
+        return new Promise(() => {
+          throw new Error(error);
+        });
       }
     },
     async handleUploadByType(file, type) {
@@ -618,6 +674,13 @@ export default {
 
       return false;
     },
+    handleSubmit() {
+      if (this.mode === 'create') {
+        this.submitForm();
+      } else {
+        this.updateForm();
+      }
+    },
     handleRetryUpload(type) {
       if (type === 'DESKTOP') {
         this.uploadDesktopImage(this.imageDesktopFile);
@@ -667,8 +730,8 @@ export default {
 
             setTimeout(() => {
               this.successMessage = {
-                title: 'Tambah Agenda Berhasil',
-                body: 'Agenda yang Anda buat berhasil ditambahkan.',
+                title: 'Tambah Pop-up Banner Berhasil',
+                body: 'Banner yang Anda buat berhasil ditambahkan.',
               };
               this.submitStatus = FORM_SUBMIT_STATUS.SUCCESS;
             }, 150);
@@ -681,6 +744,72 @@ export default {
         };
         this.submitStatus = FORM_SUBMIT_STATUS.ERROR;
       }
+    },
+    async updateForm() {
+      // @todo: add update form functionality
+      try {
+        this.submitStatus = FORM_SUBMIT_STATUS.LOADING;
+        this.submitProgress = 25;
+
+        const { id } = this.$route.params;
+        const formData = this.generateFormData();
+
+        const response = await bannerRepository.updateBanner(id, formData);
+
+        if (response.status === 200) {
+          // Add timeout to prevent progress bar too fast
+          setTimeout(() => {
+            this.submitProgress = 75;
+
+            setTimeout(() => {
+              this.successMessage = {
+                title: 'Update Pop-up Banner Berhasil',
+                body: 'Banner yang Anda ubah berhasil disimpan.',
+              };
+              this.submitStatus = FORM_SUBMIT_STATUS.SUCCESS;
+            }, 150);
+          }, 150);
+        }
+      } catch (error) {
+        this.errorMessage = {
+          title: 'Update Banner Gagal',
+          body: 'Banner yang Anda ubah gagal disimpan.',
+        };
+        this.submitStatus = FORM_SUBMIT_STATUS.ERROR;
+      }
+    },
+    setInitialData(data) {
+      this.imageDesktopUploadStatus = IMAGE_UPLOAD_STATUS.HASDEFAULT;
+      this.imageMobileUploadStatus = IMAGE_UPLOAD_STATUS.HASDEFAULT;
+
+      this.form.image.desktop.url = data.image?.desktop;
+      this.form.image.desktop.fileName = '';
+      this.form.image.desktop.size = 0;
+
+      this.form.image.mobile.url = data.image?.mobile;
+      this.form.image.mobile.fileName = '';
+      this.form.image.mobile.size = 0;
+
+      this.form.title = data.title;
+
+      if (data.button_label || data.link) {
+        this.form.customButton.label = data.button_label;
+        this.form.customButton.link = data.link;
+      } else {
+        this.isCustomizeButton = false;
+        this.form.customButton.label = '';
+        this.form.customButton.link = '';
+      }
+
+      if (data.duration === -1) {
+        this.isScheduled = false;
+      } else {
+        this.form.scheduler.duration = data.duration;
+        this.form.scheduler.startDate = formatDate(data.start_date, 'dd/MM/yyyy');
+      }
+
+      this.imageDesktopFile = new File([''], data.image?.desktop);
+      this.imageMobileFile = new File([''], data.image?.desktop);
     },
     resetSubmitState() {
       this.submitStatus = FORM_SUBMIT_STATUS.NONE;
@@ -714,8 +843,8 @@ export default {
           mobile: this.form.image.mobile.url,
         },
         custom_button: {
-          label: this.form.customButton.label,
-          link: this.form.customButton.link,
+          label: this.isCustomizeButton ? this.form.customButton.label : '',
+          link: this.isCustomizeButton ? this.form.customButton.link : '',
         },
         scheduler: {
           duration: this.form.scheduler.duration,
