@@ -130,7 +130,7 @@
 </template>
 
 <script>
-import { formatDate, getHour, getMinute } from '@/common/helpers/date';
+import { formatDate } from '@/common/helpers/date';
 
 export default {
   name: 'PopUpBannerDetailTable',
@@ -186,11 +186,9 @@ export default {
       return `${startDate} - ${endDate}`;
     },
     lastUpdate() {
-      const updateDate = formatDate(this.banner?.updated_at);
-      const hour = getHour(this.banner?.updated_at);
-      const minute = getMinute(this.banner?.updated_at);
+      const updateDate = formatDate(this.banner?.updated_at, 'dd/MM/yyyy - hh:mm');
       if (this.banner?.updated_at) {
-        return `Terakhir disimpan pada: ${updateDate} - ${hour}:${minute}`;
+        return `Terakhir disimpan pada: ${updateDate}`;
       }
       return '-';
     },
