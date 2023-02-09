@@ -266,7 +266,7 @@
                   Waktu Penayangan
                 </label>
                 <div class="date-input flex items-start">
-                  <div class="w-full">
+                  <div class="relative w-full">
                     <JdsDateInput
                       v-model="form.scheduler.startDate"
                       :class="classes"
@@ -277,6 +277,10 @@
                     >
                       {{ errors[0] }}
                     </p>
+                    <div
+                      v-if="!isScheduled"
+                      class="absolute inset-0 bg-gray-500 opacity-20 rounded-md cursor-not-allowed"
+                    />
                   </div>
                   <div class="min-w-[150px] ml-4 mt-2 ">
                     <p
@@ -527,22 +531,6 @@ export default {
         });
       }
     }
-    /**
-     * Add disabled attribute manually because currently JdsDateInput
-     * component doesn't have disabled state/functionality
-     */
-    const dateInput = document.querySelector('.date-input input');
-    const dateInputWrapperEl = document.querySelector('.date-input .jds-date-input__input');
-
-    this.$watch('isScheduled', (value) => {
-      if (value === false) {
-        dateInput.setAttribute('disabled', true);
-        dateInputWrapperEl.setAttribute('disabled', true);
-      } else {
-        dateInput.removeAttribute('disabled');
-        dateInputWrapperEl.removeAttribute('disabled');
-      }
-    });
   },
   methods: {
     normalizeDate(initialDate) {
