@@ -416,9 +416,9 @@ export default {
       } else {
         const { id } = to.params;
         const response = await bannerRepository.getBannerById(id);
-        const { status } = response.data.data;
+        const { is_live: isLive } = response.data.data;
 
-        if (status === 'NON-ACTIVE') {
+        if (isLive === 0) {
           next();
         } else {
           next('/landing-page');

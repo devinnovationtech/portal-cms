@@ -155,18 +155,10 @@ export default {
       return this.banner?.link || '-';
     },
     status() {
-      let bannerStatus;
-      switch (this.banner?.status) {
-        case ('ACTIVE'):
-          bannerStatus = 'Aktif';
-          break;
-        case ('NON-ACTIVE'):
-          bannerStatus = 'Tidak Aktif';
-          break;
-        default:
-          bannerStatus = '-';
+      if (this.banner.is_live === 1) {
+        return 'Aktif';
       }
-      return bannerStatus;
+      return 'Tidak Aktif';
     },
     duration() {
       const duration = this.banner?.duration || null;

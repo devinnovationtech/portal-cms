@@ -61,8 +61,8 @@
       <!-- eslint-disable-next-line vue/valid-v-slot -->
       <template #item.status="{item}">
         <JdsToggle
-          :label="getStatusLabel(item.status)"
-          :checked="getStatusBool(item.status)"
+          :label="getStatusLabel(item.is_live)"
+          :checked="getStatusBool(item.is_live)"
           @change="$emit('change:status', item)"
         />
       </template>
@@ -131,11 +131,11 @@ export default {
     },
   },
   methods: {
-    getStatusLabel(status) {
-      return status === 'ACTIVE' ? 'Aktif' : 'Tidak Aktif';
+    getStatusLabel(isLive) {
+      return isLive === 1 ? 'Aktif' : 'Tidak Aktif';
     },
-    getStatusBool(status) {
-      return status === 'ACTIVE';
+    getStatusBool(isLive) {
+      return isLive === 1;
     },
     onPaginationChange(action, value) {
       const paginationObj = { ...this.pagination };

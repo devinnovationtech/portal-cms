@@ -34,7 +34,7 @@
         </li>
 
         <!-- Edit Action -->
-        <li v-if="item.status === 'NON-ACTIVE'">
+        <li v-if="item.is_live === 0">
           <router-link
             class="font-lato text-sm leading-4 text-gray-800"
             :to="`/popup-banner/detail/${item.id}/ubah`"
