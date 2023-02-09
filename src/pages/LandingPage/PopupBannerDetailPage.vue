@@ -21,15 +21,21 @@
         <!-- Update Button -->
 
         <LinkButton
-          :href="linkBannerUpdatePage"
+          :href="editLink"
           variant="secondary"
-          class="hover:bg-green-50 font-lato text-sm font-bold text-green-700"
+          :class="{
+            'hover:bg-green-50 font-lato text-sm font-bold text-green-700': true,
+            'hover:bg-gray-300 text-gray-600 border-gray-600': isLive
+          }"
         >
           <template #icon-left>
             <JdsIcon
               name="pencil"
               size="16"
-              class="h-4 text-green-700"
+              :class="{
+                'h-4 text-green-700': true,
+                'text-gray-600': isLive
+              }"
             />
           </template>
           Ubah Data
@@ -237,8 +243,6 @@ export default {
         title: '',
         body: '',
       },
-      // @TODO: change the right link to update banner page
-      linkBannerUpdatePage: '/landing-page',
     };
   },
   computed: {
@@ -269,6 +273,16 @@ export default {
     },
     messageIconClassName() {
       return this.modalStatus === 'SUCCESS' ? 'text-green-600' : 'text-red-600';
+    },
+    editLink() {
+      if (this.isLive) {
+        return '#';
+      }
+
+      return `/popup-banner/detail/${this.banner.id}/ubah`;
+    },
+    isLive() {
+      return this.banner.is_live === 1;
     },
   },
   async mounted() {
