@@ -176,9 +176,7 @@
             </div>
             <ValidationProvider
               v-slot="{ errors }"
-              :rules="{
-                'required': isCustomizeButton
-              }"
+              :rules="isCustomizeButton ? 'max:20|required' : ''"
             >
               <div class="flex flex-col mb-4">
                 <label
