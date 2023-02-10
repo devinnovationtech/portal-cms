@@ -768,13 +768,13 @@ export default {
       this.imageDesktopUploadStatus = IMAGE_UPLOAD_STATUS.HASDEFAULT;
       this.imageMobileUploadStatus = IMAGE_UPLOAD_STATUS.HASDEFAULT;
 
-      this.form.image.desktop.url = data.image?.desktop;
-      this.form.image.desktop.fileName = '';
-      this.form.image.desktop.size = 0;
+      this.form.image.desktop.url = data.image?.desktop?.file_download_uri;
+      this.form.image.desktop.fileName = data.image?.desktop?.file_name;
+      this.form.image.desktop.size = data.image?.desktop?.size;
 
-      this.form.image.mobile.url = data.image?.mobile;
-      this.form.image.mobile.fileName = '';
-      this.form.image.mobile.size = 0;
+      this.form.image.mobile.url = data.image?.mobile?.file_download_uri;
+      this.form.image.mobile.fileName = data.image?.mobile?.file_name;
+      this.form.image.mobile.size = data.image?.mobile?.size;
 
       this.form.title = data.title;
 
@@ -794,8 +794,8 @@ export default {
         this.form.scheduler.startDate = formatDate(data.start_date, 'dd/MM/yyyy');
       }
 
-      this.imageDesktopFile = new File([''], data.image?.desktop);
-      this.imageMobileFile = new File([''], data.image?.desktop);
+      this.imageDesktopFile = new File([''], data.image?.desktop?.file_name);
+      this.imageMobileFile = new File([''], data.image?.mobile?.file_name);
     },
     resetSubmitState() {
       this.submitStatus = FORM_SUBMIT_STATUS.NONE;
