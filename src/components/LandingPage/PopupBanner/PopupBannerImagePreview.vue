@@ -102,6 +102,9 @@ export default {
     isSelected: {
       type: String,
       default: 'Desktop',
+      validator(value) {
+        return ['Desktop', 'Mobile'].includes(value);
+      },
     },
     isContentMobile: {
       type: Boolean,

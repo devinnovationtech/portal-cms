@@ -78,8 +78,8 @@
       <div class="bg-gray-50 w-full h-full overflow-hidden rounded-[8px]">
         <component
           :is="imagePreviewComponent"
-          :image-desktop="banner?.image.desktop || defaultImageDesktop"
-          :image-mobile="banner?.image.mobile || defaultImageMobile"
+          :image-desktop="banner?.image.desktop.file_download_uri || defaultImageDesktop"
+          :image-mobile="banner?.image.mobile.file_download_uri || defaultImageMobile"
           v-bind="{ ...propsImagePreview }"
           @showContentMobile="showContentMobile"
         />
