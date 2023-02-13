@@ -833,6 +833,7 @@ export default {
           link: this.isCustomizeButton ? this.form.customButton.link : '',
         },
         scheduler: {
+          is_scheduled: this.isScheduled ? 1 : 0,
           duration: this.form.scheduler.duration,
           start_date: formatDate(normalizedStartDate, 'yyyy-MM-dd'),
         },
