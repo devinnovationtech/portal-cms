@@ -20,6 +20,40 @@ export default [
     },
   },
   {
+    path: '/landing-page',
+    name: 'Landing Page',
+    component: () => import('@/pages/LandingPage'),
+    meta: {
+      layout: 'AppLayoutPrivate',
+    },
+  },
+  {
+    path: '/popup-banner/tambah',
+    name: 'Tambah Pop-up Banner',
+    component: () => import('@/pages/LandingPage/CreateEditPopupBanner.vue'),
+    meta: {
+      mode: 'create',
+      layout: 'AppLayoutPrivate',
+    },
+  },
+  {
+    path: '/popup-banner/detail/:id/ubah',
+    name: 'Ubah Pop-up Banner',
+    component: () => import('@/pages/LandingPage/CreateEditPopupBanner.vue'),
+    meta: {
+      mode: 'edit',
+      layout: 'AppLayoutPrivate',
+    },
+  },
+  {
+    path: '/popup-banner/detail/:id',
+    name: 'Pop-up Banner Detail',
+    component: () => import('@/pages/LandingPage/PopupBannerDetailPage'),
+    meta: {
+      layout: 'AppLayoutPrivate',
+    },
+  },
+  {
     path: '/layanan',
     name: 'Layanan',
     component: () => import('@/pages/Home'),

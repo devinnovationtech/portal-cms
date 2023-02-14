@@ -107,6 +107,7 @@ import ServiceIcon from '@/assets/icons/layanan.svg?inline';
 import AgendaIcon from '@/assets/icons/agenda.svg?inline';
 import NewsIcon from '@/assets/icons/berita.svg?inline';
 import SettingIcon from '@/assets/icons/setting.svg?inline';
+import LandingPageIcon from '@/assets/icons/landing-page.svg?inline';
 
 export default {
   name: 'Sidebar',
@@ -116,6 +117,7 @@ export default {
     AgendaIcon,
     NewsIcon,
     SettingIcon,
+    LandingPageIcon,
   },
   data() {
     return {

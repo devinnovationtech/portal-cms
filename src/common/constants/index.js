@@ -5,6 +5,12 @@ export const NAVIGATION_MENU = [
     icon: 'DashboardIcon',
   },
   {
+    link: '/landing-page',
+    label: 'Landing Page',
+    icon: 'LandingPageIcon',
+    arrow: true,
+  },
+  {
     link: '/layanan',
     label: 'Layanan',
     icon: 'ServiceIcon',
@@ -219,3 +225,65 @@ export const MEMBER_TABLE_HEADER = [
     text: 'Aksi',
   },
 ];
+
+export const POPUP_BANNER_TABLE_HEADER = [
+  {
+    key: 'title',
+    text: 'Judul Banner',
+  },
+  {
+    key: 'preview',
+    text: 'Preview',
+  },
+  {
+    key: 'link',
+    text: 'Link Button',
+  },
+  {
+    key: 'duration',
+    text: 'Durasi Penayangan',
+  },
+  {
+    key: 'start_date',
+    text: 'Waktu Mulai Penayangan',
+  },
+  {
+    key: 'status',
+    text: 'Status',
+  },
+  {
+    key: 'action',
+    text: 'Aksi',
+  },
+];
+
+export const POPUP_BANNER_SCHEDULE_OPTIONS = [
+  {
+    label: '2 Hari',
+    value: 2,
+  },
+  {
+    label: '5 Hari',
+    value: 5,
+  },
+  {
+    label: '7 Hari',
+    value: 7,
+  },
+  {
+    label: '14 Hari',
+    value: 14,
+  },
+  {
+    label: '30 Hari',
+    value: 30,
+  },
+];
+
+export const STATUS_MODAL = {
+  NONE: 'NONE',
+  CONFIRMATION: 'CONFIRMATION',
+  LOADING: 'LOADING',
+  SUCCESS: 'SUCCESS',
+  ERROR: 'ERROR',
+};

@@ -1,5 +1,5 @@
 import {
-  differenceInDays, differenceInMinutes, format, isToday as isTheGivenDateToday, isValid,
+  addDays, getMinutes, differenceInDays, differenceInMinutes, format, isToday as isTheGivenDateToday, isValid, getHours,
 } from 'date-fns';
 import { id } from 'date-fns/locale';
 
@@ -53,3 +53,28 @@ export function daysDifference(laterDate, earlierDate) {
 export function minutesDifference(laterDate, earlierDate) {
   return differenceInMinutes(new Date(laterDate), new Date(earlierDate));
 }
+
+/**
+ * Add the specified number of days to the given date.
+ *
+ * @param {Date|Number} date - the date to be changed
+ * @param {Number} amount - the amount of days to be added.
+ * @returns {Date} - the new date with the days added
+ */
+export const addDay = (date, amount) => addDays(new Date(date), amount);
+
+/**
+ * Get the hours of the given date.
+ *
+ * @param {Date} date - the given date
+ * @returns {Number} - the hours
+ */
+export const getHour = (date) => getHours(new Date(date));
+
+/**
+ * Get the minutes of the given date.
+ *
+ * @param {Date} date - the given date
+ * @returns {Number} - the minutes
+ */
+export const getMinute = (date) => getMinutes(new Date(date));

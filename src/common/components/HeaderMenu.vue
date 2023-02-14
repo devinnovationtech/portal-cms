@@ -2,6 +2,7 @@
   <section class="h-[66px] -mt-[14px] z-40 flex items-center sticky top-[72px] bg-gray-100">
     <div class="flex items-center">
       <BaseButton
+        type="button"
         class="bg-green-700 hover:bg-green-600 font-lato text-sm text-white"
         @click="$router.back()"
       >
