@@ -62,6 +62,14 @@ export default [
     },
   },
   {
+    path: '/layanan/master-data/detail/:id',
+    name: 'Master Data Detail',
+    component: () => import('@/pages/Services/MasterDataServiceDetail.vue'),
+    meta: {
+      layout: 'AppLayoutPrivate',
+    },
+  },
+  {
     path: '/agenda',
     name: 'Agenda Jawa Barat',
     component: () => import('@/pages/Agenda'),
