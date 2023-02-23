@@ -55,8 +55,8 @@ export default [
   },
   {
     path: '/layanan',
-    name: 'Layanan',
-    component: () => import('@/pages/Home'),
+    name: 'Layanan Pemerintah Daerah Provinsi Jawa Barat',
+    component: () => import('@/pages/Services'),
     meta: {
       layout: 'AppLayoutPrivate',
     },
