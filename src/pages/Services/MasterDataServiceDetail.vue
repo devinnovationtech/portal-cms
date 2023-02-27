@@ -49,7 +49,10 @@
         :table-data="informationTableData"
       />
       <ApplicationTable v-else-if="currentTab === 'aplikasi'" />
-      <AdditionalInformationTable v-else />
+      <AdditionalInformationTable
+        v-else
+        :table-data="additionalInformationTableData"
+      />
     </section>
   </main>
 </template>
@@ -69,7 +72,6 @@ export default {
     InformationTable: () => import('@/components/Services/MasterData/Detail/InformationTable'),
     ApplicationTable: () => import('@/components/Services/MasterData/Detail/ApplicationTable'),
     AdditionalInformationTable: () => import('@/components/Services/MasterData/Detail/AdditionalInformationTable'),
-
   },
   data() {
     return {
@@ -211,7 +213,16 @@ export default {
         },
       };
     },
+    additionalInformationTableData() {
+      return {
+        additional_information: {
+          responsible_name: this.tableData.additional_information?.responsible_name ?? '-',
+          phone_number: this.tableData.additional_information?.phone_number ?? '-',
+          email: this.tableData.additional_information?.email ?? '-',
+          social_media: this.tableData.additional_information?.social_media ?? [],
+        },
+      };
+    },
   },
-
 };
 </script>
