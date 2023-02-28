@@ -197,7 +197,7 @@
             <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
               Tautan Layanan
             </td>
-            <td class="w-full flex flex-wrap font-lato text-blue-gray-500 font-bold hover:underline text-sm">
+            <td class="w-full flex flex-wrap font-lato text-blue-gray-500 font-bold text-sm">
               <template v-if="information.links.length">
                 <div
                   v-for="(link, index) in information.links"
@@ -212,7 +212,9 @@
                   >
                   <a
                     :href="link.link"
-                    class="whitespace-nowrap"
+                    class="whitespace-nowrap hover:underline"
+                    rel="noopener noreferrer"
+                    target="_blank"
                   >
                     {{ link.link }}
                   </a>
@@ -226,6 +228,7 @@
         </tbody>
       </JdsSimpleTable>
     </div>
+
     <div class="overflow-hidden rounded-lg border border-gray-200 mb-4">
       <JdsSimpleTable>
         <thead>
@@ -278,7 +281,7 @@
               Tarif Layanan
             </td>
             <td class="w-full font-lato text-blue-gray-500 text-sm">
-              {{ serviceDetail.service_fee }}
+              {{ serviceDetail.service_fee || '-' }}
             </td>
           </tr>
           <tr>
@@ -303,7 +306,7 @@
               Kontak Hotline (Nomor HP/Telp)
             </td>
             <td class="w-full font-lato text-blue-gray-500 text-sm">
-              {{ serviceDetail.hotline_number }}
+              {{ serviceDetail.hotline_number || '-' }}
             </td>
           </tr>
           <tr>
@@ -311,7 +314,7 @@
               Kontak Hotline (Alamat E-mail)
             </td>
             <td class="w-full font-lato text-blue-gray-500 text-sm">
-              {{ serviceDetail.hotline_mail }}
+              {{ serviceDetail.hotline_mail || '-' }}
             </td>
           </tr>
         </tbody>

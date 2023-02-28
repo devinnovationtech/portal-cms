@@ -72,7 +72,7 @@
               <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm capitalize">
                 {{ socialMedia.type }}
               </td>
-              <td class="w-full font-lato text-blue-gray-500 text-sm">
+              <td class="w-full font-lato font-bold text-blue-gray-500 text-sm">
                 <a
                   :href="socialMedia.link"
                   target="_blank"
