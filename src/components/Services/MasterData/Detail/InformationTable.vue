@@ -213,10 +213,11 @@
                   <a
                     :href="link.link"
                     class="whitespace-nowrap hover:underline"
+                    :class="getServiceLinkLabelColor(link.type)"
                     rel="noopener noreferrer"
                     target="_blank"
                   >
-                    {{ link.link }}
+                    {{ link.label }}
                   </a>
                 </div>
               </template>
@@ -437,6 +438,18 @@ export default {
           return require('@/assets/icons/google_playstore_logo.svg');
         case 'apple_store':
           return require('@/assets/icons/apple_store_logo.svg');
+        default:
+          return null;
+      }
+    },
+    getServiceLinkLabelColor(type) {
+      switch (type) {
+        case 'google_form':
+          return 'text-[#764EBE]';
+        case 'google_playstore':
+          return 'text-[#20A2BD]';
+        case 'apple_store':
+          return 'text-[#1A4373]';
         default:
           return null;
       }
