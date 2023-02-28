@@ -36,25 +36,45 @@
             {{ application.name || '-' }}
           </td>
         </tr>
-        <template v-for="(feature, index) in application.feature">
-          <tr
-            :key="`${feature.name}-${index}`"
-          >
+        <template v-if="hasFeature">
+          <template v-for="(feature, index) in application.feature">
+            <tr
+              :key="`${feature.name}-${index}`"
+            >
+              <td class="min-w-[228px] font-lato text-green-700 font-bold text-sm">
+                Fitur Aplikasi ke {{ index + 1 }}
+              </td>
+              <td class="w-full font-lato text-blue-gray-500 text-sm">
+                {{ feature.name || '-' }}
+              </td>
+            </tr>
+            <tr
+              :key="`${feature.description}-${index}`"
+            >
+              <td class="min-w-[228px] font-lato text-blue-gray-500 font-bold text-sm">
+                Deskripsi Fitur Aplikasi
+              </td>
+              <td class="w-full font-lato text-blue-gray-500 text-sm">
+                {{ feature.description || '-' }}
+              </td>
+            </tr>
+          </template>
+        </template>
+        <template v-else>
+          <tr>
             <td class="min-w-[228px] font-lato text-green-700 font-bold text-sm">
-              Fitur Aplikasi ke {{ index + 1 }}
+              Fitur Aplikasi ke 1
             </td>
             <td class="w-full font-lato text-blue-gray-500 text-sm">
-              {{ feature.name || '-' }}
+              -
             </td>
           </tr>
-          <tr
-            :key="`${feature.description}-${index}`"
-          >
+          <tr>
             <td class="min-w-[228px] font-lato text-blue-gray-500 font-bold text-sm">
               Deskripsi Fitur Aplikasi
             </td>
             <td class="w-full font-lato text-blue-gray-500 text-sm">
-              {{ feature.description || '-' }}
+              -
             </td>
           </tr>
         </template>
@@ -84,6 +104,9 @@ export default {
         default:
           return '-';
       }
+    },
+    hasFeature() {
+      return Array.isArray(this.application.feature) && this.application.feature.length > 0;
     },
   },
 };

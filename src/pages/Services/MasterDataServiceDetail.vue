@@ -48,7 +48,10 @@
         v-if="currentTab === 'pelayanan'"
         :table-data="informationTableData"
       />
-      <ApplicationTable v-else-if="currentTab === 'aplikasi'" />
+      <ApplicationTable
+        v-else-if="currentTab === 'aplikasi'"
+        :table-data="applicationTableData"
+      />
       <AdditionalInformationTable
         v-else
         :table-data="additionalInformationTableData"
@@ -161,7 +164,7 @@ export default {
           ],
         },
         application: {
-          status: 'available',
+          status: 'AVAILABLE',
           name: 'SAMBARA',
           feature: [
             {
@@ -220,6 +223,15 @@ export default {
           hotline_mail: this.tableData.services?.service_detail?.hotline_mail ?? null,
         },
         location: this.tableData.services?.location ?? [],
+      };
+    },
+    applicationTableData() {
+      return {
+        application: {
+          status: this.tableData.application?.status ?? '-',
+          name: this.tableData.application?.name ?? '-',
+          feature: this.tableData.application?.feature ?? [],
+        },
       };
     },
     additionalInformationTableData() {
