@@ -331,3 +331,13 @@ export const MASTER_DATA_STATUS_MAP = {
   DRAFT: 'Draf',
   SAVED: 'Tersimpan',
 };
+
+export const DAY_MAP = {
+  MONDAY: 'Senin',
+  TUESDAY: 'Selasa',
+  WEDNESDAY: 'Rabu',
+  THURSDAY: 'Kamis',
+  FRIDAY: 'Jumat',
+  SATURDAY: 'Sabtu',
+  SUNDAY: 'Minggu',
+};

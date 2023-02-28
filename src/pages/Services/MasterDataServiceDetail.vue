@@ -211,6 +211,15 @@ export default {
           website: this.tableData.services?.information?.website ?? null,
           links: this.tableData.services?.information?.links ?? [],
         },
+        service_detail: {
+          terms_and_conditions: this.tableData.services?.service_detail?.terms_and_conditions ?? [],
+          service_procedures: this.tableData.services?.service_detail?.service_procedures ?? [],
+          service_fee: this.tableData.services?.service_detail?.service_fee ?? null,
+          operational_time: this.tableData.services?.service_detail?.operational_time ?? null,
+          hotline_number: this.tableData.services?.service_detail?.hotline_number ?? null,
+          hotline_mail: this.tableData.services?.service_detail?.hotline_mail ?? null,
+        },
+        location: this.tableData.services?.location ?? [],
       };
     },
     additionalInformationTableData() {
