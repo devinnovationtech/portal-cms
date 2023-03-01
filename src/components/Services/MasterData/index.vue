@@ -11,7 +11,7 @@
             placeholder="Cari layanan"
           />
           <LinkButton
-            href="/layanan"
+            href="/layanan/master-data/tambah"
             title="Tambah Layanan"
             class="ml-auto"
           >

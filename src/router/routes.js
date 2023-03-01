@@ -62,6 +62,14 @@ export default [
     },
   },
   {
+    path: '/layanan/master-data/tambah',
+    name: 'Layanan Pemerintah Daerah Provinsi Jawa Barat',
+    component: () => import('@/pages/Services/CreateEditMasterData.vue'),
+    meta: {
+      layout: 'AppLayoutPrivate',
+    },
+  },
+  {
     path: '/layanan/master-data/detail/:id',
     name: 'Master Data Detail',
     component: () => import('@/pages/Services/MasterDataServiceDetail.vue'),
