@@ -27,16 +27,16 @@
       <!-- eslint-disable-next-line vue/valid-v-slot -->
       <template #item.user="{item}">
         <p>
-          {{ item.goverment_affair }}
+          {{ getGovermentAffair(item.goverment_affair) }}
         </p>
       </template>
       <!-- eslint-disable-next-line vue/valid-v-slot -->
       <template #item.operational="{item}">
         <p
           :class="{
-            'font-lato font-bold text-[14px] leading-[23px]' : true,
-            'w-fit rounded-[6px] bg-[#E3F0FF] text-blue-800 px-2 py-[2px] lowercase': item.operational_status === 'ONLINE',
-            'w-fit rounded-[6px] bg-gray-200 text-gray-600 px-2 py-[2px] lowercase': item.operational_status === 'OFFLINE'
+            'font-lato font-bold text-[14px] leading-[23px] capitalize' : true,
+            'w-fit rounded-[6px] bg-[#E3F0FF] text-blue-800 px-2 py-[2px]': item.operational_status === 'ONLINE',
+            'w-fit rounded-[6px] bg-gray-200 text-gray-600 px-2 py-[2px]': item.operational_status === 'OFFLINE'
           }"
         >
           <span
@@ -46,7 +46,7 @@
               'bg-gray-600': item.operational_status === 'OFFLINE',
             }"
           />
-          {{ item.operational_status }}
+          {{ item.operational_status.toLowerCase() }}
         </p>
       </template>
       <!-- eslint-disable-next-line vue/valid-v-slot -->
@@ -165,6 +165,19 @@ export default {
 
     getServiceStatus(status) {
       return MASTER_DATA_STATUS_MAP[status] ?? status;
+    },
+
+    getGovermentAffair(value) {
+      switch (value) {
+        case 'UMUM':
+          return 'Umum';
+        case 'ASN':
+          return 'ASN';
+        case 'LEMBAGA':
+          return 'Lembaga';
+        default:
+          return '-';
+      }
     },
 
     onSortChange(sort) {

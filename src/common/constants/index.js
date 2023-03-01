@@ -328,7 +328,7 @@ export const MASTER_DATA_TABLE_HEADER = [
 
 export const MASTER_DATA_STATUS_MAP = {
   ALLSERVICES: 'Semua Layanan',
-  DRAFT: 'Draf',
+  DRAFT: 'Arsip',
   SAVED: 'Tersimpan',
 };
 
