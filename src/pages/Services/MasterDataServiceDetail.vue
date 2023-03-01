@@ -113,18 +113,23 @@ export default {
             links: [
               {
                 link: 'https://google.com',
-                type: 'google_form',
+                type: 'GOOGLE_FORM',
                 label: 'Google Forms',
               },
               {
                 link: 'https://google.com',
-                type: 'google_playstore',
+                type: 'GOOGLE_PLAYSTORE',
                 label: 'Google Playstore',
               },
               {
                 link: 'https://apple.com',
-                type: 'apple_store',
+                type: 'APP_STORE',
                 label: 'Apple Store',
+              },
+              {
+                link: 'https://google.com',
+                type: 'WEBSITE',
+                label: 'Website',
               },
             ],
           },

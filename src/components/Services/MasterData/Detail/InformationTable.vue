@@ -432,24 +432,28 @@ export default {
   methods: {
     getServiceLinkIcon(type) {
       switch (type) {
-        case 'google_form':
+        case 'GOOGLE_FORM':
           return require('@/assets/icons/google_form_logo.svg');
-        case 'google_playstore':
+        case 'GOOGLE_PLAYSTORE':
           return require('@/assets/icons/google_playstore_logo.svg');
-        case 'apple_store':
+        case 'APP_STORE':
           return require('@/assets/icons/apple_store_logo.svg');
+        case 'WEBSITE':
+          return require('@/assets/icons/website_logo.svg');
         default:
           return null;
       }
     },
     getServiceLinkLabelColor(type) {
       switch (type) {
-        case 'google_form':
+        case 'GOOGLE_FORM':
           return 'text-[#764EBE]';
-        case 'google_playstore':
+        case 'GOOGLE_PLAYSTORE':
           return 'text-[#20A2BD]';
-        case 'apple_store':
+        case 'APP_STORE':
           return 'text-[#1A4373]';
+        case 'WEBSITE':
+          return 'text-[#16A75C]';
         default:
           return null;
       }
