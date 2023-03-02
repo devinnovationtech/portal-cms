@@ -1,6 +1,6 @@
 <template>
   <main class="pb-20">
-    <form>
+    <form class="master-data__form">
       <HeaderMenu>
         <template #left-button>
           <BaseButton
@@ -127,3 +127,14 @@ export default {
   },
 };
 </script>
+
+<style>
+/**
+ * Override default Jds-Select styling
+ */
+.master-data__form .jds-popover__activator,
+.master-data__form .jds-select,
+.master-data__form .jds-input-text {
+  width: 100% !important;
+}
+</style>
