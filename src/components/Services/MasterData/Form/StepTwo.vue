@@ -2,7 +2,7 @@
   <fieldset>
     <section
       v-if="isShowForm"
-      class="application__form border border-gray-300 rounded-xl h-full w-full px-[10px] py-3"
+      class="border border-gray-300 rounded-xl h-full w-full px-[10px] py-3"
     >
       <h2 class="font-roboto font-medium text-blue-gray-800 text-[16px] leading-[28px] pb-7">
         Aplikasi
@@ -13,6 +13,7 @@
             Status Ketersediaan Aplikasi
           </label>
           <JdsSelect
+            v-model="applicationStatus"
             :options="status"
             placeholder="Pilih Ketersediaan Aplikasi"
           />
@@ -26,47 +27,84 @@
           </label>
           <JdsInputText
             id="application-name"
+            v-model="applicationName"
             placeholder="Nama Aplikasi"
           />
         </div>
       </section>
       <hr class="w-full h-[2px] bg-gray-300 my-[32px]">
       <section>
-        <h3 class="font-roboto font-medium text-green-700 text-[16px] leading-[26px] pb-4">
-          1. Fitur Aplikasi
-        </h3>
-        <div class="flex flex-col gap-[6px] mb-4">
-          <label
-            class="font-lato font-normal text-[15px] leading-[23px] text-blue-gray-800"
-            for="application-feature"
+        <div
+          v-for="(item,index) in applicationFeatures"
+          :key="index"
+        >
+          <h3 class="font-roboto font-medium text-green-700 text-[16px] leading-[26px] pb-4">
+            {{ index + 1 }}. Fitur Aplikasi
+          </h3>
+          <div class="flex flex-col gap-[6px] mb-4">
+            <label
+              class="font-lato font-normal text-[15px] leading-[23px] text-blue-gray-800"
+              for="application-feature"
+            >
+              Fitur Aplikasi
+            </label>
+            <JdsInputText
+              id="application-feature"
+              :value="applicationFeatures[index].name"
+              placeholder="Masukkan fitur aplikasi"
+              @input="setNameFeature($event, index)"
+            />
+          </div>
+          <div class="flex flex-col gap-[6px] mb-4">
+            <label
+              class="font-lato font-normal text-[15px] leading-[23px] text-blue-gray-800"
+              for="application-feature"
+            >
+              Deskripsi Fitur Aplikasi
+            </label>
+            <JdsTextArea
+              id="application-feature"
+              :value="applicationFeatures[index].description"
+              placeholder="Masukkan deskripsi"
+              @input="setDescriptionFeature($event, index)"
+            />
+            <p class="text-xs text-gray-600 text-right">
+              Tersisa 255 karakter
+            </p>
+          </div>
+          <div
+            v-show="applicationFeatures.length > 1"
+            class="flex flex-row justify-end mb-4"
           >
-            Fitur Aplikasi
-          </label>
-          <JdsInputText
-            id="application-feature"
-            placeholder="Masukkan fitur aplikasi"
-          />
-        </div>
-        <div class="flex flex-col gap-[6px] mb-4">
-          <label
-            class="font-lato font-normal text-[15px] leading-[23px] text-blue-gray-800"
-            for="application-feature"
+            <BaseButton
+              type="button"
+              class="bg-white font-lato text-sm border-red-700 hover:bg-red-50 focus:bg-red-50 focus:shadow-[inset_0px_0px_0px_1px_rgba(255,200,0,1)]"
+              @click="removeFeature(index)"
+            >
+              <template #icon-right>
+                <JdsIcon
+                  name="trash"
+                  size="16px"
+                  fill="#F44336"
+                  class="h-4 w-4"
+                />
+              </template>
+              <p class="text-red-500">
+                Hapus Layanan
+              </p>
+            </BaseButton>
+          </div>
+          <hr
+            v-show="applicationFeatures.length > 1"
+            class="w-full h-[2px] bg-gray-300 my-[32px]"
           >
-            Deskripsi Fitur Aplikasi
-          </label>
-          <JdsTextArea
-            id="application-feature"
-            placeholder="Masukkan deskripsi"
-          />
-          <p class="text-xs text-gray-600 text-right">
-            Tersisa 255 karakter
-          </p>
         </div>
       </section>
       <div class="flex flex-row justify-end">
         <BaseButton
           type="button"
           class="bg-white font-lato text-sm border-green-700 hover:bg-green-50 focus:bg-green-50 focus:shadow-[inset_0px_0px_0px_1px_rgba(255,200,0,1)]"
+          @click="addNewFeature"
         >
           <template #icon-right>
             <JdsIcon
@@ -110,7 +148,7 @@ export default {
   data() {
     return {
       // @TODO: isShowForm is temporarly use, it will replace based on teknis layanan in form one
-      isShowForm: false,
+      isShowForm: true,
       status: [
         {
           label: 'Tersedia',
@@ -124,28 +162,41 @@ export default {
 
     };
   },
+  computed: {
+    applicationStatus: {
+      get() {
+        return this.$store.state.masterDataForm.stepTwo.application.status;
+      },
+      set(value) {
+        this.$store.commit('masterDataForm/SET_STEP_TWO_APPLICATION_STATUS', value);
+      },
+    },
+    applicationName: {
+      get() {
+        return this.$store.state.masterDataForm.stepTwo.application.name;
+      },
+      set(value) {
+        this.$store.commit('masterDataForm/SET_STEP_TWO_APPLICATION_NAME', value);
+      },
+    },
+    applicationFeatures() {
+      return this.$store.state.masterDataForm.stepTwo.application.features;
+    },
+
+  },
+  methods: {
+    setNameFeature(value, index) {
+      this.$store.commit('masterDataForm/SET_STEP_TWO_APPLICATION_FEATURES_NAME', { value, index });
+    },
+    setDescriptionFeature(value, index) {
+      this.$store.commit('masterDataForm/SET_STEP_TWO_APPLICATION_FEATURES_DESCRIPTION', { value, index });
+    },
+    addNewFeature() {
+      this.$store.commit('masterDataForm/ADD_STEP_TWO_APPLICATION_FEATURES');
+    },
+    removeFeature(index) {
+      this.$store.commit('masterDataForm/REMOVE_STEP_TWO_APPLICATION_FEATURES', index);
+    },
+  },
 };
 </script>
-
-<style>
-/* Custom style for jds-text-area */
-
-.application__form .jds-text-area__input-wrapper > textarea {
-  border: 1px solid #9E9E9E;
-}
-.application__form .jds-text-area__input-wrapper > textarea:hover {
-  border: 1px solid #16a34a;
-}
-
-/* Custom style for jds-select */
-
-.application__form .jds-popover__content {
-  z-index: 10 !important;
-}
-.application__form .jds-select,
-.application__form .jds-popover__activator,
-.application__form .jds-input-text {
-  width: 100% !important;
-}
-
-</style>

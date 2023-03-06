@@ -45,7 +45,12 @@ const getDefaultState = () => ({
     application: {
       status: '',
       name: '',
-      features: [],
+      features: [
+        {
+          name: '',
+          description: '',
+        },
+      ],
     },
   },
   stepThree: {
@@ -78,6 +83,26 @@ export default {
     },
     RESET_FORM_DATA(state) {
       Object.assign(state, getDefaultState());
+    },
+    SET_STEP_TWO_APPLICATION_STATUS(state, payload) {
+      state.stepTwo.application.status = payload;
+    },
+    SET_STEP_TWO_APPLICATION_NAME(state, payload) {
+      state.stepTwo.application.name = payload;
+    },
+    SET_STEP_TWO_APPLICATION_FEATURES_NAME(state, payload) {
+      const { index, value } = payload;
+      state.stepTwo.application.features[index].name = value;
+    },
+    SET_STEP_TWO_APPLICATION_FEATURES_DESCRIPTION(state, payload) {
+      const { index, value } = payload;
+      state.stepTwo.application.features[index].description = value;
+    },
+    ADD_STEP_TWO_APPLICATION_FEATURES(state) {
+      state.stepTwo.application.features.push({ name: '', description: '' });
+    },
+    REMOVE_STEP_TWO_APPLICATION_FEATURES(state, index) {
+      state.stepTwo.application.features.splice(index, 1);
     },
   },
   actions: {

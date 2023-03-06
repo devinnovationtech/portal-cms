@@ -137,4 +137,14 @@ export default {
 .master-data__form .jds-input-text {
   width: 100% !important;
 }
+.master-data__form .jds-popover__content {
+  z-index: 10 !important;
+}
+.master-data__form .jds-text-area__input-wrapper > textarea {
+  border: 1px solid #9E9E9E;
+}
+.master-data__form .jds-text-area__input-wrapper > textarea:hover {
+  border: 1px solid #16a34a;
+}
+/* Custom style for jds-select */
 </style>
