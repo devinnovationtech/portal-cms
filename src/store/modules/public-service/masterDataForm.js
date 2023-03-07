@@ -62,7 +62,13 @@ const getDefaultState = () => ({
       responsible_name: '',
       phone_number: '',
       email: '',
-      social_media: [],
+      social_media: [
+        {
+          name: '',
+          type: 'FACEBOOK',
+          link: '',
+        },
+      ],
     },
   },
   governmentAffairOptions: [],
@@ -192,6 +198,33 @@ export default {
     },
     REMOVE_STEP_TWO_APPLICATION_FEATURES(state, index) {
       state.stepTwo.application.features.splice(index, 1);
+    },
+    SET_STEP_THREE_ADDITIONAL_INFORMATION_RESPONSIBLE_NAME(state, payload) {
+      state.stepThree.additional_information.responsible_name = payload;
+    },
+    SET_STEP_THREE_ADDITIONAL_INFORMATION_PHONE_NUMBER(state, payload) {
+      state.stepThree.additional_information.phone_number = payload;
+    },
+    SET_STEP_THREE_ADDITIONAL_INFORMATION_EMAIL(state, payload) {
+      state.stepThree.additional_information.email = payload;
+    },
+    SET_STEP_THREE_ADDITIONAL_INFORMATION_SOCIAL_MEDIA_NAME(state, payload) {
+      const { index, value } = payload;
+      state.stepThree.additional_information.social_media[index].name = value;
+    },
+    SET_STEP_THREE_ADDITIONAL_INFORMATION_SOCIAL_MEDIA_TYPE(state, payload) {
+      const { index, value } = payload;
+      state.stepThree.additional_information.social_media[index].type = value;
+    },
+    SET_STEP_THREE_ADDITIONAL_INFORMATION_SOCIAL_MEDIA_LINK(state, payload) {
+      const { index, value } = payload;
+      state.stepThree.additional_information.social_media[index].link = value;
+    },
+    ADD_STEP_THREE_ADDITIONAL_INFORMATION_SOCIAL_MEDIA(state) {
+      state.stepThree.additional_information.social_media.push({ name: '', type: 'FACEBOOK', link: '' });
+    },
+    REMOVE_STEP_THREE_ADDITIONAL_INFORMATION_SOCIAL_MEDIA(state, index) {
+      state.stepThree.additional_information.social_media.splice(index, 1);
     },
   },
   actions: {
