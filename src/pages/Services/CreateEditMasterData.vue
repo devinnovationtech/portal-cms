@@ -152,6 +152,9 @@ export default {
 .master-data__form .jds-text-area__input-wrapper > textarea {
   border: 1px solid #9E9E9E;
 }
+.master-data__form .jds-text-area--error .jds-text-area__input-wrapper > textarea {
+  border: 1px solid #D32F2F !important;
+}
 
 .master-data__form .jds-text-area__input-wrapper > textarea:hover {
   border: 1px solid #16a34a;

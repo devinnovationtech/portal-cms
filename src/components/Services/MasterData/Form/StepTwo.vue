@@ -7,8 +7,13 @@
       <h2 class="font-roboto font-medium text-blue-gray-800 text-[16px] leading-[28px] pb-7">
         Aplikasi
       </h2>
-      <section>
-        <div class="flex flex-col gap-[6px] mb-4">
+      <section class="grid grid-cols-1 gap-4">
+        <ValidationProvider
+          v-slot="{ errors }"
+          rules="required"
+          class="flex flex-col gap-[6px] mb-4"
+          tag="div"
+        >
           <label class="font-lato font-normal text-[15px] leading-[23px] text-blue-gray-800">
             Status Ketersediaan Aplikasi
           </label>
@@ -16,9 +21,15 @@
             v-model="applicationStatus"
             :options="status"
             placeholder="Pilih Ketersediaan Aplikasi"
+            :error-message="errors[0]"
           />
-        </div>
-        <div class="flex flex-col gap-[6px]">
+        </ValidationProvider>
+        <ValidationProvider
+          v-slot="{ errors }"
+          rules="required"
+          class="flex flex-col gap-[6px]"
+          tag="div"
+        >
           <label
             class="font-lato font-normal text-[15px] leading-[23px] text-blue-gray-800"
             for="application-name"
@@ -29,8 +40,9 @@
             id="application-name"
             v-model="applicationName"
             placeholder="Nama Aplikasi"
+            :error-message="errors[0]"
           />
-        </div>
+        </ValidationProvider>
       </section>
       <hr class="w-full h-[2px] bg-gray-300 my-[32px]">
       <section>
@@ -41,7 +53,12 @@
           <h3 class="font-roboto font-medium text-green-700 text-[16px] leading-[26px] pb-4">
             {{ index + 1 }}. Fitur Aplikasi
           </h3>
-          <div class="flex flex-col gap-[6px] mb-4">
+          <ValidationProvider
+            v-slot="{ errors }"
+            rules="required"
+            class="flex flex-col gap-[6px] mb-4"
+            tag="div"
+          >
             <label
               class="font-lato font-normal text-[15px] leading-[23px] text-blue-gray-800"
               for="application-feature"
@@ -52,10 +69,16 @@
               id="application-feature"
               :value="applicationFeatures[index].name"
               placeholder="Masukkan fitur aplikasi"
+              :error-message="errors[0]"
               @input="setNameFeature($event, index)"
             />
-          </div>
-          <div class="flex flex-col gap-[6px] mb-4">
+          </ValidationProvider>
+          <ValidationProvider
+            v-slot="{ errors }"
+            rules="required"
+            class="flex flex-col gap-[6px] mb-4"
+            tag="div"
+          >
             <label
               class="font-lato font-normal text-[15px] leading-[23px] text-blue-gray-800"
               for="application-feature"
@@ -66,14 +89,15 @@
               id="application-feature"
               :value="applicationFeatures[index].description"
               placeholder="Masukkan deskripsi"
+              :error-message="errors[0]"
               @input="setDescriptionFeature($event, index)"
             />
             <p class="text-xs text-gray-600 text-right">
               Tersisa 255 karakter
             </p>
-          </div>
+          </ValidationProvider>
           <div
-            v-show="applicationFeatures.length > 1"
+            v-show="!(applicationFeatures[index] === applicationFeatures.slice(-1)[0])"
             class="flex flex-row justify-end mb-4"
           >
             <BaseButton
@@ -95,7 +119,7 @@
             </BaseButton>
           </div>
           <hr
-            v-show="applicationFeatures.length > 1"
+            v-show="!(applicationFeatures[index] === applicationFeatures.slice(-1)[0])"
             class="w-full h-[2px] bg-gray-300 my-[32px]"
           >
         </div>
@@ -139,11 +163,14 @@
 </template>
 
 <script>
+import '@/common/helpers/vee-validate.js';
+import { ValidationProvider } from 'vee-validate';
 import BaseButton from '@/common/components/BaseButton';
 
 export default {
   components: {
     BaseButton,
+    ValidationProvider,
   },
   data() {
     return {
