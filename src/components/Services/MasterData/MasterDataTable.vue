@@ -15,7 +15,7 @@
       <!-- eslint-disable-next-line vue/valid-v-slot -->
       <template #item.title="{item}">
         <p class="line-clamp-1">
-          {{ item.name }}
+          {{ item.service_name }}
         </p>
       </template>
       <!-- eslint-disable-next-line vue/valid-v-slot -->
@@ -27,32 +27,32 @@
       <!-- eslint-disable-next-line vue/valid-v-slot -->
       <template #item.user="{item}">
         <p>
-          {{ getGovermentAffair(item.goverment_affair) }}
+          {{ getGovermentAffair(item.service_user) }}
         </p>
       </template>
       <!-- eslint-disable-next-line vue/valid-v-slot -->
-      <template #item.operational="{item}">
+      <template #item.technical="{item}">
         <p
           :class="{
             'font-lato font-bold text-[14px] leading-[23px] capitalize' : true,
-            'w-fit rounded-[6px] bg-[#E3F0FF] text-blue-800 px-2 py-[2px]': item.operational_status === 'ONLINE',
-            'w-fit rounded-[6px] bg-gray-200 text-gray-600 px-2 py-[2px]': item.operational_status === 'OFFLINE'
+            'w-fit rounded-[6px] bg-[#E3F0FF] text-blue-800 px-2 py-[2px]': item.technical === 'ONLINE',
+            'w-fit rounded-[6px] bg-gray-200 text-gray-600 px-2 py-[2px]': item.technical === 'OFFLINE'
           }"
         >
           <span
             :class="{
               'w-2 h-2 rounded-full inline-block mr-[5px]': true,
-              'bg-blue-800': item.operational_status === 'ONLINE',
-              'bg-gray-600': item.operational_status === 'OFFLINE',
+              'bg-blue-800': item.technical === 'ONLINE',
+              'bg-gray-600': item.technical === 'OFFLINE',
             }"
           />
-          {{ item.operational_status.toLowerCase() }}
+          {{ item.technical.toLowerCase() }}
         </p>
       </template>
       <!-- eslint-disable-next-line vue/valid-v-slot -->
       <template #item.updated="{item}">
         <p>
-          {{ item.updated_at }}
+          {{ formatDate(item.updated_at) }}
         </p>
       </template>
       <!-- eslint-disable-next-line vue/valid-v-slot -->
@@ -74,6 +74,7 @@
 
 <script>
 import { MASTER_DATA_TABLE_HEADER, MASTER_DATA_STATUS_MAP } from '@/common/constants';
+import { formatDate } from '@/common/helpers/date';
 import MasterDataTableAction from '@/components/Services/MasterData/MasterDataTableAction';
 
 export default {
@@ -107,6 +108,7 @@ export default {
         totalRows: 0,
         itemsPerPageOptions: [10, 20, 30, 40, 50],
       },
+      formatDate,
     };
   },
   watch: {

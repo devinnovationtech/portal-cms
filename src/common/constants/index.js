@@ -305,8 +305,8 @@ export const MASTER_DATA_TABLE_HEADER = [
     sortable: true,
   },
   {
-    key: 'operational',
-    text: 'Operasional',
+    key: 'technical',
+    text: 'Teknis Layanan',
     sortable: true,
   },
   {
@@ -328,8 +328,8 @@ export const MASTER_DATA_TABLE_HEADER = [
 
 export const MASTER_DATA_STATUS_MAP = {
   ALLSERVICES: 'Semua Layanan',
-  DRAFT: 'Arsip',
-  SAVED: 'Tersimpan',
+  DRAFT: 'Draf',
+  ARCHIVE: 'Tersimpan',
 };
 
 export const DAY_MAP = {

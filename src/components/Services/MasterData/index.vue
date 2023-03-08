@@ -33,6 +33,7 @@
             :loading="loading"
             :meta="meta"
             class="min-w-[1000px]"
+            @update:pagination="onUpdatePagination($event)"
           />
         </div>
       </section>
@@ -46,99 +47,9 @@ import MasterDataTable from '@/components/Services/MasterData/MasterDataTable';
 import LinkButton from '@/common/components/LinkButton';
 import SearchBar from '@/common/components/SearchBar';
 import { formatDate } from '@/common/helpers/date';
+import { RepositoryFactory } from '@/repositories/RepositoryFactory';
 
-const EXAMPLE_LIST_SERVICES = [
-  {
-    id: 1,
-    name: 'Dashboard Satgas Citarum',
-    opd_name: 'Pariwisata',
-    goverment_affair: 'UMUM',
-    operational_status: 'ONLINE',
-    updated_at: formatDate(new Date(), 'dd/MM/yyyy'),
-    status: 'DRAFT',
-  },
-  {
-    id: 2,
-    name: 'Dashboard Satgas Citarum',
-    opd_name: 'Pariwisata',
-    goverment_affair: 'UMUM',
-    operational_status: 'ONLINE',
-    updated_at: formatDate(new Date(), 'dd/MM/yyyy'),
-    status: 'DRAFT',
-  },
-  {
-    id: 3,
-    name: 'Dashboard Satgas Citarum',
-    opd_name: 'Pariwisata',
-    goverment_affair: 'UMUM',
-    operational_status: 'ONLINE',
-    updated_at: formatDate(new Date(), 'dd/MM/yyyy'),
-    status: 'DRAFT',
-  },
-  {
-    id: 4,
-    name: 'Dashboard Satgas Citarum',
-    opd_name: 'Pariwisata',
-    goverment_affair: 'LEMBAGA',
-    operational_status: 'ONLINE',
-    updated_at: formatDate(new Date(), 'dd/MM/yyyy'),
-    status: 'DRAFT',
-  },
-  {
-    id: 5,
-    name: 'Dashboard Satgas Citarum',
-    opd_name: 'Pariwisata',
-    goverment_affair: 'LEMBAGA',
-    operational_status: 'ONLINE',
-    updated_at: formatDate(new Date(), 'dd/MM/yyyy'),
-    status: 'DRAFT',
-  },
-  {
-    id: 6,
-    name: 'Dashboard Satgas Citarum',
-    opd_name: 'Pariwisata',
-    goverment_affair: 'LEMBAGA',
-    operational_status: 'OFFLINE',
-    updated_at: formatDate(new Date(), 'dd/MM/yyyy'),
-    status: 'DRAFT',
-  },
-  {
-    id: 7,
-    name: 'Dashboard Satgas Citarum',
-    opd_name: 'Pariwisata',
-    goverment_affair: 'ASN',
-    operational_status: 'OFFLINE',
-    updated_at: formatDate(new Date(), 'dd/MM/yyyy'),
-    status: 'SAVED',
-  },
-  {
-    id: 8,
-    name: 'Dashboard Satgas Citarum',
-    opd_name: 'Pariwisata',
-    goverment_affair: 'ASN',
-    operational_status: 'OFFLINE',
-    updated_at: formatDate(new Date(), 'dd/MM/yyyy'),
-    status: 'DRAFT',
-  },
-  {
-    id: 9,
-    name: 'Dashboard Satgas Citarum',
-    opd_name: 'Pariwisata',
-    goverment_affair: 'ASN',
-    operational_status: 'OFFLINE',
-    updated_at: formatDate(new Date(), 'dd/MM/yyyy'),
-    status: 'DRAFT',
-  },
-  {
-    id: 10,
-    name: 'Dashboard Satgas Citarum',
-    opd_name: 'Pariwisata',
-    goverment_affair: 'UMUM',
-    operational_status: 'OFFLINE',
-    updated_at: formatDate(new Date(), 'dd/MM/yyyy'),
-    status: 'DRAFT',
-  },
-];
+const masterDataRepository = RepositoryFactory.get('masterDataService');
 
 export default {
   name: 'ListServices',
@@ -170,7 +81,7 @@ export default {
           count: null,
         },
       ],
-      services: EXAMPLE_LIST_SERVICES,
+      services: [],
       currentTab: 'ALL',
       loading: false,
       meta: {
@@ -179,7 +90,42 @@ export default {
         current_page: 1,
         per_page: 10,
       },
+      params: {
+        per_page: 10,
+        page: 1,
+        q: '',
+      },
+      formatDate,
     };
+  },
+  async mounted() {
+    await this.fetchMasterData();
+  },
+  methods: {
+    async fetchMasterData() {
+      try {
+        this.loading = true;
+        const response = await masterDataRepository.getMasterDataList(this.params);
+        const { data, meta } = response.data;
+        this.meta = meta;
+        this.services = data;
+      } catch {
+        this.$toast({
+          type: 'error',
+          message: 'Gagal mendapatkan data Master Data Layanan, silakan coba beberapa saat lagi',
+        });
+      } finally {
+        this.loading = false;
+      }
+    },
+    setParams(data) {
+      const newParams = { ...this.params, ...data };
+      this.params = { ...newParams };
+    },
+    onUpdatePagination(data) {
+      this.setParams(data);
+      this.fetchMasterData();
+    },
   },
 };
 </script>
