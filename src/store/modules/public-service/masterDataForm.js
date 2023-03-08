@@ -21,10 +21,16 @@ const getDefaultState = () => ({
         sub_service_spbe: '',
         operational_status: '',
         technical: '',
-        benefits: [],
-        facilities: [],
+        benefits: [''],
+        facilities: [''],
         website: '',
-        links: [],
+        links: [
+          {
+            link: '',
+            type: 'GOOGLE_FORM',
+            label: '',
+          },
+        ],
       },
       service_detail: {
         terms_and_conditions: [],
@@ -178,6 +184,51 @@ export default {
     },
     SET_STEP_ONE_TECHNICAL(state, payload) {
       state.stepOne.services.information.technical = payload;
+    },
+    ADD_STEP_ONE_BENEFIT(state) {
+      state.stepOne.services.information.benefits.push('');
+    },
+    REMOVE_STEP_ONE_BENEFIT(state, index) {
+      state.stepOne.services.information.benefits.splice(index, 1);
+    },
+    SET_STEP_ONE_BENEFIT(state, payload) {
+      const { value, index } = payload;
+      state.stepOne.services.information.benefits[index] = value;
+    },
+    ADD_STEP_ONE_FACILITIES(state) {
+      state.stepOne.services.information.facilities.push('');
+    },
+    REMOVE_STEP_ONE_FACILITIES(state, index) {
+      state.stepOne.services.information.facilities.splice(index, 1);
+    },
+    SET_STEP_ONE_FACILITIES(state, payload) {
+      const { value, index } = payload;
+      state.stepOne.services.information.facilities[index] = value;
+    },
+    SET_STEP_ONE_WEBSITE(state, payload) {
+      state.stepOne.services.information.website = payload;
+    },
+    ADD_STEP_ONE_LINKS(state) {
+      state.stepOne.services.information.links.push({
+        link: '',
+        type: 'GOOGLE_FORM',
+        label: '',
+      });
+    },
+    REMOVE_STEP_ONE_LINKS(state, index) {
+      state.stepOne.services.information.links.splice(index, 1);
+    },
+    SET_STEP_ONE_LINK_TYPE(state, payload) {
+      const { value, index } = payload;
+      state.stepOne.services.information.links[index].type = value;
+    },
+    SET_STEP_ONE_LINK_LABEL(state, payload) {
+      const { value, index } = payload;
+      state.stepOne.services.information.links[index].label = value;
+    },
+    SET_STEP_ONE_LINK(state, payload) {
+      const { value, index } = payload;
+      state.stepOne.services.information.links[index].link = value;
     },
     SET_STEP_TWO_APPLICATION_STATUS(state, payload) {
       state.stepTwo.application.status = payload;

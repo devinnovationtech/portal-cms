@@ -223,19 +223,50 @@
           <span class="font-lato text-[13px] text-red-700 mt-3">{{ errors[0] }}</span>
         </ValidationProvider>
 
-        <div class="flex flex-col col-span-2">
+        <ValidationProvider
+          v-for="(benefit, index) in benefits"
+          v-slot="{ errors }"
+          :key="`step-one-benefit-${index}`"
+          rules="required"
+          class="flex flex-col col-span-2"
+        >
           <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
             Manfaat Layanan
           </label>
           <JdsInputText
+            :value="benefits[index]"
             placeholder="Masukkan manfaat layanan"
+            @input="setBenefitByIndex($event, index)"
           />
-        </div>
+          <span class="font-lato text-[13px] text-red-700 mt-3">{{ errors[0] }}</span>
+          <div
+            v-if="index !== 0"
+            class="flex justify-end"
+          >
+            <BaseButton
+              type="button"
+              class="border-red-500 hover:bg-red-50 font-lato text-sm text-red-500"
+              @click="removeBenefit(index)"
+            >
+              <span>
+                Hapus Manfaat
+              </span>
+              <template #icon-right>
+                <JdsIcon
+                  name="trash"
+                  size="16px"
+                  fill="#F44336"
+                />
+              </template>
+            </BaseButton>
+          </div>
+        </ValidationProvider>
 
         <div class="flex justify-end col-span-2">
           <BaseButton
             type="button"
             class="border-green-700 hover:bg-green-50 font-lato text-sm text-green-700"
+            @click="addBenefit"
           >
             <span>
               Tambahkan Manfaat
@@ -257,19 +288,53 @@
           message="Jika Teknis Layanan bersifat online maka fasilitas layanan tidak aktif"
         />
 
-        <div class="flex flex-col col-span-2">
+        <ValidationProvider
+          v-for="(facility, index) in facilities"
+          v-slot="{ errors }"
+          :key="`step-one-facility-${index}`"
+          rules="required"
+          class="flex flex-col col-span-2"
+        >
           <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
             Fasilitas Layanan
           </label>
           <JdsInputText
+            :value="facilities[index]"
             placeholder="Masukkan fasilitas layanan"
+            :disabled="technical === 'ONLINE'"
+            @input="setFacilityByIndex($event, index)"
           />
-        </div>
+          <span class="font-lato text-[13px] text-red-700 mt-3">{{ errors[0] }}</span>
+
+          <div
+            v-if="index !== 0"
+            class="flex justify-end"
+          >
+            <BaseButton
+              type="button"
+              class="border-red-500 hover:bg-red-50 font-lato text-sm text-red-500"
+              @click="removeFacility(index)"
+            >
+              <span>
+                Hapus Fasilitas Layanan
+              </span>
+              <template #icon-right>
+                <JdsIcon
+                  name="trash"
+                  size="16px"
+                  fill="#F44336"
+                />
+              </template>
+            </BaseButton>
+          </div>
+        </ValidationProvider>
 
         <div class="flex justify-end col-span-2">
           <BaseButton
             type="button"
             class="border-green-700 hover:bg-green-50 font-lato text-sm text-green-700"
+            :disabled="technical === 'ONLINE'"
+            @click="addFacility"
           >
             <span>
               Tambahkan Fasilitas
@@ -284,25 +349,38 @@
           </BaseButton>
         </div>
 
-        <div class="flex flex-col col-span-2">
+        <ValidationProvider
+          v-slot="{ errors }"
+          class="flex flex-col col-span-2"
+          rules="url"
+        >
           <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
             Alamat Website Informasi Resmi
           </label>
           <JdsInputText
+            v-model="website"
             prefix-text="https://"
             placeholder="Masukkan alamat website informasi resmi"
           />
-        </div>
+          <span class="font-lato text-[13px] text-red-700 mt-3">{{ errors[0] }}</span>
+        </ValidationProvider>
 
-        <section class="col-span-2 grid grid-cols-2 gap-8">
+        <section
+          v-for="(link, index) in links"
+          :key="`step-one-links-${index}`"
+          class="col-span-2 grid grid-cols-2 gap-x-8 gap-y-4"
+        >
           <div class="flex flex-col">
             <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
               Tautan Layanan
             </label>
             <JdsInputText
+              :value="links[index].link"
               prefix-text="GOOGLE_FORM"
-              :prefix-config="tautanLayananOptions"
+              :prefix-config="serviceLinkOptions"
               placeholder="https://"
+              @input="setLinkByIndex($event, index)"
+              @change:prefix-text="setLinkTypeByIndex($event, index)"
             />
           </div>
 
@@ -311,8 +389,32 @@
               Label Tautan
             </label>
             <JdsInputText
+              :value="links[index].label"
               placeholder="Masukkan label tautan"
+              @input="setLinkLabelByIndex($event, index)"
             />
+          </div>
+
+          <div
+            v-if="index !== 0"
+            class="col-span-2 flex justify-end"
+          >
+            <BaseButton
+              type="button"
+              class="border-red-500 hover:bg-red-50 font-lato text-sm text-red-500"
+              @click="removeLink(index)"
+            >
+              <span>
+                Hapus Fasilitas Layanan
+              </span>
+              <template #icon-right>
+                <JdsIcon
+                  name="trash"
+                  size="16px"
+                  fill="#F44336"
+                />
+              </template>
+            </BaseButton>
           </div>
         </section>
 
@@ -320,6 +422,7 @@
           <BaseButton
             type="button"
             class="border-green-700 hover:bg-green-50 font-lato text-sm text-green-700"
+            @click="addLink"
           >
             <span>
               Tambahkan Tautan Layanan
@@ -647,7 +750,7 @@ export default {
           label: 'Online',
         },
       ],
-      tautanLayananOptions: {
+      serviceLinkOptions: {
         valueKey: 'value',
         labelKey: 'label',
         options: [
@@ -792,6 +895,58 @@ export default {
       set(value) {
         this.$store.commit('masterDataForm/SET_STEP_ONE_TECHNICAL', value);
       },
+    },
+    benefits() {
+      return this.$store.state.masterDataForm.stepOne.services.information.benefits;
+    },
+    facilities() {
+      return this.$store.state.masterDataForm.stepOne.services.information.facilities;
+    },
+    website: {
+      get() {
+        return this.$store.state.masterDataForm.stepOne.services.information.website;
+      },
+      set(value) {
+        this.$store.commit('masterDataForm/SET_STEP_ONE_WEBSITE', value);
+      },
+    },
+    links() {
+      return this.$store.state.masterDataForm.stepOne.services.information.links;
+    },
+  },
+  methods: {
+    addBenefit() {
+      this.$store.commit('masterDataForm/ADD_STEP_ONE_BENEFIT');
+    },
+    removeBenefit(index) {
+      this.$store.commit('masterDataForm/REMOVE_STEP_ONE_BENEFIT', index);
+    },
+    setBenefitByIndex(value, index) {
+      this.$store.commit('masterDataForm/SET_STEP_ONE_BENEFIT', { value, index });
+    },
+    addFacility() {
+      this.$store.commit('masterDataForm/ADD_STEP_ONE_FACILITIES');
+    },
+    removeFacility(index) {
+      this.$store.commit('masterDataForm/REMOVE_STEP_ONE_FACILITIES', index);
+    },
+    setFacilityByIndex(value, index) {
+      this.$store.commit('masterDataForm/SET_STEP_ONE_FACILITIES', { value, index });
+    },
+    addLink() {
+      this.$store.commit('masterDataForm/ADD_STEP_ONE_LINKS');
+    },
+    removeLink(index) {
+      this.$store.commit('masterDataForm/REMOVE_STEP_ONE_LINKS', index);
+    },
+    setLinkTypeByIndex(value, index) {
+      this.$store.commit('masterDataForm/SET_STEP_ONE_LINK_TYPE', { value, index });
+    },
+    setLinkLabelByIndex(value, index) {
+      this.$store.commit('masterDataForm/SET_STEP_ONE_LINK_LABEL', { value, index });
+    },
+    setLinkByIndex(value, index) {
+      this.$store.commit('masterDataForm/SET_STEP_ONE_LINK', { value, index });
     },
   },
 };
