@@ -97,7 +97,7 @@
             </p>
           </ValidationProvider>
           <div
-            v-show="!(applicationFeatures[index] === applicationFeatures.slice(-1)[0])"
+            v-if="applicationFeatures.length > 1"
             class="flex flex-row justify-end mb-4"
           >
             <BaseButton

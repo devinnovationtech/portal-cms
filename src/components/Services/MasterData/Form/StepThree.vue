@@ -68,7 +68,7 @@
       title="Sosial Media"
       class="mb-5"
     >
-      <section class="flex flex-col gap-8">
+      <section class="flex flex-col gap-4">
         <div
           v-for="(_,index) in socialMedias"
           :key="index"
@@ -105,7 +105,7 @@
             />
           </ValidationProvider>
           <div
-            v-show="!(socialMedias[index] === socialMedias.slice(-1)[0])"
+            v-if="socialMedias.length > 1"
             class="flex flex-row justify-end mb-4"
           >
             <BaseButton
@@ -126,10 +126,6 @@
               </p>
             </BaseButton>
           </div>
-          <hr
-            v-show="!(socialMedias[index] === socialMedias.slice(-1)[0])"
-            class="w-full h-[2px] bg-gray-300 my-[32px]"
-          >
         </div>
         <div class="flex justify-end col-span-2">
           <BaseButton
@@ -149,7 +145,10 @@
             </template>
           </BaseButton>
         </div>
-        <div class="h-[130px] col-span-2" />
+        <div
+          v-show="socialMedias.length <= 1"
+          class="h-[130px] col-span-2"
+        />
       </section>
     </Collapse>
   </fieldset>
