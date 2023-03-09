@@ -446,19 +446,51 @@
       class="mb-5"
     >
       <section class="grid grid-cols-2 gap-x-8 gap-y-4">
-        <div class="flex flex-col col-span-2">
+        <ValidationProvider
+          v-for="(_, index) in termsAndConditions"
+          :key="`step-one-terms-and-condition-${index}`"
+          v-slot="{ errors }"
+          class="flex flex-col col-span-2"
+          rules="required"
+        >
           <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
             Syarat dan Ketentuan Layanan
           </label>
           <JdsInputText
+            :value="termsAndConditions[index]"
             placeholder="Masukkan syarat dan ketentuan layanan"
+            @input="setTermAndConditionByIndex($event, index)"
           />
-        </div>
+          <span class="font-lato text-[13px] text-red-700 mt-3">{{ errors[0] }}</span>
+
+          <div
+            v-if="termsAndConditions.length > 1"
+            class="flex justify-end"
+          >
+            <BaseButton
+              type="button"
+              class="border-red-500 hover:bg-red-50 font-lato text-sm text-red-500"
+              @click="removeTermAndCondition(index)"
+            >
+              <span>
+                Hapus Syarat dan Ketentuan Layanan
+              </span>
+              <template #icon-right>
+                <JdsIcon
+                  name="trash"
+                  size="16px"
+                  fill="#F44336"
+                />
+              </template>
+            </BaseButton>
+          </div>
+        </ValidationProvider>
 
         <div class="flex justify-end col-span-2">
           <BaseButton
             type="button"
             class="border-green-700 hover:bg-green-50 font-lato text-sm text-green-700"
+            @click="addTermAndCondition"
           >
             <span>
               Tambahkan Syarat dan Ketentuan
@@ -473,19 +505,51 @@
           </BaseButton>
         </div>
 
-        <div class="flex flex-col col-span-2">
+        <ValidationProvider
+          v-for="(_, index) in serviceProcedures"
+          :key="`step-one-service-procedure-${index}`"
+          v-slot="{ errors }"
+          class="flex flex-col col-span-2"
+          rules="required"
+        >
           <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
             Prosedur Layanan
           </label>
           <JdsInputText
+            :value="serviceProcedures[index]"
             placeholder="Masukkan prosedur layanan"
+            @input="setServiceProcedureByIndex($event, index)"
           />
-        </div>
+          <span class="font-lato text-[13px] text-red-700 mt-3">{{ errors[0] }}</span>
+
+          <div
+            v-if="serviceProcedures.length > 1"
+            class="flex justify-end"
+          >
+            <BaseButton
+              type="button"
+              class="border-red-500 hover:bg-red-50 font-lato text-sm text-red-500"
+              @click="removeServiceProcedure(index)"
+            >
+              <span>
+                Hapus Prosedur Layanan
+              </span>
+              <template #icon-right>
+                <JdsIcon
+                  name="trash"
+                  size="16px"
+                  fill="#F44336"
+                />
+              </template>
+            </BaseButton>
+          </div>
+        </ValidationProvider>
 
         <div class="flex justify-end col-span-2">
           <BaseButton
             type="button"
             class="border-green-700 hover:bg-green-50 font-lato text-sm text-green-700"
+            @click="addServiceProcedure"
           >
             <span>
               Tambahkan Prosedur Layanan
@@ -507,14 +571,20 @@
           message="Tidak boleh menggunakan titik"
         />
 
-        <div class="flex flex-col col-span-2">
+        <ValidationProvider
+          v-slot="{ errors }"
+          class="flex flex-col col-span-2"
+          rules="required|numeric"
+        >
           <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
             Tarif Layanan
           </label>
           <JdsInputText
+            v-model="serviceFee"
             placeholder="cth: 7000"
           />
-        </div>
+          <span class="font-lato text-[13px] text-red-700 mt-3">{{ errors[0] }}</span>
+        </ValidationProvider>
 
         <div class="flex flex-col col-span-2">
           <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
@@ -529,56 +599,92 @@
           />
 
           <div
-            v-for="(value, key) in dayMap"
-            :key="key"
-            class="grid grid-cols-[20px,160px,1fr,1fr] gap-x-3 mb-5 items-end"
+            v-for="(item, index) in operationalTime"
+            :key="`step-one-operational-time-${index}`"
+            class="grid grid-cols-[20px,160px,1fr,1fr] gap-x-3 mb-8 items-end"
           >
-            <JdsCheckbox class="mb-2" />
+            <JdsCheckbox
+              class="mb-2"
+              :checked="operationalTime[index].selected"
+              @change="setOperationalTimeDayByIndex(index)"
+            />
             <div class="flex flex-col">
               <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
                 Hari
               </label>
               <JdsInputText
-                :placeholder="value"
+                :placeholder="dayMap[item.day]"
                 :readonly="true"
               />
             </div>
-            <div class="flex flex-col">
+            <ValidationProvider
+              v-slot="{ errors }"
+              :rules="operationalTime[index].selected ? 'required': ''"
+              class="flex flex-col relative"
+            >
               <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
                 Pelayanan dibuka
               </label>
-              <JdsInputText
-                placeholder="cth: 6:00"
+              <TimePicker
+                :value="operationalTime[index].start"
+                :disabled="!operationalTime[index].selected"
+                placeholder="cth: 06:00"
+                manual-input
+                close-on-complete
+                @input="setOperationalStartTimeByIndex($event, index)"
               />
-            </div>
-            <div class="flex flex-col">
+              <span class="absolute bottom-[-24px] font-lato text-[13px] text-red-700 mt-3">{{ errors[0] }}</span>
+            </ValidationProvider>
+            <ValidationProvider
+              v-slot="{ errors }"
+              class="flex flex-col relative"
+              :rules="operationalTime[index].selected ? 'required': ''"
+            >
               <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
                 Pelayanan ditutup
               </label>
-              <JdsInputText
+              <TimePicker
+                :value="operationalTime[index].end"
+                :disabled="!operationalTime[index].selected"
                 placeholder="cth: 17:00"
+                manual-input
+                close-on-complete
+                @input="setOperationalEndTimeByIndex($event, index)"
               />
-            </div>
+              <span class="absolute bottom-[-24px] font-lato text-[13px] text-red-700 mt-3">{{ errors[0] }}</span>
+            </ValidationProvider>
           </div>
         </div>
 
-        <div class="flex flex-col">
+        <ValidationProvider
+          v-slot="{ errors }"
+          class="flex flex-col"
+          rules="required|phonenumber"
+        >
           <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
             Kontak Hotline  (Nomor HP/Telp)
           </label>
           <JdsInputText
+            v-model="hotlineNumber"
             placeholder="cth: 022 2342345"
           />
-        </div>
+          <span class="font-lato text-[13px] text-red-700 mt-3">{{ errors[0] }}</span>
+        </ValidationProvider>
 
-        <div class="flex flex-col">
+        <ValidationProvider
+          v-slot="{ errors }"
+          class="flex flex-col"
+          rules="required|email"
+        >
           <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
             Kontak Hotline  (Alamat E-mail)
           </label>
           <JdsInputText
+            v-model="hotlineMail"
             placeholder="cth: jabarprov@go.id"
           />
-        </div>
+          <span class="font-lato text-[13px] text-red-700 mt-3">{{ errors[0] }}</span>
+        </ValidationProvider>
       </section>
     </Collapse>
 
@@ -691,6 +797,7 @@ import '@/common/helpers/vee-validate.js';
 import { ValidationProvider } from 'vee-validate';
 import Collapse from '@/common/components/Collapse';
 import BaseButton from '@/common/components/BaseButton.vue';
+import TimePicker from '@/common/components/TimePicker.vue';
 
 import { DAY_MAP } from '@/common/constants';
 
@@ -699,6 +806,7 @@ export default {
     ValidationProvider,
     Collapse,
     BaseButton,
+    TimePicker,
   },
   data() {
     return {
@@ -913,6 +1021,39 @@ export default {
     links() {
       return this.$store.state.masterDataForm.stepOne.services.information.links;
     },
+    termsAndConditions() {
+      return this.$store.state.masterDataForm.stepOne.services.service_detail.terms_and_conditions;
+    },
+    serviceProcedures() {
+      return this.$store.state.masterDataForm.stepOne.services.service_detail.service_procedures;
+    },
+    serviceFee: {
+      get() {
+        return this.$store.state.masterDataForm.stepOne.services.service_detail.service_fee;
+      },
+      set(value) {
+        this.$store.commit('masterDataForm/SET_STEP_ONE_SERVICE_FEE', value);
+      },
+    },
+    operationalTime() {
+      return this.$store.state.masterDataForm.stepOne.services.service_detail.operational_time;
+    },
+    hotlineNumber: {
+      get() {
+        return this.$store.state.masterDataForm.stepOne.services.service_detail.hotline_number;
+      },
+      set(value) {
+        this.$store.commit('masterDataForm/SET_STEP_ONE_HOTLINE_NUMBER', value);
+      },
+    },
+    hotlineMail: {
+      get() {
+        return this.$store.state.masterDataForm.stepOne.services.service_detail.hotline_mail;
+      },
+      set(value) {
+        this.$store.commit('masterDataForm/SET_STEP_ONE_HOTLINE_MAIL', value);
+      },
+    },
   },
   methods: {
     addBenefit() {
@@ -947,6 +1088,33 @@ export default {
     },
     setLinkByIndex(value, index) {
       this.$store.commit('masterDataForm/SET_STEP_ONE_LINK', { value, index });
+    },
+    addTermAndCondition() {
+      this.$store.commit('masterDataForm/ADD_STEP_ONE_TERM_AND_CONDITION');
+    },
+    removeTermAndCondition(index) {
+      this.$store.commit('masterDataForm/REMOVE_STEP_ONE_TERM_AND_CONDITION', index);
+    },
+    setTermAndConditionByIndex(value, index) {
+      this.$store.commit('masterDataForm/SET_STEP_ONE_TERM_AND_CONDITION', { value, index });
+    },
+    addServiceProcedure() {
+      this.$store.commit('masterDataForm/ADD_STEP_ONE_SERVICE_PROCEDURE');
+    },
+    removeServiceProcedure(index) {
+      this.$store.commit('masterDataForm/REMOVE_STEP_ONE_SERVICE_PROCEDURE', index);
+    },
+    setServiceProcedureByIndex(value, index) {
+      this.$store.commit('masterDataForm/SET_STEP_ONE_SERVICE_PROCEDURE', { value, index });
+    },
+    setOperationalTimeDayByIndex(index) {
+      this.$store.commit('masterDataForm/SET_STEP_ONE_OPERATIONAL_TIME_DAY', { index });
+    },
+    setOperationalStartTimeByIndex(value, index) {
+      this.$store.commit('masterDataForm/SET_STEP_ONE_OPERATIONAL_TIME_START', { value, index });
+    },
+    setOperationalEndTimeByIndex(value, index) {
+      this.$store.commit('masterDataForm/SET_STEP_ONE_OPERATIONAL_TIME_END', { value, index });
     },
   },
 };

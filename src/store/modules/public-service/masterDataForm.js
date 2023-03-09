@@ -33,10 +33,53 @@ const getDefaultState = () => ({
         ],
       },
       service_detail: {
-        terms_and_conditions: [],
-        service_procedures: [],
+        terms_and_conditions: [''],
+        service_procedures: [''],
         service_fee: '',
-        operational_time: [],
+        operational_time: [
+          {
+            selected: false,
+            day: 'MONDAY',
+            start: '',
+            end: '',
+          },
+          {
+            selected: false,
+            day: 'TUESDAY',
+            start: '',
+            end: '',
+          },
+          {
+            selected: false,
+            day: 'WEDNESDAY',
+            start: '',
+            end: '',
+          },
+          {
+            selected: false,
+            day: 'THURSDAY',
+            start: '',
+            end: '',
+          },
+          {
+            selected: false,
+            day: 'FRIDAY',
+            start: '',
+            end: '',
+          },
+          {
+            selected: false,
+            day: 'SATURDAY',
+            start: '',
+            end: '',
+          },
+          {
+            selected: false,
+            day: 'SUNDAY',
+            start: '',
+            end: '',
+          },
+        ],
         hotline_number: '',
         hotline_mail: '',
       },
@@ -230,6 +273,53 @@ export default {
       const { value, index } = payload;
       state.stepOne.services.information.links[index].link = value;
     },
+    ADD_STEP_ONE_TERM_AND_CONDITION(state) {
+      state.stepOne.services.service_detail.terms_and_conditions.push('');
+    },
+    REMOVE_STEP_ONE_TERM_AND_CONDITION(state, index) {
+      state.stepOne.services.service_detail.terms_and_conditions.splice(index, 1);
+    },
+    SET_STEP_ONE_TERM_AND_CONDITION(state, payload) {
+      const { value, index } = payload;
+      state.stepOne.services.service_detail.terms_and_conditions[index] = value;
+    },
+    ADD_STEP_ONE_SERVICE_PROCEDURE(state) {
+      state.stepOne.services.service_detail.service_procedures.push('');
+    },
+    REMOVE_STEP_ONE_SERVICE_PROCEDURE(state, index) {
+      state.stepOne.services.service_detail.service_procedures.splice(index, 1);
+    },
+    SET_STEP_ONE_SERVICE_PROCEDURE(state, payload) {
+      const { value, index } = payload;
+      state.stepOne.services.service_detail.service_procedures[index] = value;
+    },
+    SET_STEP_ONE_SERVICE_FEE(state, payload) {
+      state.stepOne.services.service_detail.service_fee = payload;
+    },
+    SET_STEP_ONE_OPERATIONAL_TIME_DAY(state, payload) {
+      const { index } = payload;
+      state.stepOne.services.service_detail.operational_time[index].selected = !state.stepOne.services.service_detail.operational_time[index].selected;
+
+      // Reset start and end time if day unselected
+      if (state.stepOne.services.service_detail.operational_time[index].selected === false) {
+        state.stepOne.services.service_detail.operational_time[index].start = 'HH:mm';
+        state.stepOne.services.service_detail.operational_time[index].end = 'HH:mm';
+      }
+    },
+    SET_STEP_ONE_OPERATIONAL_TIME_START(state, payload) {
+      const { value, index } = payload;
+      state.stepOne.services.service_detail.operational_time[index].start = value;
+    },
+    SET_STEP_ONE_OPERATIONAL_TIME_END(state, payload) {
+      const { value, index } = payload;
+      state.stepOne.services.service_detail.operational_time[index].end = value;
+    },
+    SET_STEP_ONE_HOTLINE_NUMBER(state, payload) {
+      state.stepOne.services.service_detail.hotline_number = payload;
+    },
+    SET_STEP_ONE_HOTLINE_MAIL(state, payload) {
+      state.stepOne.services.service_detail.hotline_mail = payload;
+    },
     SET_STEP_TWO_APPLICATION_STATUS(state, payload) {
       state.stepTwo.application.status = payload;
     },
@@ -277,6 +367,7 @@ export default {
     REMOVE_STEP_THREE_ADDITIONAL_INFORMATION_SOCIAL_MEDIA(state, index) {
       state.stepThree.additional_information.social_media.splice(index, 1);
     },
+
   },
   actions: {
     previousStep({ commit, state }) {
