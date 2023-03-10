@@ -66,6 +66,7 @@ export default [
     name: 'Layanan Pemerintah Daerah Provinsi Jawa Barat',
     component: () => import('@/pages/Services/CreateEditMasterData.vue'),
     meta: {
+      mode: 'create',
       layout: 'AppLayoutPrivate',
     },
   },

@@ -422,6 +422,10 @@ export default {
 
   },
   actions: {
+    setInitialOPDName({ commit, rootState }) {
+      const initialOPDName = rootState.auth?.user?.unit?.name ?? '';
+      commit('SET_STEP_ONE_OPD_NAME', initialOPDName);
+    },
     previousStep({ commit, state }) {
       const { currentFormStep } = state;
 

@@ -92,6 +92,9 @@ export default {
     StepThree: () => import('@/components/Services/MasterData/Form/StepThree'),
   },
   computed: {
+    mode() {
+      return this.$route.meta?.mode || 'create';
+    },
     currentFormStep() {
       return this.$store.getters['masterDataForm/currentFormStep'];
     },
@@ -119,6 +122,10 @@ export default {
     this.$store.dispatch('masterDataForm/getGovernmentAffairOptions');
     this.$store.dispatch('masterDataForm/getRALOptions');
     this.$store.dispatch('masterDataForm/getOrganizationOptions');
+
+    if (this.mode === 'create') {
+      this.$store.dispatch('masterDataForm/setInitialOPDName');
+    }
   },
   methods: {
     goToNextStep() {

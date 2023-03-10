@@ -34,6 +34,7 @@
           </label>
           <JdsSelect
             v-model="governmentAffair"
+            placeholder="Pilih urusan pemerintahan"
             :options="governmentAffairOptions"
             :filterable="true"
           />
@@ -50,6 +51,7 @@
           </label>
           <JdsSelect
             v-model="subGovernmentAffair"
+            placeholder="Pilih sub urusan pemerintahan"
             :options="subGovernmentAffairOptions"
           />
           <span class="font-lato text-[13px] text-red-700 mt-3">{{ errors[0] }}</span>
@@ -65,6 +67,7 @@
           </label>
           <JdsSelect
             v-model="serviceForm"
+            placeholder="Pilih bentuk layanan"
             :options="serviceFormOptions"
           />
           <span class="font-lato text-[13px] text-red-700 mt-3">{{ errors[0] }}</span>
@@ -172,6 +175,7 @@
           </label>
           <JdsSelect
             v-model="user"
+            placeholder="Pilih pengguna layanan"
             :options="serviceUserOptions"
           />
           <span class="font-lato text-[13px] text-red-700 mt-3">{{ errors[0] }}</span>
@@ -187,6 +191,7 @@
           </label>
           <JdsSelect
             v-model="subServiceSPBE"
+            placeholder="Pilih kategori layanan SPBE"
             :options="spbeRALOptions"
             :filterable="true"
           />
@@ -203,6 +208,7 @@
           </label>
           <JdsSelect
             v-model="operationalStatus"
+            placeholder="Pilih status operasional"
             :options="operationalStatusOptions"
           />
           <span class="font-lato text-[13px] text-red-700 mt-3">{{ errors[0] }}</span>
@@ -218,6 +224,7 @@
           </label>
           <JdsSelect
             v-model="technical"
+            placeholder="Pilih teknis layanan"
             :options="technicalOptions"
           />
           <span class="font-lato text-[13px] text-red-700 mt-3">{{ errors[0] }}</span>
@@ -240,7 +247,7 @@
           />
           <span class="font-lato text-[13px] text-red-700 mt-3">{{ errors[0] }}</span>
           <div
-            v-if="index !== 0"
+            v-if="benefits.length > 1"
             class="flex justify-end"
           >
             <BaseButton
@@ -307,7 +314,7 @@
           <span class="font-lato text-[13px] text-red-700 mt-3">{{ errors[0] }}</span>
 
           <div
-            v-if="index !== 0"
+            v-if="facilities.length > 1"
             class="flex justify-end"
           >
             <BaseButton
@@ -396,7 +403,7 @@
           </div>
 
           <div
-            v-if="index !== 0"
+            v-if="links.length > 1"
             class="col-span-2 flex justify-end"
           >
             <BaseButton
