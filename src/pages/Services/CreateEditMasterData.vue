@@ -118,6 +118,7 @@ export default {
     this.$store.dispatch('masterDataForm/resetFormData');
     this.$store.dispatch('masterDataForm/getGovernmentAffairOptions');
     this.$store.dispatch('masterDataForm/getRALOptions');
+    this.$store.dispatch('masterDataForm/getOrganizationOptions');
   },
   methods: {
     goToNextStep() {

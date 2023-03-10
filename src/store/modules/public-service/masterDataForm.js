@@ -122,6 +122,7 @@ const getDefaultState = () => ({
   },
   governmentAffairOptions: [],
   spbeRALOptions: [],
+  organizationLists: [],
 });
 
 export default {
@@ -172,6 +173,14 @@ export default {
 
       return options;
     },
+    organizationOptions(state) {
+      const options = state.organizationLists.map((item) => ({
+        value: item.cbg_name,
+        label: item.cbg_name,
+      }));
+
+      return options;
+    },
   },
   mutations: {
     SET_CURRENT_FORM_STEP(state, payload) {
@@ -185,6 +194,9 @@ export default {
     },
     SET_SPBE_RAL_OPTIONS(state, payload) {
       state.spbeRALOptions = payload;
+    },
+    SET_ORGANIZATION_OPTIONS(state, payload) {
+      state.organizationLists = payload;
     },
     SET_STEP_ONE_OPD_NAME(state, payload) {
       state.stepOne.services.information.opd_name = payload;
@@ -320,6 +332,46 @@ export default {
     SET_STEP_ONE_HOTLINE_MAIL(state, payload) {
       state.stepOne.services.service_detail.hotline_mail = payload;
     },
+    ADD_STEP_ONE_LOCATION(state) {
+      state.stepOne.services.location.push({
+        type: '',
+        organization: '',
+        name: '',
+        address: '',
+        phone_number: '',
+      });
+    },
+    REMOVE_STEP_ONE_LOCATION(state, index) {
+      state.stepOne.services.location.splice(index, 1);
+    },
+    SET_STEP_ONE_LOCATION_TYPE(state, payload) {
+      const { index, value } = payload;
+      state.stepOne.services.location[index].type = value;
+      state.stepOne.services.location[index].name = '';
+      state.stepOne.services.location[index].address = '';
+      state.stepOne.services.location[index].organization = '';
+      state.stepOne.services.location[index].phone_number = '';
+    },
+    SET_STEP_ONE_LOCATION_NAME(state, payload) {
+      const { index, value } = payload;
+      state.stepOne.services.location[index].name = value;
+    },
+    SET_STEP_ONE_LOCATION_ORGANIZATION(state, payload) {
+      const { index, value } = payload;
+      state.stepOne.services.location[index].organization = value;
+      if (state.stepOne.services.location[index].type === 'UNIT') {
+        state.stepOne.services.location[index].name = value;
+        state.stepOne.services.location[index].address = state.organizationLists.find((item) => item.cbg_name === value)?.cbg_alamat ?? '';
+      }
+    },
+    SET_STEP_ONE_LOCATION_ADDRESS(state, payload) {
+      const { index, value } = payload;
+      state.stepOne.services.location[index].address = value;
+    },
+    SET_STEP_ONE_LOCATION_PHONE_NUMBER(state, payload) {
+      const { index, value } = payload;
+      state.stepOne.services.location[index].phone_number = value;
+    },
     SET_STEP_TWO_APPLICATION_STATUS(state, payload) {
       state.stepTwo.application.status = payload;
     },
@@ -406,6 +458,15 @@ export default {
         commit('SET_SPBE_RAL_OPTIONS', response.data);
       } catch (error) {
         commit('SET_SPBE_RAL_OPTIONS', []);
+      }
+    },
+    // Organization Options
+    async getOrganizationOptions({ commit }) {
+      try {
+        const response = await masterDataServiceRepository.getOrganizations();
+        commit('SET_ORGANIZATION_OPTIONS', response.data);
+      } catch {
+        commit('SET_ORGANIZATION_OPTIONS', []);
       }
     },
   },

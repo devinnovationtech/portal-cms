@@ -18,6 +18,13 @@ export default {
     return Repository.get('/spbe_rals');
   },
   /**
+   * Get UPTD Cabdin list
+   * @returns {Promise}
+   */
+  getOrganizations() {
+    return Repository.get('/uptd_cabdins');
+  },
+  /**
    * Get Master Data List
    * @param {object} params
    *

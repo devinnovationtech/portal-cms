@@ -691,66 +691,108 @@
     <Collapse title="Lokasi Pelayanan">
       <section>
         <div
-          v-for="index in 2"
+          v-for="(_,index) in locations"
           :key="`lokasi-pelayanan-${index}`"
           class="grid grid-cols-1 gap-x-8 gap-y-4"
         >
           <h3 class="font-roboto font-medium leading-7 text-base text-green-700">
-            {{ index }}. Lokasi Pelayanan
+            {{ index + 1 }}. Lokasi Pelayanan
           </h3>
 
-          <div class="flex flex-col">
+          <ValidationProvider
+            class="flex flex-col"
+            tag="div"
+          >
             <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
               Jenis Lokasi
             </label>
-            <JdsSelect />
-          </div>
+            <JdsSelect
+              :value="locations[index].type"
+              :options="typeLocationOptions"
+              placeholder="Pilih Jenis Lokasi"
+              @change="onChangeTypeLocation($event, index)"
+            />
+          </ValidationProvider>
 
           <div class="flex flex-col">
             <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
               Penanggung Jawab Lokasi
             </label>
-            <JdsSelect />
+            <JdsSelect
+              :value="locations[index].organization"
+              :options="onCheckOption(index)"
+              :filterable="true"
+              :auto-close="true"
+              placeholder="Pilih Penanggung Jawab Lokasi"
+              @change="onChangeOrganization($event, index)"
+            />
           </div>
 
-          <div class="flex flex-col">
+          <ValidationProvider
+            class="flex flex-col"
+            tag="div"
+          >
+            <!-- @TODO: set autofill if type of location is unit and disabled -->
             <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
               Nama Lokasi
             </label>
             <JdsInputText
+              :value="locations[index].name"
               placeholder="Masukkan nama lokasi"
+              :readonly="locations[index].type === 'UNIT'"
+              @input="setLocationName($event, index)"
             />
-          </div>
+          </ValidationProvider>
 
-          <div class="flex flex-col">
+          <ValidationProvider
+            class="flex flex-col"
+            tag="div"
+          >
+            <!-- @TODO: set autofill if type of location is unit -->
             <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
               Alamat Lokasi
             </label>
             <textarea
+              :value="locations[index].address"
+              :readonly="locations[index].type === 'UNIT'"
               placeholder="Masukkan alamat lokasi"
               rows="4"
               maxlength="255"
               class="w-full border border-gray-500 rounded-lg px-2 py-1 bg-gray-50 mb-1 hover:bg-white
             hover:border-green-600 focus:outline-none focus:border-green-500 focus:outline-1 focus:outline-offset-[-2px] focus:outline-yellow-500"
+              @input="setAddress($event.target.value, index)"
             />
             <p class="text-xs text-right text-gray-600">
               Tersisa xx karakter
             </p>
-          </div>
+          </ValidationProvider>
 
-          <div class="flex flex-col">
+          <ValidationProvider
+            v-slot="{errors}"
+            class="flex flex-col"
+            tag="div"
+            rules="phonenumber"
+          >
+            <!-- @TODO: set autofill if type of location is unit -->
             <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
               Kontak Lokasi (Nomor HP/Telp)
             </label>
             <JdsInputText
+              :value="locations[index].phone_number"
               placeholder="Masukkan kontak lokasi"
+              :error-message="errors[0]"
+              @input="setPhoneNumberOfContactLocation($event, index)"
             />
-          </div>
+          </ValidationProvider>
 
-          <div class="flex justify-end">
+          <div
+            v-if="locations.length > 1"
+            class="flex justify-end"
+          >
             <BaseButton
               type="button"
               class="border-red-500 hover:bg-red-50 font-lato text-sm text-red-500"
+              @click="removeItemLocation(index)"
             >
               <span>
                 Hapus Lokasi
@@ -766,7 +808,7 @@
           </div>
 
           <hr
-            v-show="index !== 2"
+            v-show="!(locations[index] === locations.slice(-1)[0])"
             class="mb-4"
           >
         </div>
@@ -774,6 +816,7 @@
           <BaseButton
             type="button"
             class="border-green-700 hover:bg-green-50 font-lato text-sm text-green-700"
+            @click="addItemLocation(index)"
           >
             <span>
               Tambahkan Lokasi
@@ -880,6 +923,30 @@ export default {
           },
         ],
       },
+      typeLocationOptions: [
+        {
+          label: 'Unit',
+          value: 'UNIT',
+        },
+        {
+          label: 'Khusus',
+          value: 'KHUSUS',
+        },
+      ],
+      organizationUnitOptions: [
+        {
+          label: 'Cabdin',
+          value: 'CABDIN',
+        },
+        {
+          label: 'UPTD',
+          value: 'UPTD',
+        },
+        {
+          label: 'BLUD',
+          value: 'BLUD',
+        },
+      ],
       dayMap: DAY_MAP,
     };
   },
@@ -1054,6 +1121,12 @@ export default {
         this.$store.commit('masterDataForm/SET_STEP_ONE_HOTLINE_MAIL', value);
       },
     },
+    locations() {
+      return this.$store.state.masterDataForm.stepOne.services.location;
+    },
+    organizationOptions() {
+      return this.$store.getters['masterDataForm/organizationOptions'];
+    },
   },
   methods: {
     addBenefit() {
@@ -1115,6 +1188,37 @@ export default {
     },
     setOperationalEndTimeByIndex(value, index) {
       this.$store.commit('masterDataForm/SET_STEP_ONE_OPERATIONAL_TIME_END', { value, index });
+    },
+    addItemLocation(value, index) {
+      this.$store.commit('masterDataForm/ADD_STEP_ONE_LOCATION', { value, index });
+    },
+    removeItemLocation(index) {
+      this.$store.commit('masterDataForm/REMOVE_STEP_ONE_LOCATION', index);
+    },
+    onChangeTypeLocation(value, index) {
+      this.$store.commit('masterDataForm/SET_STEP_ONE_LOCATION_TYPE', { value, index });
+    },
+    setLocationName(value, index) {
+      this.$store.commit('masterDataForm/SET_STEP_ONE_LOCATION_NAME', { value, index });
+    },
+    setAddress(value, index) {
+      this.$store.commit('masterDataForm/SET_STEP_ONE_LOCATION_ADDRESS', { value, index });
+    },
+    setPhoneNumberOfContactLocation(value, index) {
+      this.$store.commit('masterDataForm/SET_STEP_ONE_LOCATION_PHONE_NUMBER', { value, index });
+    },
+    onChangeOrganization(value, index) {
+      this.$store.commit('masterDataForm/SET_STEP_ONE_LOCATION_ORGANIZATION', { value, index });
+    },
+    onCheckOption(index) {
+      switch (this.locations[index].type) {
+        case 'UNIT':
+          return this.organizationOptions;
+        case 'KHUSUS':
+          return this.organizationUnitOptions;
+        default:
+          return [];
+      }
     },
   },
 };
