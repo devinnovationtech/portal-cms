@@ -207,7 +207,7 @@ export default {
     spbeRALOptions(state) {
       const options = state.spbeRALOptions.map((item) => ({
         value: item.ral_code_2,
-        label: item.ral_code_2,
+        label: item.item,
       }));
 
       return options;
