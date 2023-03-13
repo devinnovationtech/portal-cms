@@ -4,6 +4,7 @@
       <MasterDataTabBar
         :tabs="tabs"
         :current-tab.sync="currentTab"
+        @update:currentTab="filterMasterDataByStatus"
       />
       <section class="w-full bg-white py-6 px-3">
         <div class="full flex justify-between mb-5 items-center">
@@ -75,7 +76,7 @@ export default {
           count: null,
         },
         {
-          key: 'SAVED',
+          key: 'ARCHIVE',
           label: 'Tersimpan',
           icon: 'ArchiveIcon',
           count: null,
@@ -98,8 +99,9 @@ export default {
       formatDate,
     };
   },
-  async mounted() {
-    await this.fetchMasterData();
+  mounted() {
+    this.fetchMasterData();
+    this.fetchStatusCounter();
   },
   methods: {
     async fetchMasterData() {
@@ -118,12 +120,48 @@ export default {
         this.loading = false;
       }
     },
+    async fetchStatusCounter() {
+      try {
+        const response = await masterDataRepository.getStatusCounter();
+        const { data = [] } = response.data;
+        const newTabs = [];
+
+        this.tabs.forEach((tab) => {
+          const object = data.find((item) => item.status === tab.key);
+          newTabs.push({
+            ...tab,
+            count: object?.count || 0,
+          });
+        });
+
+        // Get total master data off all status
+        const totalCount = data.map((item) => item.count).reduce((a, b) => a + b, 0);
+
+        // Mutate the first index (object with the key of `ALL`) count property
+        newTabs[0].count = totalCount;
+
+        this.tabs = [...newTabs];
+      } catch {
+        this.$toast({
+          type: 'error',
+          message: 'Gagal mendapatkan data Total Berita, silakan coba beberapa saat lagi',
+        });
+      }
+    },
     setParams(data) {
       const newParams = { ...this.params, ...data };
       this.params = { ...newParams };
     },
     onUpdatePagination(data) {
       this.setParams(data);
+      this.fetchMasterData();
+    },
+    filterMasterDataByStatus(status) {
+      if (status === 'ALL') {
+        this.setParams({ status: null });
+      } else {
+        this.setParams({ status });
+      }
       this.fetchMasterData();
     },
   },

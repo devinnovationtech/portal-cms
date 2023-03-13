@@ -37,4 +37,11 @@ export default {
   getMasterDataList(params = {}) {
     return Repository.get(`${resource}`, { params });
   },
+  /**
+   * Get master data status counter
+   * @returns {Promise}
+   */
+  getStatusCounter() {
+    return Repository.get(`${resource}/tabs`);
+  },
 };
