@@ -1,108 +1,176 @@
 <template>
   <main class="pb-20">
-    <form class="master-data__form">
-      <HeaderMenu>
-        <template #left-button>
+    <ValidationObserver
+      ref="form"
+      v-slot="{ invalid }"
+    >
+      <form class="master-data__form">
+        <HeaderMenu>
+          <template #left-button>
+            <BaseButton
+              type="button"
+              class="bg-red-400 hover:bg-red-600 font-lato text-sm text-white"
+              @click="$router.back()"
+            >
+              <template #icon-left>
+                <JdsIcon
+                  name="arrow-left"
+                  size="16px"
+                  fill="#fff"
+                  class="h-4 w-4"
+                />
+              </template>
+              <p>
+                Batalkan
+              </p>
+            </BaseButton>
+          </template>
+          <div class="flex gap-4">
+            <BaseButton
+              v-if="!isFirstStep"
+              type="button"
+              class="border-green-700 hover:bg-green-50 font-lato text-sm text-green-700"
+              @click="previousStep"
+            >
+              <span>
+                Sebelumnya
+              </span>
+            </BaseButton>
+            <BaseButton
+              v-if="!isLastStep"
+              type="button"
+              class="bg-green-700 hover:bg-green-600 font-lato text-sm text-white"
+              @click="nextStep"
+            >
+              <span>
+                Simpan & Lanjutkan
+              </span>
+            </BaseButton>
+            <BaseButton
+              v-if="isLastStep"
+              type="button"
+              class="border-green-700 hover:bg-green-50 font-lato text-sm text-green-700"
+              @click="openSaveConfirmation"
+            >
+              <span>
+                Simpan
+              </span>
+            </BaseButton>
+            <BaseButton
+              v-if="isLastStep"
+              type="button"
+              class="bg-green-700 hover:bg-green-600 font-lato text-sm text-white"
+              :disabled="invalid"
+            >
+              <span>
+                Tambahkan Layanan
+              </span>
+            </BaseButton>
+          </div>
+        </HeaderMenu>
+
+        <section class="w-full h-full bg-white rounded-lg p-6">
+          <MasterDataFormStepper />
+          <keep-alive>
+            <component
+              :is="renderedForm"
+              :current-form-step="currentFormStep"
+            />
+          </keep-alive>
+        </section>
+      </form>
+    </ValidationObserver>
+
+    <!-- Confirmation Popup -->
+    <BaseModal :open="submitStatus === 'SAVE_AS_DRAFT_CONFIRMATION'">
+      <div class="w-full h-full px-2 pb-4">
+        <h1 class="font-roboto font-medium text-green-700 text-[21px] leading-[34px] mb-6">
+          Tambahkan Layanan
+        </h1>
+        <div class="flex items-center gap-4">
+          <p class="text-sm leading-6 to-blue-gray-800">
+            Apakah Anda ingin menambah layanan ini?
+          </p>
+        </div>
+      </div>
+      <template #footer>
+        <div class="flex w-full h-full items-center justify-end gap-4 p-2">
           <BaseButton
-            type="button"
-            class="bg-red-400 hover:bg-red-600 font-lato text-sm text-white"
-            @click="$router.back()"
+            class="border border-green-700 hover:bg-green-50 text-sm text-green-700"
+            @click="closeConfirmation"
           >
-            <template #icon-left>
-              <JdsIcon
-                name="arrow-left"
-                size="16px"
-                fill="#fff"
-                class="h-4 w-4"
-              />
-            </template>
-            <p>
-              Batalkan
-            </p>
+            Tidak
           </BaseButton>
-        </template>
-        <div class="flex gap-4">
           <BaseButton
-            v-if="!isFirstStep"
-            type="button"
-            class="border-green-700 hover:bg-green-50 font-lato text-sm text-green-700"
-            @click="goToPrevStep"
+            class="bg-green-700 hover:bg-green-600 text-sm text-white"
+            @click="saveAsDraft"
           >
-            <span>
-              Sebelumnya
-            </span>
-          </BaseButton>
-          <BaseButton
-            v-if="!isLastStep"
-            type="button"
-            class="bg-green-700 hover:bg-green-600 font-lato text-sm text-white"
-            @click="goToNextStep"
-          >
-            <span>
-              Simpan & Lanjutkan
-            </span>
-          </BaseButton>
-          <BaseButton
-            v-if="isLastStep"
-            type="button"
-            class="border-green-700 hover:bg-green-50 font-lato text-sm text-green-700"
-          >
-            <span>
-              Simpan
-            </span>
-          </BaseButton>
-          <BaseButton
-            v-if="isLastStep"
-            type="button"
-            class="bg-green-700 hover:bg-green-600 font-lato text-sm text-white"
-            :disabled="invalid"
-          >
-            <span>
-              Tambahkan Layanan
-            </span>
+            Ya, tambahkan layanan
           </BaseButton>
         </div>
-      </HeaderMenu>
+      </template>
+    </BaseModal>
 
-      <section class="w-full h-full bg-white rounded-lg p-6">
-        <MasterDataFormStepper />
-        <keep-alive>
-          <component
-            :is="renderedForm"
-            :current-form-step="currentFormStep"
+    <!-- Success/Error Message -->
+    <BaseModal :open="submitStatus === 'SUCCESS' || submitStatus === 'ERROR'">
+      <div class="w-full h-full px-2 pb-4">
+        <h1 class="font-roboto font-medium text-green-700 text-[21px] leading-[34px] mb-6">
+          {{ submitMessage.title }}
+        </h1>
+        <div class="flex items-center gap-4">
+          <JdsIcon
+            :name="submitMessage.iconName"
+            :class="submitMessage.iconClass"
           />
-        </keep-alive>
-      </section>
-    </form>
+          <p class="text-sm leading-6 to-blue-gray-800">
+            {{ submitMessage.message }}
+          </p>
+        </div>
+      </div>
+      <template #footer>
+        <div class="flex w-full h-full items-center justify-center gap-4 p-2">
+          <BaseButton
+            class="bg-green-700 hover:bg-green-600 text-sm text-white"
+            @click="handleCloseConfirmation"
+          >
+            Saya Mengerti
+          </BaseButton>
+        </div>
+      </template>
+    </BaseModal>
   </main>
 </template>
 
 <script>
 import HeaderMenu from '@/common/components/HeaderMenu.vue';
 import BaseButton from '@/common/components/BaseButton.vue';
+import BaseModal from '@/common/components/BaseModal';
 import MasterDataFormStepper from '@/components/Services/MasterData/Form/Stepper.vue';
+
+import { mapActions, mapGetters } from 'vuex';
+import { ValidationObserver } from 'vee-validate';
 
 export default {
   components: {
+    ValidationObserver,
     HeaderMenu,
     BaseButton,
+    BaseModal,
     MasterDataFormStepper,
     StepOne: () => import('@/components/Services/MasterData/Form/StepOne'),
     StepTwo: () => import('@/components/Services/MasterData/Form/StepTwo'),
     StepThree: () => import('@/components/Services/MasterData/Form/StepThree'),
   },
   computed: {
+    ...mapGetters('masterDataForm', [
+      'currentFormStep',
+      'isFirstStep',
+      'isLastStep',
+      'submitStatus',
+      'submitMessage',
+    ]),
     mode() {
       return this.$route.meta?.mode || 'create';
-    },
-    currentFormStep() {
-      return this.$store.getters['masterDataForm/currentFormStep'];
-    },
-    isFirstStep() {
-      return this.$store.getters['masterDataForm/isFirstStep'];
-    },
-    isLastStep() {
-      return this.$store.getters['masterDataForm/isLastStep'];
     },
     renderedForm() {
       switch (this.currentFormStep) {
@@ -117,6 +185,11 @@ export default {
       }
     },
   },
+  watch: {
+    currentFormStep() {
+      this.$refs.form.validate();
+    },
+  },
   mounted() {
     this.$store.dispatch('masterDataForm/resetFormData');
     this.$store.dispatch('masterDataForm/getGovernmentAffairOptions');
@@ -128,11 +201,19 @@ export default {
     }
   },
   methods: {
-    goToNextStep() {
-      this.$store.dispatch('masterDataForm/nextStep');
-    },
-    goToPrevStep() {
-      this.$store.dispatch('masterDataForm/previousStep');
+    ...mapActions('masterDataForm', [
+      'nextStep',
+      'previousStep',
+      'saveAsDraft',
+      'openSaveConfirmation',
+      'closeConfirmation',
+    ]),
+    handleCloseConfirmation() {
+      if (this.submitStatus === 'SUCCESS') {
+        this.$router.push('/layanan');
+      } else {
+        this.closeConfirmation();
+      }
     },
   },
 };

@@ -2,6 +2,14 @@ import { RepositoryFactory } from '@/repositories/RepositoryFactory';
 
 const masterDataServiceRepository = RepositoryFactory.get('masterDataService');
 
+const FORM_SUBMIT_STATUS = Object.freeze({
+  NONE: 'NONE',
+  SAVE_AS_DRAFT_CONFIRMATION: 'SAVE_AS_DRAFT_CONFIRMATION',
+  LOADING: 'LOADING',
+  SUCCESS: 'SUCCESS',
+  ERROR: 'ERROR',
+});
+
 // define the default state for reset purposes
 const getDefaultState = () => ({
   currentFormStep: 1,
@@ -9,6 +17,7 @@ const getDefaultState = () => ({
     services: {
       information: {
         opd_name: '',
+        opd_id: '',
         government_affair: '',
         sub_government_affair: '',
         form: '',
@@ -123,6 +132,7 @@ const getDefaultState = () => ({
   governmentAffairOptions: [],
   spbeRALOptions: [],
   organizationLists: [],
+  submitStatus: FORM_SUBMIT_STATUS.NONE,
 });
 
 export default {
@@ -137,6 +147,35 @@ export default {
     },
     isLastStep(state) {
       return state.currentFormStep === 3;
+    },
+    submitStatus(state) {
+      return state.submitStatus;
+    },
+    submitMessage(state) {
+      if (state.submitStatus === FORM_SUBMIT_STATUS.SUCCESS) {
+        return {
+          title: 'Berhasil!',
+          message: 'Layanan yang Anda buat berhasil ditambahkan.',
+          iconName: 'check-mark-circle',
+          iconClass: 'text-green-600',
+        };
+      }
+
+      if (state.submitStatus === FORM_SUBMIT_STATUS.ERROR) {
+        return {
+          title: 'Tambah Layanan Gagal!',
+          message: 'Layanan yang Anda buat gagal ditambahkan.',
+          iconName: 'warning',
+          iconClass: 'text-red-600',
+        };
+      }
+
+      return {
+        title: '',
+        message: '',
+        iconName: '',
+        iconClass: '',
+      };
     },
     governmentAffairOptions(state) {
       const originalList = state.governmentAffairOptions.map((item) => item.main_affair);
@@ -419,11 +458,13 @@ export default {
     REMOVE_STEP_THREE_ADDITIONAL_INFORMATION_SOCIAL_MEDIA(state, index) {
       state.stepThree.additional_information.social_media.splice(index, 1);
     },
-
+    SET_SUBMIT_STATUS(state, payload) {
+      state.submitStatus = payload;
+    },
   },
   actions: {
     setInitialOPDName({ commit, rootState }) {
-      const initialOPDName = rootState.auth?.user?.unit?.name ?? '';
+      const initialOPDName = rootState.auth?.user?.unit?.id ?? null;
       commit('SET_STEP_ONE_OPD_NAME', initialOPDName);
     },
     previousStep({ commit, state }) {
@@ -473,5 +514,53 @@ export default {
         commit('SET_ORGANIZATION_OPTIONS', []);
       }
     },
+    generateFormData({ state }, status) {
+      let stepTwoState;
+      const { technical } = state.stepOne.services.information;
+
+      // generate different state based on step one state (technical)
+      if (technical === 'ONLINE') {
+        stepTwoState = {
+          ...state.stepTwo.application,
+        };
+      } else {
+        stepTwoState = {
+          ...getDefaultState().stepTwo.application,
+        };
+      }
+
+      const formData = {
+        services: {
+          service_detail: {
+            ...state.stepOne.services.service_detail,
+            // Get only selected operational time
+            operational_time: state.stepOne.services.service_detail.operational_time.filter((item) => item.selected),
+          },
+          information: { ...state.stepOne.services.information },
+          location: [...state.stepOne.services.location],
+        },
+        application: { ...stepTwoState },
+        additional_information: { ...state.stepThree.additional_information },
+        status,
+      };
+
+      return formData;
+    },
+    closeConfirmation({ commit }) {
+      commit('SET_SUBMIT_STATUS', FORM_SUBMIT_STATUS.NONE);
+    },
+    openSaveConfirmation({ commit }) {
+      commit('SET_SUBMIT_STATUS', FORM_SUBMIT_STATUS.SAVE_AS_DRAFT_CONFIRMATION);
+    },
+    async saveAsDraft({ dispatch, commit }) {
+      try {
+        const formData = await dispatch('generateFormData', 'DRAFT');
+        await masterDataServiceRepository.createMasterData(formData);
+        commit('SET_SUBMIT_STATUS', FORM_SUBMIT_STATUS.SUCCESS);
+      } catch (error) {
+        commit('SET_SUBMIT_STATUS', FORM_SUBMIT_STATUS.ERROR);
+      }
+    },
+
   },
 };

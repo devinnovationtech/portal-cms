@@ -37,6 +37,15 @@ export default {
   getMasterDataList(params = {}) {
     return Repository.get(`${resource}`, { params });
   },
+
+  /**
+   * Store Master Data
+   * @returns {Promise}
+   */
+  createMasterData(body) {
+    return Repository.post(`${resource}`, body);
+  },
+
   /**
    * Get master data status counter
    * @returns {Promise}

@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
 import jwtDecode from 'jwt-decode';
-import { RepositoryFactory } from '../../repositories/RepositoryFactory';
 import { getAllCookies, removeAllCookies, setCookies } from '@/common/helpers/cookies';
+import { RepositoryFactory } from '../../repositories/RepositoryFactory';
 
 const authRepository = RepositoryFactory.get('auth');
 const userRepository = RepositoryFactory.get('user');
@@ -22,6 +22,9 @@ export default {
     },
     permissions(state) {
       return state.permissions;
+    },
+    unitName(state) {
+      return state.user?.unit?.name ?? '';
     },
   },
   mutations: {

@@ -20,6 +20,7 @@
             id="opd-name"
             v-model="OPDName"
             placeholder="Autofill"
+            readonly
           />
           <span class="font-lato text-[13px] text-red-700 mt-3">{{ errors[0] }}</span>
         </ValidationProvider>
@@ -823,7 +824,7 @@
           <BaseButton
             type="button"
             class="border-green-700 hover:bg-green-50 font-lato text-sm text-green-700"
-            @click="addItemLocation(index)"
+            @click="addItemLocation"
           >
             <span>
               Tambahkan Lokasi
@@ -958,13 +959,8 @@ export default {
     };
   },
   computed: {
-    OPDName: {
-      get() {
-        return this.$store.state.masterDataForm.stepOne.services.information.opd_name;
-      },
-      set(value) {
-        this.$store.commit('masterDataForm/SET_STEP_ONE_OPD_NAME', value);
-      },
+    OPDName() {
+      return this.$store.getters['auth/unitName'];
     },
     governmentAffairOptions() {
       return this.$store.getters['masterDataForm/governmentAffairOptions'];

@@ -174,22 +174,23 @@ export default {
   },
   data() {
     return {
-      // @TODO: isShowForm is temporarly use, it will replace based on teknis layanan in form one
-      isShowForm: true,
       status: [
         {
           label: 'Tersedia',
-          value: 'Tersedia',
+          value: 'AVAILABLE',
         },
         {
           label: 'Tidak Tersedia',
-          value: 'Tidak Tersedia',
+          value: 'NOT-AVAILABLE',
         },
       ],
 
     };
   },
   computed: {
+    isShowForm() {
+      return this.$store.state.masterDataForm.stepOne.services.information.technical === 'ONLINE';
+    },
     applicationStatus: {
       get() {
         return this.$store.state.masterDataForm.stepTwo.application.status;
