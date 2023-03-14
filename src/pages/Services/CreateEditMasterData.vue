@@ -4,7 +4,9 @@
       ref="form"
       v-slot="{ invalid }"
     >
-      <form class="master-data__form">
+      <form
+        class="master-data__form"
+      >
         <HeaderMenu>
           <template #left-button>
             <BaseButton
@@ -61,6 +63,7 @@
               type="button"
               class="bg-green-700 hover:bg-green-600 font-lato text-sm text-white"
               :disabled="invalid"
+              @click="submitConfirmation"
             >
               <span>
                 Tambahkan Layanan
@@ -111,6 +114,19 @@
       </template>
     </BaseModal>
 
+    <!-- Submit Confirmation -->
+    <SubmitConfirmation
+      :open="submitStatus === 'SUBMIT_CONFIRMATION'"
+      @close="closeConfirmation"
+      @submit="submitForm"
+    />
+
+    <!-- Submit Progress -->
+    <ProgressModal
+      :open="submitStatus === 'LOADING'"
+      :value="submitProgress"
+    />
+
     <!-- Success/Error Message -->
     <BaseModal :open="submitStatus === 'SUCCESS' || submitStatus === 'ERROR'">
       <div class="w-full h-full px-2 pb-4">
@@ -145,7 +161,9 @@
 import HeaderMenu from '@/common/components/HeaderMenu.vue';
 import BaseButton from '@/common/components/BaseButton.vue';
 import BaseModal from '@/common/components/BaseModal';
+import ProgressModal from '@/common/components/ProgressModal';
 import MasterDataFormStepper from '@/components/Services/MasterData/Form/Stepper.vue';
+import SubmitConfirmation from '@/components/Services/MasterData/Form/SubmitConfirmation.vue';
 
 import { mapActions, mapGetters } from 'vuex';
 import { ValidationObserver } from 'vee-validate';
@@ -156,7 +174,9 @@ export default {
     HeaderMenu,
     BaseButton,
     BaseModal,
+    ProgressModal,
     MasterDataFormStepper,
+    SubmitConfirmation,
     StepOne: () => import('@/components/Services/MasterData/Form/StepOne'),
     StepTwo: () => import('@/components/Services/MasterData/Form/StepTwo'),
     StepThree: () => import('@/components/Services/MasterData/Form/StepThree'),
@@ -168,6 +188,7 @@ export default {
       'isLastStep',
       'submitStatus',
       'submitMessage',
+      'submitProgress',
     ]),
     mode() {
       return this.$route.meta?.mode || 'create';
@@ -207,6 +228,8 @@ export default {
       'saveAsDraft',
       'openSaveConfirmation',
       'closeConfirmation',
+      'submitConfirmation',
+      'submitForm',
     ]),
     handleCloseConfirmation() {
       if (this.submitStatus === 'SUCCESS') {

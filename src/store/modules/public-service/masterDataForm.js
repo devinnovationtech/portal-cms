@@ -5,6 +5,7 @@ const masterDataServiceRepository = RepositoryFactory.get('masterDataService');
 const FORM_SUBMIT_STATUS = Object.freeze({
   NONE: 'NONE',
   SAVE_AS_DRAFT_CONFIRMATION: 'SAVE_AS_DRAFT_CONFIRMATION',
+  SUBMIT_CONFIRMATION: 'SUBMIT_CONFIRMATION',
   LOADING: 'LOADING',
   SUCCESS: 'SUCCESS',
   ERROR: 'ERROR',
@@ -133,6 +134,7 @@ const getDefaultState = () => ({
   spbeRALOptions: [],
   organizationLists: [],
   submitStatus: FORM_SUBMIT_STATUS.NONE,
+  submitProgress: 0,
 });
 
 export default {
@@ -150,6 +152,9 @@ export default {
     },
     submitStatus(state) {
       return state.submitStatus;
+    },
+    submitProgress(state) {
+      return state.submitProgress;
     },
     submitMessage(state) {
       if (state.submitStatus === FORM_SUBMIT_STATUS.SUCCESS) {
@@ -461,6 +466,9 @@ export default {
     SET_SUBMIT_STATUS(state, payload) {
       state.submitStatus = payload;
     },
+    SET_SUBMIT_PROGRESS(state, payload) {
+      state.submitProgress = payload;
+    },
   },
   actions: {
     setInitialOPDName({ commit, rootState }) {
@@ -552,11 +560,36 @@ export default {
     openSaveConfirmation({ commit }) {
       commit('SET_SUBMIT_STATUS', FORM_SUBMIT_STATUS.SAVE_AS_DRAFT_CONFIRMATION);
     },
+    submitConfirmation({ commit }) {
+      commit('SET_SUBMIT_STATUS', FORM_SUBMIT_STATUS.SUBMIT_CONFIRMATION);
+    },
     async saveAsDraft({ dispatch, commit }) {
       try {
         const formData = await dispatch('generateFormData', 'DRAFT');
         await masterDataServiceRepository.createMasterData(formData);
         commit('SET_SUBMIT_STATUS', FORM_SUBMIT_STATUS.SUCCESS);
+      } catch (error) {
+        commit('SET_SUBMIT_STATUS', FORM_SUBMIT_STATUS.ERROR);
+      }
+    },
+    async submitForm({ dispatch, commit }) {
+      try {
+        commit('SET_SUBMIT_STATUS', FORM_SUBMIT_STATUS.LOADING);
+        commit('SET_SUBMIT_PROGRESS', 25);
+
+        const formData = await dispatch('generateFormData', 'ARCHIVE');
+        const response = await masterDataServiceRepository.createMasterData(formData);
+
+        if (response.status === 201) {
+          // Add timeout to prevent progress bar too fast
+          setTimeout(() => {
+            commit('SET_SUBMIT_PROGRESS', 75);
+
+            setTimeout(() => {
+              commit('SET_SUBMIT_STATUS', FORM_SUBMIT_STATUS.SUCCESS);
+            }, 150);
+          }, 150);
+        }
       } catch (error) {
         commit('SET_SUBMIT_STATUS', FORM_SUBMIT_STATUS.ERROR);
       }
