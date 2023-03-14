@@ -37,9 +37,9 @@
           </td>
         </tr>
         <template v-if="hasFeature">
-          <template v-for="(feature, index) in application.feature">
+          <template v-for="(feature, index) in application.features">
             <tr
-              :key="`${feature.name}-${index}`"
+              :key="`nama-${index}`"
             >
               <td class="min-w-[228px] font-lato text-green-700 font-bold text-sm">
                 Fitur Aplikasi ke {{ index + 1 }}
@@ -49,7 +49,7 @@
               </td>
             </tr>
             <tr
-              :key="`${feature.description}-${index}`"
+              :key="`deskripsi-${index}`"
             >
               <td class="min-w-[228px] font-lato text-blue-gray-500 font-bold text-sm">
                 Deskripsi Fitur Aplikasi
@@ -106,7 +106,7 @@ export default {
       }
     },
     hasFeature() {
-      return Array.isArray(this.application.feature) && this.application.feature.length > 0;
+      return Array.isArray(this.application.features) && this.application.features.length > 0;
     },
   },
 };

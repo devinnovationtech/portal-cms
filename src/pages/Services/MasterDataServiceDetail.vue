@@ -5,6 +5,7 @@
         <!-- Delete Button -->
         <BaseButton
           class="border-red-500 hover:bg-red-50 font-lato text-sm text-red-500"
+          @click="showDeleteConfirmationModal(tableData.id)"
         >
           <template #icon-left>
             <JdsIcon
@@ -57,18 +58,114 @@
         :table-data="additionalInformationTableData"
       />
     </section>
+
+    <!-- Delete Action Modal -->
+    <BaseModal
+      :open="modalState === 'DELETE_CONFIRMATION'"
+    >
+      <div class="w-full h-full">
+        <h1 class="font-roboto text-xl leading-8 font-medium text-green-700 mb-6">
+          Hapus Program
+        </h1>
+        <p class="font-lato text-sm text-gray-800 mb-2">
+          Apakah Anda yakin ingin menghapus Layanan ini?
+        </p>
+        <h2 class="font-lato text-md font-bold text-gray-800">
+          {{ tableData.services.name }}
+        </h2>
+      </div>
+      <template #footer>
+        <div class="flex gap-4 justify-end">
+          <BaseButton
+            class="border-green-700 hover:bg-green-50 text-sm text-green-700"
+            @click="handleCloseModal"
+          >
+            Batal
+          </BaseButton>
+          <BaseButton
+            class="bg-red-500 hover:bg-red-400 text-sm text-white"
+            :disabled="modalState === 'LOADING'"
+            @click="modalMessage.action(tableData.id)"
+          >
+            <p
+              v-if="modalState === 'LOADING'"
+              class="flex gap-2 items-center text-gray-500"
+            >
+              <JdsSpinner
+                size="16"
+                foreground="#757575"
+              />
+              Loading...
+            </p>
+            <p v-else>
+              Ya, saya yakin
+            </p>
+          </BaseButton>
+        </div>
+      </template>
+    </BaseModal>
+
+    <!-- Success or Error Message Modal -->
+    <BaseModal
+      v-if="modalState === 'ERROR' || modalState === 'SUCCESS'"
+      :open="modalState === 'ERROR' || modalState === 'SUCCESS'"
+    >
+      <div class="w-full h-full px-2 pb-4">
+        <h1 class="font-roboto font-medium text-green-700 text-[21px] leading-[34px] mb-6">
+          {{ modalMessage.title }}
+        </h1>
+        <div class="flex items-center gap-4">
+          <JdsIcon
+            v-show="modalState === 'SUCCESS'"
+            name="check-mark-circle"
+            class="text-green-600"
+          />
+          <JdsIcon
+            v-show="modalState === 'ERROR'"
+            name="warning"
+            class="text-red-600"
+          />
+          <p class="text-sm leading-6 text-gray-800">
+            {{ modalMessage.message }}
+          </p>
+        </div>
+      </div>
+      <template #footer>
+        <div class="flex w-full h-full items-center justify-center gap-4 p-2">
+          <BaseButton
+            class="bg-green-700 hover:bg-green-600 text-sm text-white"
+            @click="handleCloseModal"
+          >
+            Saya Mengerti
+          </BaseButton>
+        </div>
+      </template>
+    </BaseModal>
   </main>
 </template>
 
 <script>
+import BaseModal from '@/common/components/BaseModal';
 import HeaderMenu from '@/common/components/HeaderMenu';
 import BaseButton from '@/common/components/BaseButton';
 import LinkButton from '@/common/components/LinkButton';
 import TabBar from '@/common/components/TabBar';
+import { RepositoryFactory } from '@/repositories/RepositoryFactory';
+
+const masterDataRepository = RepositoryFactory.get('masterDataService');
+
+const MODAL_STATE = Object.freeze({
+  NONE: 'NONE',
+  LOADING: 'LOADING',
+  DELETE_CONFIRMATION: 'DELETE_CONFIRMATION',
+  ERROR: 'ERROR',
+  SUCCESS: 'SUCCESS',
+});
 
 export default {
   components: {
     BaseButton,
+    BaseModal,
     LinkButton,
     HeaderMenu,
     TabBar,
@@ -84,150 +181,44 @@ export default {
         { key: 'informasi-tambahan', label: 'Informasi Tambahan' },
       ],
       currentTab: 'pelayanan',
-      // @todo: replace dummy data with API data
-      tableData: {
-        services: {
-          information: {
-            opd_name: 'Badan Pendapatan Daerah',
-            goverment_affair: 'Pajak',
-            sub_goverment_affair: 'Kurikulum',
-            form: 'Administratif',
-            type: 'Layanan Pajak Online',
-            sub_service_type: 'Pembayaran Pajak Tahunan Kendaraan Bermotor',
-            name: 'Pelayanan Pajak Online',
-            program_name: 'SAMBARA',
-            description: 'bayar pajak jadi lebih mudah!',
-            user: 'Umum',
-            sub_service_spbe: 'RAL.01.01',
-            operational_status: 'NOT-ACTIVE',
-            technical: 'ONLINE',
-            benefits: [
-              'kemudahan',
-              'praktis',
-            ],
-            facilities: [
-              'bayar online',
-              'dimana saja kapan saja',
-            ],
-            website: 'https://bappenda.jabarprov.go.id/samsat-mobile-jawa-barat-sambara',
-            links: [
-              {
-                link: 'https://google.com',
-                type: 'GOOGLE_FORM',
-                label: 'Google Forms',
-              },
-              {
-                link: 'https://google.com',
-                type: 'GOOGLE_PLAYSTORE',
-                label: 'Google Playstore',
-              },
-              {
-                link: 'https://apple.com',
-                type: 'APP_STORE',
-                label: 'Apple Store',
-              },
-              {
-                link: 'https://google.com',
-                type: 'WEBSITE',
-                label: 'Website',
-              },
-            ],
-          },
-          service_detail: {
-            terms_and_conditions: [
-              'memiliki kendaraan',
-              'bayar pajak',
-            ],
-            service_procedures: [
-              'mbanking',
-              'kredit',
-            ],
-            service_fee: 'free',
-            operational_time: [
-              {
-                day: 'MONDAY',
-                start: '07:00',
-                end: '16:00',
-              },
-              {
-                day: 'SATURDAY',
-                start: '08:00',
-                end: '12:00',
-              },
-            ],
-            hotline_number: '085218598090',
-            hotline_mail: 'portaljabar@gmail.com',
-          },
-          location: [
-            {
-              type: 'khusus',
-              organization: 'Badap Pendapatan Daerah',
-              name: 'UPTD Pusat Layanan Operasional Pendapatan Daerah',
-              address: 'Jl. Merdeka Raya No. 2',
-              phone_number: '085314276935',
-            },
-          ],
-        },
-        application: {
-          status: 'AVAILABLE',
-          name: 'SAMBARA',
-          feature: [
-            {
-              name: 'online payment',
-              description: 'via e-wallet or mbanking',
-            },
-            {
-              name: 'online check fee',
-              description: 'vehicle numbers',
-            },
-          ],
-        },
-        additional_information: {
-          responsible_name: 'Adzhar Amrullah',
-          phone_number: '082157849232',
-          email: 'portaljabar@gmail.com',
-          social_media: [
-            {
-              name: 'SAMBARA TUTORIAL',
-              type: 'youtube',
-              link: 'https://www.youtube.com/@bappendantb9973',
-            },
-          ],
-        },
+      tableData: {},
+      modalMessage: {
+        title: '',
+        message: '',
+        action: null,
       },
+      modalState: MODAL_STATE.NONE,
     };
   },
   computed: {
     informationTableData() {
       return {
-        information: {
-          opd_name: this.tableData.services?.information?.opd_name ?? null,
-          goverment_affair: this.tableData.services?.information?.goverment_affair ?? null,
-          sub_goverment_affair: this.tableData.services?.information?.sub_goverment_affair ?? null,
-          form: this.tableData.services?.information?.form ?? null,
-          type: this.tableData.services?.information?.type ?? null,
-          sub_service_type: this.tableData.services?.information?.sub_service_type ?? null,
-          name: this.tableData.services?.information?.name ?? null,
-          program_name: this.tableData.services?.information?.program_name ?? null,
-          description: this.tableData.services?.information?.description ?? null,
-          user: this.tableData.services?.information?.user ?? null,
-          sub_service_spbe: this.tableData.services?.information?.sub_service_spbe ?? null,
-          operational_status: this.tableData.services?.information?.operational_status ?? null,
-          technical: this.tableData.services?.information?.technical ?? null,
-          benefits: this.tableData.services?.information?.benefits ?? [],
-          facilities: this.tableData.services?.information?.facilities ?? [],
-          website: this.tableData.services?.information?.website ?? null,
-          links: this.tableData.services?.information?.links ?? [],
+        services: {
+          opd_name: this.tableData.services?.opd_name ?? null,
+          goverment_affair: this.tableData.services?.goverment_affair ?? null,
+          sub_goverment_affair: this.tableData.services?.sub_goverment_affair ?? null,
+          form: this.tableData.services?.form ?? null,
+          type: this.tableData.services?.type ?? null,
+          sub_service_type: this.tableData.services?.sub_service_type ?? null,
+          name: this.tableData.services?.name ?? null,
+          program_name: this.tableData.services?.program_name ?? null,
+          description: this.tableData.services?.description ?? null,
+          user: this.tableData.services?.user ?? null,
+          sub_service_spbe: this.tableData.services?.sub_service_spbe ?? null,
+          operational_status: this.tableData.services?.operational_status ?? null,
+          technical: this.tableData.services?.technical ?? null,
+          benefits: this.tableData.services?.benefits ?? [],
+          facilities: this.tableData.services?.facilities ?? [],
+          website: this.tableData.services?.website ?? null,
+          links: this.tableData.services?.links ?? [],
+          terms_and_conditions: this.tableData.services?.terms_and_conditions ?? [],
+          service_procedures: this.tableData.services?.service_procedures ?? [],
+          service_fee: this.tableData.services?.service_fee ?? null,
+          operational_time: this.tableData.services?.operational_time ?? [],
+          hotline_number: this.tableData.services?.hotline_number ?? null,
+          hotline_mail: this.tableData.services?.hotline_mail ?? null,
+          location: this.tableData.services?.location ?? [],
         },
-        service_detail: {
-          terms_and_conditions: this.tableData.services?.service_detail?.terms_and_conditions ?? [],
-          service_procedures: this.tableData.services?.service_detail?.service_procedures ?? [],
-          service_fee: this.tableData.services?.service_detail?.service_fee ?? null,
-          operational_time: this.tableData.services?.service_detail?.operational_time ?? [],
-          hotline_number: this.tableData.services?.service_detail?.hotline_number ?? null,
-          hotline_mail: this.tableData.services?.service_detail?.hotline_mail ?? null,
-        },
-        location: this.tableData.services?.location ?? [],
       };
     },
     applicationTableData() {
@@ -235,7 +226,7 @@ export default {
         application: {
           status: this.tableData.application?.status ?? '-',
           name: this.tableData.application?.name ?? '-',
-          feature: this.tableData.application?.feature ?? [],
+          features: this.tableData.application?.features ?? [],
         },
       };
     },
@@ -248,6 +239,70 @@ export default {
           social_media: this.tableData.additional_information?.social_media ?? [],
         },
       };
+    },
+  },
+  mounted() {
+    this.fetchMasterDataById();
+  },
+  methods: {
+    async deleteMasterData(id) {
+      try {
+        this.modalState = MODAL_STATE.LOADING;
+        const response = await masterDataRepository.deleteMasterDataById(id);
+        if (response.status === 204) {
+          this.setModalMessage({
+            title: 'Berhasil dihapus!',
+            message: `Program ${this.tableData.services.name} berhasil dihapus.`,
+          });
+          this.modalState = MODAL_STATE.SUCCESS;
+        }
+      } catch (error) {
+        this.setModalMessage({
+          title: 'Hapus Program Gagal',
+          message: 'Layanan Anda gagal dihapus.',
+        });
+        this.modalState = MODAL_STATE.ERROR;
+      }
+    },
+    async fetchMasterDataById() {
+      try {
+        const response = await masterDataRepository.getMasterDataById(this.$route.params.id);
+        const { data } = response.data;
+
+        this.tableData = data;
+      } catch {
+        this.$toast({
+          type: 'error',
+          message: 'Gagal mendapatkan data Master Data Layanan, silakan coba beberapa saat lagi',
+        });
+      }
+    },
+    handleCloseModal() {
+      if (this.modalState === MODAL_STATE.SUCCESS) {
+        this.$router.push('/layanan');
+      } else {
+        this.resetModalState();
+      }
+    },
+    resetModalState() {
+      this.modalState = MODAL_STATE.NONE;
+      this.modalMessage.title = '';
+      this.modalMessage.body = '';
+    },
+    setModalMessage(messageObj) {
+      this.modalMessage = { ...messageObj };
+    },
+    setParams(data) {
+      const newParams = { ...this.params, ...data };
+      this.params = { ...newParams };
+    },
+    showDeleteConfirmationModal(id) {
+      this.modalState = MODAL_STATE.DELETE_CONFIRMATION;
+      this.setModalMessage({
+        title: 'Hapus Program!',
+        message: 'Apakah Anda yakin ingin menghapus Layanan ini?',
+        action: () => this.deleteMasterData(id),
+      });
     },
   },
 };

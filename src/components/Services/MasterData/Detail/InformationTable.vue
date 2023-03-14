@@ -18,7 +18,7 @@
               Nama Perangkat Daerah
             </td>
             <td class="w-full font-lato text-blue-gray-500 text-sm">
-              {{ information.opd_name || '-' }}
+              {{ services.opd_name || '-' }}
             </td>
           </tr>
           <tr>
@@ -26,7 +26,7 @@
               Urusan Pemerintahan
             </td>
             <td class="w-full font-lato text-blue-gray-500 text-sm">
-              {{ information.goverment_affair || '-' }}
+              {{ services.goverment_affair || '-' }}
             </td>
           </tr>
           <tr>
@@ -34,7 +34,7 @@
               Sub Urusan Pemerintahan
             </td>
             <td class="w-full font-lato text-blue-gray-500 text-sm">
-              {{ information.sub_goverment_affair || '-' }}
+              {{ services.sub_goverment_affair || '-' }}
             </td>
           </tr>
           <tr>
@@ -42,7 +42,7 @@
               Bentuk Layanan
             </td>
             <td class="w-full font-lato text-blue-gray-500 text-sm">
-              {{ information.form || '-' }}
+              {{ services.form || '-' }}
             </td>
           </tr>
           <tr>
@@ -50,7 +50,7 @@
               Jenis Layanan
             </td>
             <td class="w-full font-lato text-blue-gray-500 text-sm">
-              {{ information.type || '-' }}
+              {{ services.type || '-' }}
             </td>
           </tr>
           <tr>
@@ -58,7 +58,7 @@
               Sub Jenis Layanan
             </td>
             <td class="w-full font-lato text-blue-gray-500 text-sm">
-              {{ information.sub_service_type || '-' }}
+              {{ services.sub_service_type || '-' }}
             </td>
           </tr>
           <tr>
@@ -66,7 +66,7 @@
               Nama Layanan
             </td>
             <td class="font-lato text-blue-gray-500 text-sm">
-              {{ information.name || '-' }}
+              {{ services.name || '-' }}
             </td>
           </tr>
           <tr>
@@ -74,7 +74,7 @@
               Nama Program Layanan
             </td>
             <td class="font-lato text-blue-gray-500 text-sm">
-              {{ information.program_name || '-' }}
+              {{ services.program_name || '-' }}
             </td>
           </tr>
           <tr>
@@ -82,7 +82,7 @@
               Deskripsi Layanan
             </td>
             <td class="font-lato text-blue-gray-500 text-sm">
-              {{ information.description || '-' }}
+              {{ services.description || '-' }}
             </td>
           </tr>
           <tr>
@@ -90,7 +90,7 @@
               Pengguna Layanan
             </td>
             <td class="font-lato text-blue-gray-500 text-sm">
-              {{ information.user || '-' }}
+              {{ services.user || '-' }}
             </td>
           </tr>
           <tr>
@@ -98,7 +98,7 @@
               Kategori Layanan SPBE (RAL Level 2)
             </td>
             <td class="font-lato text-blue-gray-500 text-sm">
-              {{ information.sub_service_spbe || '-' }}
+              {{ services.sub_service_spbe || '-' }}
             </td>
           </tr>
           <tr>
@@ -125,19 +125,19 @@
               <div
                 class="w-fit flex items-center font-lato text-[12px] leading-[23px]"
                 :class="{
-                  'bg-blue-50 px-[10px] rounded-[5px] font-bold text-blue-800' : information.technical === 'ONLINE',
-                  'bg-gray-200 text-gray-600 px-[10px] rounded-[5px] font-bold ' : information.technical === 'OFFLINE'
+                  'bg-blue-50 px-[10px] rounded-[5px] font-bold text-blue-800' : services.technical === 'ONLINE',
+                  'bg-gray-200 text-gray-600 px-[10px] rounded-[5px] font-bold ' : services.technical === 'OFFLINE'
                 }"
               >
                 <span
-                  v-show="information.technical"
+                  v-show="services.technical"
                   :class="{
                     'w-2 h-2 mr-2 rounded-full': true,
-                    'bg-blue-800': information.technical === 'ONLINE',
-                    'bg-gray-600': information.technical === 'OFFLINE',
+                    'bg-blue-800': services.technical === 'ONLINE',
+                    'bg-gray-600': services.technical === 'OFFLINE',
                   }"
                 />
-                <span class="capitalize">{{ (information.technical && information.technical.toLowerCase()) || '-' }}</span>
+                <span class="capitalize">{{ (services.technical && services.technical.toLowerCase()) || '-' }}</span>
               </div>
             </td>
           </tr>
@@ -146,9 +146,9 @@
               Manfaat Layanan
             </td>
             <td class="font-lato text-blue-gray-500 text-sm">
-              <template v-if="information.benefits.length > 0">
+              <template v-if="services.benefits.length > 0">
                 <div
-                  v-for="(benefit, index) in information.benefits"
+                  v-for="(benefit, index) in services.benefits"
                   :key="`benefit-${index}`"
                   class="mb-1"
                 >
@@ -165,9 +165,9 @@
               Fasilitas Layanan
             </td>
             <td class="font-lato text-blue-gray-500 text-sm">
-              <template v-if="information.facilities.length > 0">
+              <template v-if="services.facilities.length > 0">
                 <div
-                  v-for="(facility, index) in information.facilities"
+                  v-for="(facility, index) in services.facilities"
                   :key="`facility-${index}`"
                   class="mb-1"
                 >
@@ -185,11 +185,11 @@
             </td>
             <td class="font-lato text-blue-gray-500 font-bold hover:underline text-sm">
               <a
-                :href="information.website"
+                :href="services.website"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                {{ information.website || '-' }}
+                {{ services.website || '-' }}
               </a>
             </td>
           </tr>
@@ -198,9 +198,9 @@
               Tautan Layanan
             </td>
             <td class="w-full flex flex-wrap font-lato text-blue-gray-500 font-bold text-sm">
-              <template v-if="information.links.length">
+              <template v-if="services.links.length">
                 <div
-                  v-for="(link, index) in information.links"
+                  v-for="(link, index) in services.links"
                   :key="`link-${index}`"
                   class="w-fit flex mr-4"
                 >
@@ -248,9 +248,9 @@
               Syarat dan Ketentuan
             </td>
             <td class="w-full font-lato text-blue-gray-500 text-sm">
-              <template v-if="serviceDetail.terms_and_conditions.length > 0">
+              <template v-if="services.terms_and_conditions.length > 0">
                 <div
-                  v-for="(item, index) in serviceDetail.terms_and_conditions"
+                  v-for="(item, index) in services.terms_and_conditions"
                   :key="`terms-and-condition-${index}`"
                   class="mb-1"
                 >
@@ -265,9 +265,9 @@
               Prosedur Layanan
             </td>
             <td class="w-full font-lato text-blue-gray-500 text-sm">
-              <template v-if="serviceDetail.terms_and_conditions.length > 0">
+              <template v-if="services.terms_and_conditions.length > 0">
                 <div
-                  v-for="(item, index) in serviceDetail.service_procedures"
+                  v-for="(item, index) in services.service_procedures"
                   :key="`service-procedure-${index}`"
                   class="mb-1"
                 >
@@ -282,7 +282,7 @@
               Tarif Layanan
             </td>
             <td class="w-full font-lato text-blue-gray-500 text-sm">
-              {{ serviceDetail.service_fee || '-' }}
+              {{ services.service_fee || '-' }}
             </td>
           </tr>
           <tr>
@@ -290,9 +290,9 @@
               Waktu Operasional
             </td>
             <td class="w-full font-lato text-blue-gray-500 text-sm">
-              <template v-if="serviceDetail.operational_time.length > 0">
+              <template v-if="services.operational_time.length > 0">
                 <div
-                  v-for="(item, index) in serviceDetail.operational_time"
+                  v-for="(item, index) in services.operational_time"
                   :key="`operational-time-${index}`"
                   class="mb-1"
                 >
@@ -307,7 +307,7 @@
               Kontak Hotline (Nomor HP/Telp)
             </td>
             <td class="w-full font-lato text-blue-gray-500 text-sm">
-              {{ serviceDetail.hotline_number || '-' }}
+              {{ services.hotline_number || '-' }}
             </td>
           </tr>
           <tr>
@@ -315,7 +315,7 @@
               Kontak Hotline (Alamat E-mail)
             </td>
             <td class="w-full font-lato text-blue-gray-500 text-sm">
-              {{ serviceDetail.hotline_mail || '-' }}
+              {{ services.hotline_mail || '-' }}
             </td>
           </tr>
         </tbody>
@@ -323,7 +323,7 @@
     </div>
 
     <div
-      v-if="location.length > 0"
+      v-if="services.location.length > 0"
       class="overflow-hidden rounded-lg border border-gray-200"
     >
       <JdsSimpleTable>
@@ -339,7 +339,7 @@
         </thead>
         <tbody>
           <div
-            v-for="(item, index) in location"
+            v-for="(item, index) in services.location"
             :key="`location-${index}`"
           >
             <tr>
@@ -408,21 +408,15 @@ export default {
     },
   },
   computed: {
-    information() {
-      return this.tableData.information;
-    },
-    serviceDetail() {
-      return this.tableData.service_detail;
-    },
-    location() {
-      return this.tableData.location;
+    services() {
+      return this.tableData.services;
     },
     operationalStatus() {
-      if (this.tableData.information.operational_status === null) {
+      if (this.tableData.services.operational_status === null) {
         return { value: null, label: '-' };
       }
 
-      if (this.tableData.information.operational_status === 'ACTIVE') {
+      if (this.tableData.services.operational_status === 'ACTIVE') {
         return { value: 'ACTIVE', label: 'Aktif' };
       }
 

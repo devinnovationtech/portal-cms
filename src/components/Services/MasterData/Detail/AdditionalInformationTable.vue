@@ -18,7 +18,7 @@
               Nama Pejabat Penanggung Jawab
             </td>
             <td class="w-full font-lato text-blue-gray-500 text-sm">
-              {{ additionalInformation.responsible_name }}
+              {{ additionalInformation.responsible_name || '-' }}
             </td>
           </tr>
           <tr>
@@ -26,7 +26,7 @@
               Nomor HP
             </td>
             <td class="w-full font-lato text-blue-gray-500 text-sm">
-              {{ additionalInformation.phone_number }}
+              {{ additionalInformation.phone_number || '-' }}
             </td>
           </tr>
           <tr>
@@ -34,7 +34,7 @@
               Alamat Email
             </td>
             <td class="w-full font-lato text-blue-gray-500 text-sm">
-              {{ additionalInformation.email }}
+              {{ additionalInformation.email || '-' }}
             </td>
           </tr>
         </tbody>
@@ -65,12 +65,12 @@
                 Nama Sosial Media
               </td>
               <td class="w-full font-lato text-blue-gray-500 text-sm">
-                {{ socialMedia.name }}
+                {{ socialMedia.name || '-' }}
               </td>
             </tr>
             <tr>
               <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm capitalize">
-                {{ socialMedia.type }}
+                {{ socialMedia.type || '-' }}
               </td>
               <td class="w-full font-lato font-bold text-blue-gray-500 text-sm">
                 <a
@@ -79,7 +79,7 @@
                   rel="noopener noreferrer"
                   class="hover:underline"
                 >
-                  {{ socialMedia.link }}
+                  {{ socialMedia.link || '-' }}
                 </a>
               </td>
             </tr>

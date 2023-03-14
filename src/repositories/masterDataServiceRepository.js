@@ -53,4 +53,22 @@ export default {
   getStatusCounter() {
     return Repository.get(`${resource}/tabs`);
   },
+  /**
+   * Delete master data by master data ID
+   * @param {number} id - ID of the master data
+   *
+   * @returns {Promise}
+   */
+  deleteMasterDataById(id = null) {
+    return Repository.delete(`${resource}/${id}`);
+  },
+  /**
+   * get master data by master data ID
+   * @param {number} id - ID of the master data
+   *
+   * @returns {Promise}
+   */
+  getMasterDataById(id = null) {
+    return Repository.get(`${resource}/${id}`);
+  },
 };
