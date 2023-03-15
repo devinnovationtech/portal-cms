@@ -195,8 +195,8 @@ export default {
       return {
         services: {
           opd_name: this.tableData.services?.opd_name ?? null,
-          goverment_affair: this.tableData.services?.goverment_affair ?? null,
-          sub_goverment_affair: this.tableData.services?.sub_goverment_affair ?? null,
+          government_affair: this.tableData.services?.government_affair ?? null,
+          sub_government_affair: this.tableData.services?.sub_government_affair ?? null,
           form: this.tableData.services?.form ?? null,
           type: this.tableData.services?.type ?? null,
           sub_service_type: this.tableData.services?.sub_service_type ?? null,
@@ -214,10 +214,10 @@ export default {
           terms_and_conditions: this.tableData.services?.terms_and_conditions ?? [],
           service_procedures: this.tableData.services?.service_procedures ?? [],
           service_fee: this.tableData.services?.service_fee ?? null,
-          operational_time: this.tableData.services?.operational_time ?? [],
+          operational_times: this.tableData.services?.operational_times ?? [],
           hotline_number: this.tableData.services?.hotline_number ?? null,
           hotline_mail: this.tableData.services?.hotline_mail ?? null,
-          location: this.tableData.services?.location ?? [],
+          locations: this.tableData.services?.locations ?? [],
         },
       };
     },

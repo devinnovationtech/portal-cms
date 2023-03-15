@@ -26,7 +26,7 @@
               Urusan Pemerintahan
             </td>
             <td class="w-full font-lato text-blue-gray-500 text-sm">
-              {{ services.goverment_affair || '-' }}
+              {{ services.government_affair || '-' }}
             </td>
           </tr>
           <tr>
@@ -34,7 +34,7 @@
               Sub Urusan Pemerintahan
             </td>
             <td class="w-full font-lato text-blue-gray-500 text-sm">
-              {{ services.sub_goverment_affair || '-' }}
+              {{ services.sub_government_affair || '-' }}
             </td>
           </tr>
           <tr>
@@ -290,9 +290,9 @@
               Waktu Operasional
             </td>
             <td class="w-full font-lato text-blue-gray-500 text-sm">
-              <template v-if="services.operational_time.length > 0">
+              <template v-if="services.operational_times.length > 0">
                 <div
-                  v-for="(item, index) in services.operational_time"
+                  v-for="(item, index) in services.operational_times"
                   :key="`operational-time-${index}`"
                   class="mb-1"
                 >
@@ -323,7 +323,7 @@
     </div>
 
     <div
-      v-if="services.location.length > 0"
+      v-if="services.locations.length > 0"
       class="overflow-hidden rounded-lg border border-gray-200"
     >
       <JdsSimpleTable>
@@ -339,7 +339,7 @@
         </thead>
         <tbody>
           <div
-            v-for="(item, index) in services.location"
+            v-for="(item, index) in services.locations"
             :key="`location-${index}`"
           >
             <tr>
