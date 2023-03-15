@@ -292,32 +292,32 @@ export const MASTER_DATA_TABLE_HEADER = [
   {
     key: 'title',
     text: 'Nama Layanan',
-    sortable: true,
+    sortable: false,
   },
   {
     key: 'author',
     text: 'Author',
-    sortable: true,
+    sortable: false,
   },
   {
     key: 'user',
     text: 'Pengguna Layanan',
-    sortable: true,
+    sortable: false,
   },
   {
     key: 'technical',
     text: 'Teknis Layanan',
-    sortable: true,
+    sortable: false,
   },
   {
     key: 'updated',
     text: 'Diperbarui',
-    sortable: true,
+    sortable: false,
   },
   {
     key: 'status',
     text: 'Status',
-    sortable: true,
+    sortable: false,
   },
   {
     key: 'action',

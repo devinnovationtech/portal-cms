@@ -15,19 +15,19 @@
       <!-- eslint-disable-next-line vue/valid-v-slot -->
       <template #item.title="{item}">
         <p class="line-clamp-1">
-          {{ item.service_name }}
+          {{ item.service_name || '-' }}
         </p>
       </template>
       <!-- eslint-disable-next-line vue/valid-v-slot -->
       <template #item.author="{item}">
         <p class="capitalize">
-          {{ item.opd_name }}
+          {{ item.opd_name || '-' }}
         </p>
       </template>
       <!-- eslint-disable-next-line vue/valid-v-slot -->
       <template #item.user="{item}">
         <p>
-          {{ getGovermentAffair(item.service_user) }}
+          {{ getGovermentAffair(item.service_user) || '-' }}
         </p>
       </template>
       <!-- eslint-disable-next-line vue/valid-v-slot -->
@@ -46,19 +46,19 @@
               'bg-gray-600': item.technical === 'OFFLINE',
             }"
           />
-          {{ item.technical.toLowerCase() }}
+          {{ item.technical.toLowerCase() || '-' }}
         </p>
       </template>
       <!-- eslint-disable-next-line vue/valid-v-slot -->
       <template #item.updated="{item}">
         <p>
-          {{ formatDate(item.updated_at) }}
+          {{ formatDate(item.updated_at) || '-' }}
         </p>
       </template>
       <!-- eslint-disable-next-line vue/valid-v-slot -->
       <template #item.status="{item}">
         <p>
-          {{ getServiceStatus(item.status) }}
+          {{ getServiceStatus(item.status) || '-' }}
         </p>
       </template>
       <!-- eslint-disable-next-line vue/valid-v-slot -->

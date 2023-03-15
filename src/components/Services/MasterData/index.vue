@@ -9,6 +9,7 @@
       <section class="w-full bg-white py-6 px-3">
         <div class="full flex justify-between mb-5 items-center">
           <SearchBar
+            v-if="isShowSearchBar"
             placeholder="Cari layanan"
           />
           <LinkButton
@@ -176,6 +177,8 @@ export default {
           count: null,
         },
       ],
+      // @TODO: remove isShowSearchBar varible when search feature is develop
+      isShowSearchBar: false,
       services: [],
       serviceDetail: {},
       currentTab: 'ALL',
