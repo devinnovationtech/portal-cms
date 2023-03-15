@@ -1,851 +1,852 @@
 <template>
-  <fieldset>
-    <Collapse
-      title="Informasi Layanan"
-      class="mb-5"
-    >
-      <section class="grid grid-cols-2 gap-x-8 gap-y-4">
-        <ValidationProvider
-          v-slot="{ errors }"
-          rules="required"
-          class="flex flex-col col-span-2"
-        >
-          <label
-            for="opd-name"
-            class="font-lato text-blue-gray-800 mb-3 text-[15px]"
+  <ValidationObserver ref="formStepOne">
+    <fieldset>
+      <Collapse
+        title="Informasi Layanan"
+        class="mb-5"
+      >
+        <section class="grid grid-cols-2 gap-x-8 gap-y-4">
+          <ValidationProvider
+            v-slot="{ errors }"
+            rules="required"
+            class="flex flex-col col-span-2"
           >
-            Nama Perangkat Daerah
-          </label>
-          <JdsInputText
-            id="opd-name"
-            v-model="OPDName"
-            placeholder="Autofill"
-            readonly
+            <label
+              for="opd-name"
+              class="font-lato text-blue-gray-800 mb-3 text-[15px]"
+            >
+              Nama Perangkat Daerah
+            </label>
+            <JdsInputText
+              id="opd-name"
+              v-model="OPDName"
+              placeholder="Autofill"
+              readonly
+              :error-message="errors[0]"
+            />
+          </ValidationProvider>
+
+          <ValidationProvider
+            v-slot="{ errors }"
+            rules="required"
+            class="flex flex-col"
+          >
+            <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
+              Urusan Pemerintahan
+            </label>
+            <JdsSelect
+              v-model="governmentAffair"
+              placeholder="Pilih urusan pemerintahan"
+              :options="governmentAffairOptions"
+              :filterable="true"
+            />
+            <span class="font-lato text-[13px] text-red-600 mt-1">{{ errors[0] }}</span>
+          </ValidationProvider>
+
+          <ValidationProvider
+            v-slot="{ errors }"
+            rules="required"
+            class="flex flex-col"
+          >
+            <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
+              Sub Urusan Pemerintahan
+            </label>
+            <JdsSelect
+              v-model="subGovernmentAffair"
+              placeholder="Pilih sub urusan pemerintahan"
+              :options="subGovernmentAffairOptions"
+            />
+            <span class="font-lato text-[13px] text-red-600 mt-1">{{ errors[0] }}</span>
+          </ValidationProvider>
+
+          <ValidationProvider
+            v-slot="{ errors }"
+            rules="required"
+            class="flex flex-col col-span-2"
+          >
+            <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
+              Bentuk Layanan
+            </label>
+            <JdsSelect
+              v-model="serviceForm"
+              placeholder="Pilih bentuk layanan"
+              :options="serviceFormOptions"
+            />
+            <span class="font-lato text-[13px] text-red-600 mt-1">{{ errors[0] }}</span>
+          </ValidationProvider>
+
+          <ValidationProvider
+            v-slot="{ errors }"
+            rules="required"
+            class="flex flex-col"
+          >
+            <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
+              Jenis Layanan
+            </label>
+            <JdsInputText
+              v-model="serviceType"
+              placeholder="Masukkan jenis layanan"
+              :error-message="errors[0]"
+            />
+          </ValidationProvider>
+
+          <ValidationProvider
+            v-slot="{ errors }"
+            rules="required"
+            class="flex flex-col"
+          >
+            <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
+              Sub Jenis Layanan
+            </label>
+            <JdsInputText
+              v-model="subServiceType"
+              placeholder="Masukkan sub jenis layanan"
+              :error-message="errors[0]"
+            />
+          </ValidationProvider>
+
+          <ValidationProvider
+            v-slot="{ errors }"
+            rules="required"
+            class="flex flex-col col-span-2"
+          >
+            <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
+              Nama Layanan
+            </label>
+            <JdsInputText
+              v-model="serviceName"
+              placeholder="Masukkan nama layanan"
+              :error-message="errors[0]"
+            />
+          </ValidationProvider>
+
+          <JdsSectionMessage
+            show
+            variant="info"
+            class="col-span-2"
+            message="Jika tidak ada nama program layanan, silakan isikan nama layanan di program layanan"
           />
-          <span class="font-lato text-[13px] text-red-700 mt-3">{{ errors[0] }}</span>
-        </ValidationProvider>
 
-        <ValidationProvider
-          v-slot="{ errors }"
-          rules="required"
-          class="flex flex-col"
-        >
-          <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
-            Urusan Pemerintahan
-          </label>
-          <JdsSelect
-            v-model="governmentAffair"
-            placeholder="Pilih urusan pemerintahan"
-            :options="governmentAffairOptions"
-            :filterable="true"
-          />
-          <span class="font-lato text-[13px] text-red-700 mt-3">{{ errors[0] }}</span>
-        </ValidationProvider>
+          <ValidationProvider
+            v-slot="{ errors }"
+            rules="required"
+            class="flex flex-col col-span-2"
+          >
+            <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
+              Nama Program Layanan
+            </label>
+            <JdsInputText
+              v-model="programName"
+              placeholder="Masukkan nama program layanan"
+              :error-message="errors[0]"
+            />
+          </ValidationProvider>
 
-        <ValidationProvider
-          v-slot="{ errors }"
-          rules="required"
-          class="flex flex-col"
-        >
-          <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
-            Sub Urusan Pemerintahan
-          </label>
-          <JdsSelect
-            v-model="subGovernmentAffair"
-            placeholder="Pilih sub urusan pemerintahan"
-            :options="subGovernmentAffairOptions"
-          />
-          <span class="font-lato text-[13px] text-red-700 mt-3">{{ errors[0] }}</span>
-        </ValidationProvider>
-
-        <ValidationProvider
-          v-slot="{ errors }"
-          rules="required"
-          class="flex flex-col col-span-2"
-        >
-          <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
-            Bentuk Layanan
-          </label>
-          <JdsSelect
-            v-model="serviceForm"
-            placeholder="Pilih bentuk layanan"
-            :options="serviceFormOptions"
-          />
-          <span class="font-lato text-[13px] text-red-700 mt-3">{{ errors[0] }}</span>
-        </ValidationProvider>
-
-        <ValidationProvider
-          v-slot="{ errors }"
-          rules="required"
-          class="flex flex-col"
-        >
-          <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
-            Jenis Layanan
-          </label>
-          <JdsInputText
-            v-model="serviceType"
-            placeholder="Masukkan jenis layanan"
-          />
-          <span class="font-lato text-[13px] text-red-700 mt-3">{{ errors[0] }}</span>
-        </ValidationProvider>
-
-        <ValidationProvider
-          v-slot="{ errors }"
-          rules="required"
-          class="flex flex-col"
-        >
-          <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
-            Sub Jenis Layanan
-          </label>
-          <JdsInputText
-            v-model="subServiceType"
-            placeholder="Masukkan sub jenis layanan"
-          />
-          <span class="font-lato text-[13px] text-red-700 mt-3">{{ errors[0] }}</span>
-        </ValidationProvider>
-
-        <ValidationProvider
-          v-slot="{ errors }"
-          rules="required"
-          class="flex flex-col col-span-2"
-        >
-          <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
-            Nama Layanan
-          </label>
-          <JdsInputText
-            v-model="serviceName"
-            placeholder="Masukkan nama layanan"
-          />
-          <span class="font-lato text-[13px] text-red-700 mt-3">{{ errors[0] }}</span>
-        </ValidationProvider>
-
-        <JdsSectionMessage
-          show
-          variant="info"
-          class="col-span-2"
-          message="Jika tidak ada nama program layanan, silakan isikan nama layanan di program layanan"
-        />
-
-        <ValidationProvider
-          v-slot="{ errors }"
-          rules="required"
-          class="flex flex-col col-span-2"
-        >
-          <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
-            Nama Program Layanan
-          </label>
-          <JdsInputText
-            v-model="programName"
-            placeholder="Masukkan nama program layanan"
-          />
-          <span class="font-lato text-[13px] text-red-700 mt-3">{{ errors[0] }}</span>
-        </ValidationProvider>
-
-        <ValidationProvider
-          v-slot="{ errors }"
-          rules="required"
-          class="flex flex-col col-span-2"
-        >
-          <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
-            Deskripsi Layanan
-          </label>
-          <textarea
-            v-model="programDescription"
-            placeholder="Masukkan deskripsi layanan"
-            rows="4"
-            maxlength="500"
-            class="w-full border border-gray-500 rounded-lg px-2 py-1 bg-gray-50 mb-1 hover:bg-white
+          <ValidationProvider
+            v-slot="{ errors }"
+            rules="required"
+            class="flex flex-col col-span-2"
+          >
+            <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
+              Deskripsi Layanan
+            </label>
+            <textarea
+              v-model="programDescription"
+              placeholder="Masukkan deskripsi layanan"
+              rows="4"
+              maxlength="500"
+              class="w-full border border-gray-500 rounded-lg px-2 py-1 bg-gray-50 mb-1 hover:bg-white
             hover:border-green-600 focus:outline-none focus:border-green-500 focus:outline-1 focus:outline-offset-[-2px] focus:outline-yellow-500"
-          />
-          <span class="font-lato text-[13px] text-red-700 mt-3">{{ errors[0] }}</span>
-          <p
-            v-show="programDescriptionCharCounter"
-            class="text-xs text-right text-gray-600"
+            />
+            <span class="font-lato text-[13px] text-red-600 mt-1">{{ errors[0] }}</span>
+            <p
+              v-show="programDescriptionCharCounter"
+              class="text-xs text-right text-gray-600"
+            >
+              Tersisa {{ programDescriptionCharCounter }} karakter
+            </p>
+          </ValidationProvider>
+
+          <ValidationProvider
+            v-slot="{ errors }"
+            rules="required"
+            class="flex flex-col"
           >
-            Tersisa {{ programDescriptionCharCounter }} karakter
-          </p>
-        </ValidationProvider>
+            <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
+              Pengguna Layanan
+            </label>
+            <JdsSelect
+              v-model="user"
+              placeholder="Pilih pengguna layanan"
+              :options="serviceUserOptions"
+            />
+            <span class="font-lato text-[13px] text-red-600 mt-1">{{ errors[0] }}</span>
+          </ValidationProvider>
 
-        <ValidationProvider
-          v-slot="{ errors }"
-          rules="required"
-          class="flex flex-col"
-        >
-          <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
-            Pengguna Layanan
-          </label>
-          <JdsSelect
-            v-model="user"
-            placeholder="Pilih pengguna layanan"
-            :options="serviceUserOptions"
-          />
-          <span class="font-lato text-[13px] text-red-700 mt-3">{{ errors[0] }}</span>
-        </ValidationProvider>
-
-        <ValidationProvider
-          v-slot="{ errors }"
-          rules="required"
-          class="flex flex-col"
-        >
-          <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
-            Kategori Layanan SPBE (RAL Level 2)
-          </label>
-          <JdsSelect
-            v-model="subServiceSPBE"
-            placeholder="Pilih kategori layanan SPBE"
-            :options="spbeRALOptions"
-            :filterable="true"
-          />
-          <span class="font-lato text-[13px] text-red-700 mt-3">{{ errors[0] }}</span>
-        </ValidationProvider>
-
-        <ValidationProvider
-          v-slot="{ errors }"
-          rules="required"
-          class="flex flex-col"
-        >
-          <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
-            Status Operasional
-          </label>
-          <JdsSelect
-            v-model="operationalStatus"
-            placeholder="Pilih status operasional"
-            :options="operationalStatusOptions"
-          />
-          <span class="font-lato text-[13px] text-red-700 mt-3">{{ errors[0] }}</span>
-        </ValidationProvider>
-
-        <ValidationProvider
-          v-slot="{ errors }"
-          rules="required"
-          class="flex flex-col"
-        >
-          <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
-            Teknis Layanan
-          </label>
-          <JdsSelect
-            v-model="technical"
-            placeholder="Pilih teknis layanan"
-            :options="technicalOptions"
-          />
-          <span class="font-lato text-[13px] text-red-700 mt-3">{{ errors[0] }}</span>
-        </ValidationProvider>
-
-        <ValidationProvider
-          v-for="(benefit, index) in benefits"
-          v-slot="{ errors }"
-          :key="`step-one-benefit-${index}`"
-          rules="required"
-          class="flex flex-col col-span-2"
-        >
-          <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
-            Manfaat Layanan
-          </label>
-          <JdsInputText
-            :value="benefits[index]"
-            placeholder="Masukkan manfaat layanan"
-            @input="setBenefitByIndex($event, index)"
-          />
-          <span class="font-lato text-[13px] text-red-700 mt-3">{{ errors[0] }}</span>
-          <div
-            v-if="benefits.length > 1"
-            class="flex justify-end"
+          <ValidationProvider
+            class="flex flex-col"
           >
+            <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
+              Kategori Layanan SPBE (RAL Level 2)
+            </label>
+            <JdsSelect
+              v-model="subServiceSPBE"
+              placeholder="Pilih kategori layanan SPBE"
+              :options="spbeRALOptions"
+              :filterable="true"
+            />
+          </ValidationProvider>
+
+          <ValidationProvider
+            v-slot="{ errors }"
+            rules="required"
+            class="flex flex-col"
+          >
+            <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
+              Status Operasional
+            </label>
+            <JdsSelect
+              v-model="operationalStatus"
+              placeholder="Pilih status operasional"
+              :options="operationalStatusOptions"
+            />
+            <span class="font-lato text-[13px] text-red-600 mt-1">{{ errors[0] }}</span>
+          </ValidationProvider>
+
+          <ValidationProvider
+            v-slot="{ errors }"
+            rules="required"
+            class="flex flex-col"
+          >
+            <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
+              Teknis Layanan
+            </label>
+            <JdsSelect
+              v-model="technical"
+              placeholder="Pilih teknis layanan"
+              :options="technicalOptions"
+            />
+            <span class="font-lato text-[13px] text-red-600 mt-1">{{ errors[0] }}</span>
+          </ValidationProvider>
+
+          <ValidationProvider
+            v-for="(benefit, index) in benefits"
+            v-slot="{ errors }"
+            :key="`step-one-benefit-${index}`"
+            rules="required"
+            class="flex flex-col col-span-2"
+          >
+            <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
+              Manfaat Layanan
+            </label>
+            <JdsInputText
+              :value="benefits[index]"
+              placeholder="Masukkan manfaat layanan"
+              :error-message="errors[0]"
+              @input="setBenefitByIndex($event, index)"
+            />
+            <div
+              v-if="benefits.length > 1"
+              class="flex justify-end"
+            >
+              <BaseButton
+                type="button"
+                class="border-red-500 hover:bg-red-50 font-lato text-sm text-red-500"
+                @click="removeBenefit(index)"
+              >
+                <span>
+                  Hapus Manfaat
+                </span>
+                <template #icon-right>
+                  <JdsIcon
+                    name="trash"
+                    size="16px"
+                    fill="#F44336"
+                  />
+                </template>
+              </BaseButton>
+            </div>
+          </ValidationProvider>
+
+          <div class="flex justify-end col-span-2">
             <BaseButton
               type="button"
-              class="border-red-500 hover:bg-red-50 font-lato text-sm text-red-500"
-              @click="removeBenefit(index)"
+              class="border-green-700 hover:bg-green-50 font-lato text-sm text-green-700"
+              @click="addBenefit"
             >
               <span>
-                Hapus Manfaat
+                Tambahkan Manfaat
               </span>
               <template #icon-right>
                 <JdsIcon
-                  name="trash"
+                  name="plus"
                   size="16px"
-                  fill="#F44336"
+                  fill="#069550"
                 />
               </template>
             </BaseButton>
           </div>
-        </ValidationProvider>
 
-        <div class="flex justify-end col-span-2">
-          <BaseButton
-            type="button"
-            class="border-green-700 hover:bg-green-50 font-lato text-sm text-green-700"
-            @click="addBenefit"
-          >
-            <span>
-              Tambahkan Manfaat
-            </span>
-            <template #icon-right>
-              <JdsIcon
-                name="plus"
-                size="16px"
-                fill="#069550"
-              />
-            </template>
-          </BaseButton>
-        </div>
-
-        <JdsSectionMessage
-          show
-          variant="info"
-          class="col-span-2"
-          message="Jika Teknis Layanan bersifat online maka fasilitas layanan tidak aktif"
-        />
-
-        <ValidationProvider
-          v-for="(facility, index) in facilities"
-          v-slot="{ errors }"
-          :key="`step-one-facility-${index}`"
-          rules="required"
-          class="flex flex-col col-span-2"
-        >
-          <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
-            Fasilitas Layanan
-          </label>
-          <JdsInputText
-            :value="facilities[index]"
-            placeholder="Masukkan fasilitas layanan"
-            :disabled="technical === 'ONLINE'"
-            @input="setFacilityByIndex($event, index)"
+          <JdsSectionMessage
+            show
+            variant="info"
+            class="col-span-2"
+            message="Jika Teknis Layanan bersifat online maka fasilitas layanan tidak aktif"
           />
-          <span class="font-lato text-[13px] text-red-700 mt-3">{{ errors[0] }}</span>
 
-          <div
-            v-if="facilities.length > 1"
-            class="flex justify-end"
+          <ValidationProvider
+            v-for="(facility, index) in facilities"
+            v-slot="{ errors }"
+            :key="`step-one-facility-${index}`"
+            :rules="technical === 'ONLINE' ? '' : 'required'"
+            class="flex flex-col col-span-2"
           >
+            <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
+              Fasilitas Layanan
+            </label>
+            <JdsInputText
+              :value="facilities[index]"
+              placeholder="Masukkan fasilitas layanan"
+              :disabled="technical === 'ONLINE'"
+              :error-message="errors[0]"
+              @input="setFacilityByIndex($event, index)"
+            />
+
+            <div
+              v-if="facilities.length > 1"
+              class="flex justify-end"
+            >
+              <BaseButton
+                type="button"
+                class="border-red-500 hover:bg-red-50 font-lato text-sm text-red-500"
+                @click="removeFacility(index)"
+              >
+                <span>
+                  Hapus Fasilitas Layanan
+                </span>
+                <template #icon-right>
+                  <JdsIcon
+                    name="trash"
+                    size="16px"
+                    fill="#F44336"
+                  />
+                </template>
+              </BaseButton>
+            </div>
+          </ValidationProvider>
+
+          <div class="flex justify-end col-span-2">
             <BaseButton
               type="button"
-              class="border-red-500 hover:bg-red-50 font-lato text-sm text-red-500"
-              @click="removeFacility(index)"
+              class="border-green-700 hover:bg-green-50 font-lato text-sm text-green-700"
+              :disabled="technical === 'ONLINE'"
+              @click="addFacility"
             >
               <span>
-                Hapus Fasilitas Layanan
+                Tambahkan Fasilitas
               </span>
               <template #icon-right>
                 <JdsIcon
-                  name="trash"
+                  name="plus"
                   size="16px"
-                  fill="#F44336"
+                  fill="#069550"
                 />
               </template>
             </BaseButton>
           </div>
-        </ValidationProvider>
 
-        <div class="flex justify-end col-span-2">
-          <BaseButton
-            type="button"
-            class="border-green-700 hover:bg-green-50 font-lato text-sm text-green-700"
-            :disabled="technical === 'ONLINE'"
-            @click="addFacility"
+          <ValidationProvider
+            v-slot="{ errors }"
+            class="flex flex-col col-span-2"
+            rules="url"
           >
-            <span>
-              Tambahkan Fasilitas
-            </span>
-            <template #icon-right>
-              <JdsIcon
-                name="plus"
-                size="16px"
-                fill="#069550"
+            <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
+              Alamat Website Informasi Resmi
+            </label>
+            <JdsInputText
+              v-model="website"
+              placeholder="Masukkan alamat website informasi resmi"
+              :error-message="errors[0]"
+            />
+          </ValidationProvider>
+
+          <ValidationProvider
+            v-for="(link, index) in links"
+            :key="`step-one-links-${index}`"
+            v-slot="{ errors }"
+            class="col-span-2 grid grid-cols-2 gap-x-8 gap-y-4"
+            rules="url"
+          >
+            <div class="flex flex-col">
+              <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
+                Tautan Layanan
+              </label>
+              <JdsInputText
+                :value="links[index].link"
+                prefix-text="GOOGLE_FORM"
+                :prefix-config="serviceLinkOptions"
+                placeholder="https://"
+                :error-message="errors[0]"
+                @input="setLinkByIndex($event, index)"
+                @change:prefix-text="setLinkTypeByIndex($event, index)"
               />
-            </template>
-          </BaseButton>
-        </div>
+            </div>
 
-        <ValidationProvider
-          v-slot="{ errors }"
-          class="flex flex-col col-span-2"
-          rules="url"
-        >
-          <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
-            Alamat Website Informasi Resmi
-          </label>
-          <JdsInputText
-            v-model="website"
-            prefix-text="https://"
-            placeholder="Masukkan alamat website informasi resmi"
-          />
-          <span class="font-lato text-[13px] text-red-700 mt-3">{{ errors[0] }}</span>
-        </ValidationProvider>
+            <div class="flex flex-col">
+              <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
+                Label Tautan
+              </label>
+              <JdsInputText
+                :value="links[index].label"
+                placeholder="Masukkan label tautan"
+                @input="setLinkLabelByIndex($event, index)"
+              />
+            </div>
 
-        <section
-          v-for="(link, index) in links"
-          :key="`step-one-links-${index}`"
-          class="col-span-2 grid grid-cols-2 gap-x-8 gap-y-4"
-        >
-          <div class="flex flex-col">
-            <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
-              Tautan Layanan
-            </label>
-            <JdsInputText
-              :value="links[index].link"
-              prefix-text="GOOGLE_FORM"
-              :prefix-config="serviceLinkOptions"
-              placeholder="https://"
-              @input="setLinkByIndex($event, index)"
-              @change:prefix-text="setLinkTypeByIndex($event, index)"
-            />
-          </div>
+            <div
+              v-if="links.length > 1"
+              class="col-span-2 flex justify-end"
+            >
+              <BaseButton
+                type="button"
+                class="border-red-500 hover:bg-red-50 font-lato text-sm text-red-500"
+                @click="removeLink(index)"
+              >
+                <span>
+                  Hapus Fasilitas Layanan
+                </span>
+                <template #icon-right>
+                  <JdsIcon
+                    name="trash"
+                    size="16px"
+                    fill="#F44336"
+                  />
+                </template>
+              </BaseButton>
+            </div>
+          </ValidationProvider>
 
-          <div class="flex flex-col">
-            <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
-              Label Tautan
-            </label>
-            <JdsInputText
-              :value="links[index].label"
-              placeholder="Masukkan label tautan"
-              @input="setLinkLabelByIndex($event, index)"
-            />
-          </div>
-
-          <div
-            v-if="links.length > 1"
-            class="col-span-2 flex justify-end"
-          >
+          <div class="flex justify-end col-span-2">
             <BaseButton
               type="button"
-              class="border-red-500 hover:bg-red-50 font-lato text-sm text-red-500"
-              @click="removeLink(index)"
+              class="border-green-700 hover:bg-green-50 font-lato text-sm text-green-700"
+              @click="addLink"
             >
               <span>
-                Hapus Fasilitas Layanan
+                Tambahkan Tautan Layanan
               </span>
               <template #icon-right>
                 <JdsIcon
-                  name="trash"
+                  name="plus"
                   size="16px"
-                  fill="#F44336"
+                  fill="#069550"
+                />
+              </template>
+            </BaseButton>
+          </div>
+
+          <div class="h-[130px] col-span-2" />
+        </section>
+      </Collapse>
+
+      <Collapse
+        title="Detail"
+        class="mb-5"
+      >
+        <section class="grid grid-cols-2 gap-x-8 gap-y-4">
+          <ValidationProvider
+            v-for="(_, index) in termsAndConditions"
+            :key="`step-one-terms-and-condition-${index}`"
+            v-slot="{ errors }"
+            class="flex flex-col col-span-2"
+            rules="required"
+          >
+            <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
+              Syarat dan Ketentuan Layanan
+            </label>
+            <JdsInputText
+              :value="termsAndConditions[index]"
+              placeholder="Masukkan syarat dan ketentuan layanan"
+              :error-message="errors[0]"
+              @input="setTermAndConditionByIndex($event, index)"
+            />
+
+            <div
+              v-if="termsAndConditions.length > 1"
+              class="flex justify-end"
+            >
+              <BaseButton
+                type="button"
+                class="border-red-500 hover:bg-red-50 font-lato text-sm text-red-500"
+                @click="removeTermAndCondition(index)"
+              >
+                <span>
+                  Hapus Syarat dan Ketentuan Layanan
+                </span>
+                <template #icon-right>
+                  <JdsIcon
+                    name="trash"
+                    size="16px"
+                    fill="#F44336"
+                  />
+                </template>
+              </BaseButton>
+            </div>
+          </ValidationProvider>
+
+          <div class="flex justify-end col-span-2">
+            <BaseButton
+              type="button"
+              class="border-green-700 hover:bg-green-50 font-lato text-sm text-green-700"
+              @click="addTermAndCondition"
+            >
+              <span>
+                Tambahkan Syarat dan Ketentuan
+              </span>
+              <template #icon-right>
+                <JdsIcon
+                  name="plus"
+                  size="16px"
+                  fill="#069550"
+                />
+              </template>
+            </BaseButton>
+          </div>
+
+          <ValidationProvider
+            v-for="(_, index) in serviceProcedures"
+            :key="`step-one-service-procedure-${index}`"
+            v-slot="{ errors }"
+            class="flex flex-col col-span-2"
+            rules="required"
+          >
+            <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
+              Prosedur Layanan
+            </label>
+            <JdsInputText
+              :value="serviceProcedures[index]"
+              placeholder="Masukkan prosedur layanan"
+              :error-message="errors[0]"
+              @input="setServiceProcedureByIndex($event, index)"
+            />
+
+            <div
+              v-if="serviceProcedures.length > 1"
+              class="flex justify-end"
+            >
+              <BaseButton
+                type="button"
+                class="border-red-500 hover:bg-red-50 font-lato text-sm text-red-500"
+                @click="removeServiceProcedure(index)"
+              >
+                <span>
+                  Hapus Prosedur Layanan
+                </span>
+                <template #icon-right>
+                  <JdsIcon
+                    name="trash"
+                    size="16px"
+                    fill="#F44336"
+                  />
+                </template>
+              </BaseButton>
+            </div>
+          </ValidationProvider>
+
+          <div class="flex justify-end col-span-2">
+            <BaseButton
+              type="button"
+              class="border-green-700 hover:bg-green-50 font-lato text-sm text-green-700"
+              @click="addServiceProcedure"
+            >
+              <span>
+                Tambahkan Prosedur Layanan
+              </span>
+              <template #icon-right>
+                <JdsIcon
+                  name="plus"
+                  size="16px"
+                  fill="#069550"
+                />
+              </template>
+            </BaseButton>
+          </div>
+
+          <JdsSectionMessage
+            show
+            variant="info"
+            class="col-span-2"
+            message="Tidak boleh menggunakan titik"
+          />
+
+          <ValidationProvider
+            v-slot="{ errors }"
+            class="flex flex-col col-span-2"
+            rules="required|numeric"
+          >
+            <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
+              Tarif Layanan
+            </label>
+            <JdsInputText
+              v-model="serviceFee"
+              placeholder="cth: 7000"
+              :error-message="errors[0]"
+            />
+          </ValidationProvider>
+
+          <div class="flex flex-col col-span-2">
+            <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
+              Waktu Operasional
+            </label>
+
+            <JdsSectionMessage
+              show
+              variant="info"
+              class="col-span-2 mb-3"
+              message="Jika hari operasional tidak diceklis maka hari operasional tersebut Tutup"
+            />
+
+            <div
+              v-for="(item, index) in operationalTime"
+              :key="`step-one-operational-time-${index}`"
+              class="grid grid-cols-[20px,160px,1fr,1fr] gap-x-3 mb-8 items-end"
+            >
+              <JdsCheckbox
+                class="mb-2"
+                :checked="operationalTime[index].selected"
+                @change="setOperationalTimeDayByIndex(index)"
+              />
+              <div class="flex flex-col">
+                <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
+                  Hari
+                </label>
+                <JdsInputText
+                  :placeholder="dayMap[item.day]"
+                  :readonly="true"
+                />
+              </div>
+              <ValidationProvider
+                v-slot="{ errors }"
+                :rules="operationalTime[index].selected ? 'required': ''"
+                class="flex flex-col relative"
+              >
+                <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
+                  Pelayanan dibuka
+                </label>
+                <TimePicker
+                  :value="operationalTime[index].start"
+                  :disabled="!operationalTime[index].selected"
+                  placeholder="cth: 06:00"
+                  manual-input
+                  close-on-complete
+                  @input="setOperationalStartTimeByIndex($event, index)"
+                />
+                <span class="absolute bottom-[-24px] font-lato text-[13px] text-red-700 mt-1">{{ errors[0] }}</span>
+              </ValidationProvider>
+              <ValidationProvider
+                v-slot="{ errors }"
+                class="flex flex-col relative"
+                :rules="operationalTime[index].selected ? 'required': ''"
+              >
+                <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
+                  Pelayanan ditutup
+                </label>
+                <TimePicker
+                  :value="operationalTime[index].end"
+                  :disabled="!operationalTime[index].selected"
+                  placeholder="cth: 17:00"
+                  manual-input
+                  close-on-complete
+                  @input="setOperationalEndTimeByIndex($event, index)"
+                />
+                <span class="absolute bottom-[-24px] font-lato text-[13px] text-red-700 mt-1">{{ errors[0] }}</span>
+              </ValidationProvider>
+            </div>
+          </div>
+
+          <ValidationProvider
+            v-slot="{ errors }"
+            class="flex flex-col"
+            rules="required|phonenumber"
+          >
+            <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
+              Kontak Hotline  (Nomor HP/Telp)
+            </label>
+            <JdsInputText
+              v-model="hotlineNumber"
+              placeholder="cth: 022 2342345"
+              :error-message="errors[0]"
+            />
+          </ValidationProvider>
+
+          <ValidationProvider
+            v-slot="{ errors }"
+            class="flex flex-col"
+            rules="required|email"
+          >
+            <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
+              Kontak Hotline  (Alamat E-mail)
+            </label>
+            <JdsInputText
+              v-model="hotlineMail"
+              placeholder="cth: jabarprov@go.id"
+              :error-message="errors[0]"
+            />
+          </ValidationProvider>
+        </section>
+      </Collapse>
+
+      <Collapse title="Lokasi Pelayanan">
+        <section>
+          <div
+            v-for="(_,index) in locations"
+            :key="`lokasi-pelayanan-${index}`"
+            class="grid grid-cols-1 gap-x-8 gap-y-4"
+          >
+            <h3 class="font-roboto font-medium leading-7 text-base text-green-700">
+              {{ index + 1 }}. Lokasi Pelayanan
+            </h3>
+
+            <ValidationProvider
+              class="flex flex-col"
+              tag="div"
+            >
+              <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
+                Jenis Lokasi
+              </label>
+              <JdsSelect
+                :value="locations[index].type"
+                :options="typeLocationOptions"
+                placeholder="Pilih Jenis Lokasi"
+                @change="onChangeTypeLocation($event, index)"
+              />
+            </ValidationProvider>
+
+            <div class="flex flex-col">
+              <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
+                Penanggung Jawab Lokasi
+              </label>
+              <JdsSelect
+                :value="locations[index].organization"
+                :options="onCheckOption(index)"
+                :filterable="true"
+                :auto-close="true"
+                placeholder="Pilih Penanggung Jawab Lokasi"
+                @change="onChangeOrganization($event, index)"
+              />
+            </div>
+
+            <ValidationProvider
+              class="flex flex-col"
+              tag="div"
+            >
+              <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
+                Nama Lokasi
+              </label>
+              <JdsInputText
+                :value="locations[index].name"
+                placeholder="Masukkan nama lokasi"
+                :readonly="locations[index].type === 'UNIT'"
+                @input="setLocationName($event, index)"
+              />
+            </ValidationProvider>
+
+            <ValidationProvider
+              class="flex flex-col"
+              tag="div"
+            >
+              <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
+                Alamat Lokasi
+              </label>
+              <textarea
+                :value="locations[index].address"
+                :readonly="locations[index].type === 'UNIT'"
+                placeholder="Masukkan alamat lokasi"
+                rows="4"
+                maxlength="255"
+                class="w-full border border-gray-500 rounded-lg px-2 py-1 bg-gray-50 mb-1 hover:bg-white
+            hover:border-green-600 focus:outline-none focus:border-green-500 focus:outline-1 focus:outline-offset-[-2px] focus:outline-yellow-500"
+                @input="setAddress($event.target.value, index)"
+              />
+              <p
+                v-show="locations[index].address"
+                class="text-xs text-right text-gray-600"
+              >
+                Tersisa {{ locations[index].address && 255 - locations[index].address.length }} karakter
+              </p>
+            </ValidationProvider>
+
+            <ValidationProvider
+              v-slot="{errors}"
+              class="flex flex-col"
+              tag="div"
+              rules="phonenumber"
+            >
+              <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
+                Kontak Lokasi (Nomor HP/Telp)
+              </label>
+              <JdsInputText
+                :value="locations[index].phone_number"
+                placeholder="Masukkan kontak lokasi"
+                :error-message="errors[0]"
+                @input="setPhoneNumberOfContactLocation($event, index)"
+              />
+            </ValidationProvider>
+
+            <div
+              v-if="locations.length > 1"
+              class="flex justify-end"
+            >
+              <BaseButton
+                type="button"
+                class="border-red-500 hover:bg-red-50 font-lato text-sm text-red-500"
+                @click="removeItemLocation(index)"
+              >
+                <span>
+                  Hapus Lokasi
+                </span>
+                <template #icon-right>
+                  <JdsIcon
+                    name="trash"
+                    size="16px"
+                    fill="#F44336"
+                  />
+                </template>
+              </BaseButton>
+            </div>
+
+            <hr
+              v-show="!(locations[index] === locations.slice(-1)[0])"
+              class="mb-4"
+            >
+          </div>
+          <div class="flex justify-end mt-4">
+            <BaseButton
+              type="button"
+              class="border-green-700 hover:bg-green-50 font-lato text-sm text-green-700"
+              @click="addItemLocation"
+            >
+              <span>
+                Tambahkan Lokasi
+              </span>
+              <template #icon-right>
+                <JdsIcon
+                  name="plus"
+                  size="16px"
+                  fill="#069550"
                 />
               </template>
             </BaseButton>
           </div>
         </section>
-
-        <div class="flex justify-end col-span-2">
-          <BaseButton
-            type="button"
-            class="border-green-700 hover:bg-green-50 font-lato text-sm text-green-700"
-            @click="addLink"
-          >
-            <span>
-              Tambahkan Tautan Layanan
-            </span>
-            <template #icon-right>
-              <JdsIcon
-                name="plus"
-                size="16px"
-                fill="#069550"
-              />
-            </template>
-          </BaseButton>
-        </div>
-
-        <div class="h-[130px] col-span-2" />
-      </section>
-    </Collapse>
-
-    <Collapse
-      title="Detail"
-      class="mb-5"
-    >
-      <section class="grid grid-cols-2 gap-x-8 gap-y-4">
-        <ValidationProvider
-          v-for="(_, index) in termsAndConditions"
-          :key="`step-one-terms-and-condition-${index}`"
-          v-slot="{ errors }"
-          class="flex flex-col col-span-2"
-          rules="required"
-        >
-          <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
-            Syarat dan Ketentuan Layanan
-          </label>
-          <JdsInputText
-            :value="termsAndConditions[index]"
-            placeholder="Masukkan syarat dan ketentuan layanan"
-            @input="setTermAndConditionByIndex($event, index)"
-          />
-          <span class="font-lato text-[13px] text-red-700 mt-3">{{ errors[0] }}</span>
-
-          <div
-            v-if="termsAndConditions.length > 1"
-            class="flex justify-end"
-          >
-            <BaseButton
-              type="button"
-              class="border-red-500 hover:bg-red-50 font-lato text-sm text-red-500"
-              @click="removeTermAndCondition(index)"
-            >
-              <span>
-                Hapus Syarat dan Ketentuan Layanan
-              </span>
-              <template #icon-right>
-                <JdsIcon
-                  name="trash"
-                  size="16px"
-                  fill="#F44336"
-                />
-              </template>
-            </BaseButton>
-          </div>
-        </ValidationProvider>
-
-        <div class="flex justify-end col-span-2">
-          <BaseButton
-            type="button"
-            class="border-green-700 hover:bg-green-50 font-lato text-sm text-green-700"
-            @click="addTermAndCondition"
-          >
-            <span>
-              Tambahkan Syarat dan Ketentuan
-            </span>
-            <template #icon-right>
-              <JdsIcon
-                name="plus"
-                size="16px"
-                fill="#069550"
-              />
-            </template>
-          </BaseButton>
-        </div>
-
-        <ValidationProvider
-          v-for="(_, index) in serviceProcedures"
-          :key="`step-one-service-procedure-${index}`"
-          v-slot="{ errors }"
-          class="flex flex-col col-span-2"
-          rules="required"
-        >
-          <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
-            Prosedur Layanan
-          </label>
-          <JdsInputText
-            :value="serviceProcedures[index]"
-            placeholder="Masukkan prosedur layanan"
-            @input="setServiceProcedureByIndex($event, index)"
-          />
-          <span class="font-lato text-[13px] text-red-700 mt-3">{{ errors[0] }}</span>
-
-          <div
-            v-if="serviceProcedures.length > 1"
-            class="flex justify-end"
-          >
-            <BaseButton
-              type="button"
-              class="border-red-500 hover:bg-red-50 font-lato text-sm text-red-500"
-              @click="removeServiceProcedure(index)"
-            >
-              <span>
-                Hapus Prosedur Layanan
-              </span>
-              <template #icon-right>
-                <JdsIcon
-                  name="trash"
-                  size="16px"
-                  fill="#F44336"
-                />
-              </template>
-            </BaseButton>
-          </div>
-        </ValidationProvider>
-
-        <div class="flex justify-end col-span-2">
-          <BaseButton
-            type="button"
-            class="border-green-700 hover:bg-green-50 font-lato text-sm text-green-700"
-            @click="addServiceProcedure"
-          >
-            <span>
-              Tambahkan Prosedur Layanan
-            </span>
-            <template #icon-right>
-              <JdsIcon
-                name="plus"
-                size="16px"
-                fill="#069550"
-              />
-            </template>
-          </BaseButton>
-        </div>
-
-        <JdsSectionMessage
-          show
-          variant="info"
-          class="col-span-2"
-          message="Tidak boleh menggunakan titik"
-        />
-
-        <ValidationProvider
-          v-slot="{ errors }"
-          class="flex flex-col col-span-2"
-          rules="required|numeric"
-        >
-          <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
-            Tarif Layanan
-          </label>
-          <JdsInputText
-            v-model="serviceFee"
-            placeholder="cth: 7000"
-          />
-          <span class="font-lato text-[13px] text-red-700 mt-3">{{ errors[0] }}</span>
-        </ValidationProvider>
-
-        <div class="flex flex-col col-span-2">
-          <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
-            Waktu Operasional
-          </label>
-
-          <JdsSectionMessage
-            show
-            variant="info"
-            class="col-span-2 mb-3"
-            message="Jika hari operasional tidak diceklis maka hari operasional tersebut Tutup"
-          />
-
-          <div
-            v-for="(item, index) in operationalTime"
-            :key="`step-one-operational-time-${index}`"
-            class="grid grid-cols-[20px,160px,1fr,1fr] gap-x-3 mb-8 items-end"
-          >
-            <JdsCheckbox
-              class="mb-2"
-              :checked="operationalTime[index].selected"
-              @change="setOperationalTimeDayByIndex(index)"
-            />
-            <div class="flex flex-col">
-              <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
-                Hari
-              </label>
-              <JdsInputText
-                :placeholder="dayMap[item.day]"
-                :readonly="true"
-              />
-            </div>
-            <ValidationProvider
-              v-slot="{ errors }"
-              :rules="operationalTime[index].selected ? 'required': ''"
-              class="flex flex-col relative"
-            >
-              <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
-                Pelayanan dibuka
-              </label>
-              <TimePicker
-                :value="operationalTime[index].start"
-                :disabled="!operationalTime[index].selected"
-                placeholder="cth: 06:00"
-                manual-input
-                close-on-complete
-                @input="setOperationalStartTimeByIndex($event, index)"
-              />
-              <span class="absolute bottom-[-24px] font-lato text-[13px] text-red-700 mt-3">{{ errors[0] }}</span>
-            </ValidationProvider>
-            <ValidationProvider
-              v-slot="{ errors }"
-              class="flex flex-col relative"
-              :rules="operationalTime[index].selected ? 'required': ''"
-            >
-              <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
-                Pelayanan ditutup
-              </label>
-              <TimePicker
-                :value="operationalTime[index].end"
-                :disabled="!operationalTime[index].selected"
-                placeholder="cth: 17:00"
-                manual-input
-                close-on-complete
-                @input="setOperationalEndTimeByIndex($event, index)"
-              />
-              <span class="absolute bottom-[-24px] font-lato text-[13px] text-red-700 mt-3">{{ errors[0] }}</span>
-            </ValidationProvider>
-          </div>
-        </div>
-
-        <ValidationProvider
-          v-slot="{ errors }"
-          class="flex flex-col"
-          rules="required|phonenumber"
-        >
-          <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
-            Kontak Hotline  (Nomor HP/Telp)
-          </label>
-          <JdsInputText
-            v-model="hotlineNumber"
-            placeholder="cth: 022 2342345"
-          />
-          <span class="font-lato text-[13px] text-red-700 mt-3">{{ errors[0] }}</span>
-        </ValidationProvider>
-
-        <ValidationProvider
-          v-slot="{ errors }"
-          class="flex flex-col"
-          rules="required|email"
-        >
-          <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
-            Kontak Hotline  (Alamat E-mail)
-          </label>
-          <JdsInputText
-            v-model="hotlineMail"
-            placeholder="cth: jabarprov@go.id"
-          />
-          <span class="font-lato text-[13px] text-red-700 mt-3">{{ errors[0] }}</span>
-        </ValidationProvider>
-      </section>
-    </Collapse>
-
-    <Collapse title="Lokasi Pelayanan">
-      <section>
-        <div
-          v-for="(_,index) in locations"
-          :key="`lokasi-pelayanan-${index}`"
-          class="grid grid-cols-1 gap-x-8 gap-y-4"
-        >
-          <h3 class="font-roboto font-medium leading-7 text-base text-green-700">
-            {{ index + 1 }}. Lokasi Pelayanan
-          </h3>
-
-          <ValidationProvider
-            class="flex flex-col"
-            tag="div"
-          >
-            <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
-              Jenis Lokasi
-            </label>
-            <JdsSelect
-              :value="locations[index].type"
-              :options="typeLocationOptions"
-              placeholder="Pilih Jenis Lokasi"
-              @change="onChangeTypeLocation($event, index)"
-            />
-          </ValidationProvider>
-
-          <div class="flex flex-col">
-            <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
-              Penanggung Jawab Lokasi
-            </label>
-            <JdsSelect
-              :value="locations[index].organization"
-              :options="onCheckOption(index)"
-              :filterable="true"
-              :auto-close="true"
-              placeholder="Pilih Penanggung Jawab Lokasi"
-              @change="onChangeOrganization($event, index)"
-            />
-          </div>
-
-          <ValidationProvider
-            class="flex flex-col"
-            tag="div"
-          >
-            <!-- @TODO: set autofill if type of location is unit and disabled -->
-            <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
-              Nama Lokasi
-            </label>
-            <JdsInputText
-              :value="locations[index].name"
-              placeholder="Masukkan nama lokasi"
-              :readonly="locations[index].type === 'UNIT'"
-              @input="setLocationName($event, index)"
-            />
-          </ValidationProvider>
-
-          <ValidationProvider
-            class="flex flex-col"
-            tag="div"
-          >
-            <!-- @TODO: set autofill if type of location is unit -->
-            <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
-              Alamat Lokasi
-            </label>
-            <textarea
-              :value="locations[index].address"
-              :readonly="locations[index].type === 'UNIT'"
-              placeholder="Masukkan alamat lokasi"
-              rows="4"
-              maxlength="255"
-              class="w-full border border-gray-500 rounded-lg px-2 py-1 bg-gray-50 mb-1 hover:bg-white
-            hover:border-green-600 focus:outline-none focus:border-green-500 focus:outline-1 focus:outline-offset-[-2px] focus:outline-yellow-500"
-              @input="setAddress($event.target.value, index)"
-            />
-            <p class="text-xs text-right text-gray-600">
-              Tersisa xx karakter
-            </p>
-          </ValidationProvider>
-
-          <ValidationProvider
-            v-slot="{errors}"
-            class="flex flex-col"
-            tag="div"
-            rules="phonenumber"
-          >
-            <!-- @TODO: set autofill if type of location is unit -->
-            <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
-              Kontak Lokasi (Nomor HP/Telp)
-            </label>
-            <JdsInputText
-              :value="locations[index].phone_number"
-              placeholder="Masukkan kontak lokasi"
-              :error-message="errors[0]"
-              @input="setPhoneNumberOfContactLocation($event, index)"
-            />
-          </ValidationProvider>
-
-          <div
-            v-if="locations.length > 1"
-            class="flex justify-end"
-          >
-            <BaseButton
-              type="button"
-              class="border-red-500 hover:bg-red-50 font-lato text-sm text-red-500"
-              @click="removeItemLocation(index)"
-            >
-              <span>
-                Hapus Lokasi
-              </span>
-              <template #icon-right>
-                <JdsIcon
-                  name="trash"
-                  size="16px"
-                  fill="#F44336"
-                />
-              </template>
-            </BaseButton>
-          </div>
-
-          <hr
-            v-show="!(locations[index] === locations.slice(-1)[0])"
-            class="mb-4"
-          >
-        </div>
-        <div class="flex justify-end mt-4">
-          <BaseButton
-            type="button"
-            class="border-green-700 hover:bg-green-50 font-lato text-sm text-green-700"
-            @click="addItemLocation"
-          >
-            <span>
-              Tambahkan Lokasi
-            </span>
-            <template #icon-right>
-              <JdsIcon
-                name="plus"
-                size="16px"
-                fill="#069550"
-              />
-            </template>
-          </BaseButton>
-        </div>
-      </section>
-    </Collapse>
-  </fieldset>
+      </Collapse>
+    </fieldset>
+  </ValidationObserver>
 </template>
 
 <script>
 import '@/common/helpers/vee-validate.js';
-import { ValidationProvider } from 'vee-validate';
+import { ValidationProvider, ValidationObserver } from 'vee-validate';
 import Collapse from '@/common/components/Collapse';
 import BaseButton from '@/common/components/BaseButton.vue';
 import TimePicker from '@/common/components/TimePicker.vue';
@@ -855,6 +856,7 @@ import { DAY_MAP } from '@/common/constants';
 export default {
   components: {
     ValidationProvider,
+    ValidationObserver,
     Collapse,
     BaseButton,
     TimePicker,
@@ -1130,6 +1132,10 @@ export default {
     organizationOptions() {
       return this.$store.getters['masterDataForm/organizationOptions'];
     },
+  },
+  deactivated() {
+    // Trigger validation message when component deactivated
+    this.$refs.formStepOne.validate();
   },
   methods: {
     addBenefit() {

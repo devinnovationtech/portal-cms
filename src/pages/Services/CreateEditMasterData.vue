@@ -206,11 +206,6 @@ export default {
       }
     },
   },
-  watch: {
-    currentFormStep() {
-      this.$refs.form.validate();
-    },
-  },
   mounted() {
     this.$store.dispatch('masterDataForm/resetFormData');
     this.$store.dispatch('masterDataForm/getGovernmentAffairOptions');
