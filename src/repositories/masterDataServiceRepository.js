@@ -71,4 +71,15 @@ export default {
   getMasterDataById(id = null) {
     return Repository.get(`${resource}/${id}`);
   },
+
+  /**
+   * update Master Data
+   * @param {object} body - form request body
+   * @param {number} id - ID of the master data
+
+   * @returns {Promise}
+   */
+  updateMasterData(body, id = null) {
+    return Repository.put(`${resource}/${id}`, body);
+  },
 };

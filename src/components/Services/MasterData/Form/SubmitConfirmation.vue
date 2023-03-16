@@ -3,7 +3,7 @@
     <template #header>
       <div class="w-full px-6 py-4 ">
         <h1 class="font-roboto font-medium text-green-700 text-[21px] leading-[34px]">
-          Tambahkan Layanan
+          {{ title }}
         </h1>
       </div>
       <hr>
@@ -412,7 +412,7 @@
           class="bg-green-700 hover:bg-green-600 text-sm text-white"
           @click="$emit('submit')"
         >
-          Tambahkan Layanan
+          {{ submitButtonLabel }}
         </BaseButton>
       </section>
     </template>
@@ -449,6 +449,14 @@ export default {
     TabBar,
   },
   props: {
+    title: {
+      type: String,
+      default: '',
+    },
+    submitButtonLabel: {
+      type: String,
+      default: '',
+    },
     open: {
       type: Boolean,
       default: false,

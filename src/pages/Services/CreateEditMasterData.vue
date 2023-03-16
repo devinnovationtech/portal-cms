@@ -39,7 +39,17 @@
               </span>
             </BaseButton>
             <BaseButton
-              v-if="!isLastStep"
+              v-if="isEditMode && !isLastStep"
+              type="button"
+              class="border-green-700 hover:bg-green-50 font-lato text-sm text-green-700"
+              @click="nextStep"
+            >
+              <span>
+                Selanjutnya
+              </span>
+            </BaseButton>
+            <BaseButton
+              v-if="isCreateMode && !isLastStep"
               type="button"
               class="bg-green-700 hover:bg-green-600 font-lato text-sm text-white"
               @click="nextStep"
@@ -49,7 +59,7 @@
               </span>
             </BaseButton>
             <BaseButton
-              v-if="isLastStep"
+              v-if="isCreateMode && isLastStep"
               type="button"
               class="border-green-700 hover:bg-green-50 font-lato text-sm text-green-700"
               @click="openSaveConfirmation"
@@ -59,7 +69,7 @@
               </span>
             </BaseButton>
             <BaseButton
-              v-if="isLastStep"
+              v-if="isCreateMode && isLastStep"
               type="button"
               class="bg-green-700 hover:bg-green-600 font-lato text-sm text-white"
               :disabled="invalid"
@@ -67,6 +77,17 @@
             >
               <span>
                 Tambahkan Layanan
+              </span>
+            </BaseButton>
+            <BaseButton
+              v-if="isEditMode && isLastStep"
+              type="button"
+              class="bg-green-700 hover:bg-green-600 font-lato text-sm text-white"
+              :disabled="invalid"
+              @click="updateConfirmation"
+            >
+              <span>
+                Simpan Perubahan
               </span>
             </BaseButton>
           </div>
@@ -117,8 +138,19 @@
     <!-- Submit Confirmation -->
     <SubmitConfirmation
       :open="submitStatus === 'SUBMIT_CONFIRMATION'"
+      title="Tambah Layanan"
+      submit-button-label="Tambah  Layanan"
       @close="closeConfirmation"
       @submit="submitForm"
+    />
+
+    <!-- Update Confirmation -->
+    <SubmitConfirmation
+      :open="submitStatus === 'UPDATE_CONFIRMATION'"
+      title="Update Layanan"
+      submit-button-label="Update Layanan"
+      @close="closeConfirmation"
+      @submit="updateForm"
     />
 
     <!-- Submit Progress -->
@@ -190,8 +222,11 @@ export default {
       'submitMessage',
       'submitProgress',
     ]),
-    mode() {
-      return this.$route.meta?.mode || 'create';
+    isCreateMode() {
+      return this.$route.meta?.mode === 'create';
+    },
+    isEditMode() {
+      return this.$route.meta?.mode === 'edit';
     },
     renderedForm() {
       switch (this.currentFormStep) {
@@ -206,14 +241,16 @@ export default {
       }
     },
   },
-  mounted() {
+  created() {
     this.$store.dispatch('masterDataForm/resetFormData');
     this.$store.dispatch('masterDataForm/getGovernmentAffairOptions');
     this.$store.dispatch('masterDataForm/getRALOptions');
     this.$store.dispatch('masterDataForm/getOrganizationOptions');
+    this.$store.dispatch('masterDataForm/setInitialOPDName');
 
-    if (this.mode === 'create') {
-      this.$store.dispatch('masterDataForm/setInitialOPDName');
+    if (this.isEditMode) {
+      const { id } = this.$route.params;
+      this.$store.dispatch('masterDataForm/setInitialFormData', id);
     }
   },
   methods: {
@@ -224,8 +261,13 @@ export default {
       'openSaveConfirmation',
       'closeConfirmation',
       'submitConfirmation',
+      'updateConfirmation',
       'submitForm',
     ]),
+    updateForm() {
+      const { id } = this.$route.params;
+      this.$store.dispatch('masterDataForm/updateForm', id);
+    },
     handleCloseConfirmation() {
       if (this.submitStatus === 'SUCCESS') {
         this.$router.push('/layanan');

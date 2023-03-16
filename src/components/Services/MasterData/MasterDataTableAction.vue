@@ -35,10 +35,9 @@
 
         <!-- Edit Action -->
         <li>
-          <!-- @TODO: update link to in router-llink -->
           <router-link
             class="font-lato text-sm leading-4 text-gray-800"
-            to="/layanan"
+            :to="`/layanan/master-data/${item.id}/ubah`"
           >
             Ubah
           </router-link>

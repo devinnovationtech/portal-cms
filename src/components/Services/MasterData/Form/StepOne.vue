@@ -382,8 +382,8 @@
                 Tautan Layanan
               </label>
               <JdsInputText
-                :value="links[index].link"
-                prefix-text="GOOGLE_FORM"
+                :value="links[index].tautan"
+                :prefix-text="links[index].type"
                 :prefix-config="serviceLinkOptions"
                 placeholder="https://"
                 :error-message="errors[0]"

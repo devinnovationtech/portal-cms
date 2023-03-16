@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { RepositoryFactory } from '@/repositories/RepositoryFactory';
 
 const masterDataServiceRepository = RepositoryFactory.get('masterDataService');
@@ -6,6 +7,7 @@ const FORM_SUBMIT_STATUS = Object.freeze({
   NONE: 'NONE',
   SAVE_AS_DRAFT_CONFIRMATION: 'SAVE_AS_DRAFT_CONFIRMATION',
   SUBMIT_CONFIRMATION: 'SUBMIT_CONFIRMATION',
+  UPDATE_CONFIRMATION: 'UPDATE_CONFIRMATION',
   LOADING: 'LOADING',
   SUCCESS: 'SUCCESS',
   ERROR: 'ERROR',
@@ -18,7 +20,6 @@ const getDefaultState = () => ({
     services: {
       information: {
         opd_name: '',
-        opd_id: '',
         government_affair: '',
         sub_government_affair: '',
         form: '',
@@ -36,7 +37,7 @@ const getDefaultState = () => ({
         website: '',
         links: [
           {
-            link: '',
+            tautan: '',
             type: 'GOOGLE_FORM',
             label: '',
           },
@@ -327,7 +328,7 @@ export default {
     },
     SET_STEP_ONE_LINK(state, payload) {
       const { value, index } = payload;
-      state.stepOne.services.information.links[index].link = value;
+      state.stepOne.services.information.links[index].tautan = value;
     },
     ADD_STEP_ONE_TERM_AND_CONDITION(state) {
       state.stepOne.services.service_detail.terms_and_conditions.push('');
@@ -469,6 +470,53 @@ export default {
     SET_SUBMIT_PROGRESS(state, payload) {
       state.submitProgress = payload;
     },
+    SET_INITIAL_FORM_DATA(state, payload) {
+      state.stepOne.services.information.government_affair = payload.services.government_affair;
+      state.stepOne.services.information.sub_government_affair = payload.services.sub_government_affair;
+      state.stepOne.services.information.form = payload.services.form;
+      state.stepOne.services.information.type = payload.services.type;
+      state.stepOne.services.information.sub_service_type = payload.services.sub_service_type;
+      state.stepOne.services.information.name = payload.services.name;
+      state.stepOne.services.information.program_name = payload.services.program_name;
+      state.stepOne.services.information.description = payload.services.description;
+      state.stepOne.services.information.user = payload.services.user;
+      state.stepOne.services.information.sub_service_spbe = payload.services.sub_service_spbe;
+      state.stepOne.services.information.operational_status = payload.services.operational_status;
+      state.stepOne.services.information.technical = payload.services.technical;
+      state.stepOne.services.information.benefits = payload.services.benefits;
+      state.stepOne.services.information.facilities = payload.services.facilities;
+      state.stepOne.services.information.website = payload.services.website;
+      state.stepOne.services.information.links = payload.services.links;
+
+      state.stepOne.services.service_detail.terms_and_conditions = payload.services.terms_and_conditions;
+      state.stepOne.services.service_detail.service_procedures = payload.services.service_procedures;
+      state.stepOne.services.service_detail.service_fee = payload.services.service_fee;
+      state.stepOne.services.service_detail.hotline_number = payload.services.hotline_number;
+      state.stepOne.services.service_detail.hotline_mail = payload.services.hotline_mail;
+
+      // Set Active Operational Time
+      const defaultOperationalTime = state.stepOne.services.service_detail.operational_time;
+      const payloadOperationalTime = payload.services.operational_times;
+
+      payloadOperationalTime.forEach((item) => {
+        const index = defaultOperationalTime.map((obj) => obj.day).indexOf(item.day);
+
+        state.stepOne.services.service_detail.operational_time[index].selected = true;
+        state.stepOne.services.service_detail.operational_time[index].start = item.start;
+        state.stepOne.services.service_detail.operational_time[index].end = item.end;
+      });
+
+      state.stepOne.services.location = payload.services.locations;
+
+      state.stepTwo.application.status = payload.application.status;
+      state.stepTwo.application.name = payload.application.name;
+      state.stepTwo.application.features = payload.application.features;
+
+      state.stepThree.additional_information.responsible_name = payload.additional_information.responsible_name;
+      state.stepThree.additional_information.phone_number = payload.additional_information.phone_number;
+      state.stepThree.additional_information.email = payload.additional_information.email;
+      state.stepThree.additional_information.social_media = payload.additional_information.social_media;
+    },
   },
   actions: {
     setInitialOPDName({ commit, rootState }) {
@@ -563,6 +611,9 @@ export default {
     submitConfirmation({ commit }) {
       commit('SET_SUBMIT_STATUS', FORM_SUBMIT_STATUS.SUBMIT_CONFIRMATION);
     },
+    updateConfirmation({ commit }) {
+      commit('SET_SUBMIT_STATUS', FORM_SUBMIT_STATUS.UPDATE_CONFIRMATION);
+    },
     async saveAsDraft({ dispatch, commit }) {
       try {
         const formData = await dispatch('generateFormData', 'DRAFT');
@@ -581,6 +632,40 @@ export default {
         const response = await masterDataServiceRepository.createMasterData(formData);
 
         if (response.status === 201) {
+          // Add timeout to prevent progress bar too fast
+          setTimeout(() => {
+            commit('SET_SUBMIT_PROGRESS', 75);
+
+            setTimeout(() => {
+              commit('SET_SUBMIT_STATUS', FORM_SUBMIT_STATUS.SUCCESS);
+            }, 150);
+          }, 150);
+        }
+      } catch (error) {
+        commit('SET_SUBMIT_STATUS', FORM_SUBMIT_STATUS.ERROR);
+      }
+    },
+    async setInitialFormData({ commit }, id) {
+      try {
+        const response = await masterDataServiceRepository.getMasterDataById(id);
+        const { data } = response.data;
+
+        if (response.status === 200) {
+          commit('SET_INITIAL_FORM_DATA', data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async updateForm({ dispatch, commit }, id) {
+      try {
+        commit('SET_SUBMIT_STATUS', FORM_SUBMIT_STATUS.LOADING);
+        commit('SET_SUBMIT_PROGRESS', 25);
+
+        const formData = await dispatch('generateFormData', 'ARCHIVE');
+        const response = await masterDataServiceRepository.updateMasterData(formData, id);
+
+        if (response.status === 200) {
           // Add timeout to prevent progress bar too fast
           setTimeout(() => {
             commit('SET_SUBMIT_PROGRESS', 75);
