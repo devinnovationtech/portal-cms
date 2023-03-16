@@ -211,7 +211,7 @@
                     class="w-full h-full object-contain object-center mr-2"
                   >
                   <a
-                    :href="link.link"
+                    :href="link.tautan"
                     class="whitespace-nowrap hover:underline"
                     :class="getServiceLinkLabelColor(link.type)"
                     rel="noopener noreferrer"
