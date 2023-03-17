@@ -122,7 +122,7 @@
                   />
                 </template>
                 <p class="text-red-500">
-                  Hapus Layanan
+                  Hapus Fitur Aplikasi
                 </p>
               </BaseButton>
             </div>

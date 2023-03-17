@@ -39,6 +39,7 @@
               placeholder="Pilih urusan pemerintahan"
               :options="governmentAffairOptions"
               :filterable="true"
+              filter-type="contain"
             />
             <span class="font-lato text-[13px] text-red-600 mt-1">{{ errors[0] }}</span>
           </ValidationProvider>
@@ -55,6 +56,8 @@
               v-model="subGovernmentAffair"
               placeholder="Pilih sub urusan pemerintahan"
               :options="subGovernmentAffairOptions"
+              :filterable="true"
+              filter-type="contain"
             />
             <span class="font-lato text-[13px] text-red-600 mt-1">{{ errors[0] }}</span>
           </ValidationProvider>
@@ -194,6 +197,7 @@
               placeholder="Pilih kategori layanan SPBE"
               :options="spbeRALOptions"
               :filterable="true"
+              filter-type="contain"
             />
           </ValidationProvider>
 
@@ -251,7 +255,7 @@
             >
               <BaseButton
                 type="button"
-                class="border-red-500 hover:bg-red-50 font-lato text-sm text-red-500"
+                class="border-red-500 hover:bg-red-50 font-lato text-sm text-red-500 mt-4"
                 @click="removeBenefit(index)"
               >
                 <span>
@@ -318,7 +322,7 @@
             >
               <BaseButton
                 type="button"
-                class="border-red-500 hover:bg-red-50 font-lato text-sm text-red-500"
+                class="border-red-500 hover:bg-red-50 font-lato text-sm text-red-500 mt-4"
                 @click="removeFacility(index)"
               >
                 <span>
@@ -413,7 +417,7 @@
                 @click="removeLink(index)"
               >
                 <span>
-                  Hapus Fasilitas Layanan
+                  Hapus Tautan
                 </span>
                 <template #icon-right>
                   <JdsIcon
@@ -477,7 +481,7 @@
             >
               <BaseButton
                 type="button"
-                class="border-red-500 hover:bg-red-50 font-lato text-sm text-red-500"
+                class="border-red-500 hover:bg-red-50 font-lato text-sm text-red-500 mt-4"
                 @click="removeTermAndCondition(index)"
               >
                 <span>
@@ -536,7 +540,7 @@
             >
               <BaseButton
                 type="button"
-                class="border-red-500 hover:bg-red-50 font-lato text-sm text-red-500"
+                class="border-red-500 hover:bg-red-50 font-lato text-sm text-red-500 mt-4"
                 @click="removeServiceProcedure(index)"
               >
                 <span>
@@ -730,6 +734,7 @@
                 :value="locations[index].organization"
                 :options="onCheckOption(index)"
                 :filterable="true"
+                filter-type="contain"
                 :auto-close="true"
                 placeholder="Pilih Penanggung Jawab Lokasi"
                 @change="onChangeOrganization($event, index)"

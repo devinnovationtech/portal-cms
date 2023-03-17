@@ -126,7 +126,7 @@
                   />
                 </template>
                 <p class="text-red-500">
-                  Hapus Layanan
+                  Hapus Sosial Media
                 </p>
               </BaseButton>
             </div>
