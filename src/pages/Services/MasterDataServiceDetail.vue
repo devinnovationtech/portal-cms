@@ -18,7 +18,7 @@
         </BaseButton>
         <!-- Edit Button -->
         <LinkButton
-          href="#"
+          :href="`/layanan/master-data/${tableData.id}/ubah`"
           variant="secondary"
           class="hover:bg-green-50"
         >

@@ -153,15 +153,15 @@
               v-for="(link, index) in links"
               :key="`link-${index}`"
             >
-              <p v-if="link.link !== ''">
+              <p v-if="link.tautan !== ''">
                 {{ link.label }} :
                 <a
-                  :href="link.link"
+                  :href="link.tautan"
                   target="_blank"
                   rel="noopener noreferrer"
                   class="underline text-blue-500"
                 >
-                  {{ link.link }}
+                  {{ link.tautan }}
                 </a>
               </p>
               <p v-else>
