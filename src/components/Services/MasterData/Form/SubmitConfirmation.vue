@@ -386,7 +386,7 @@
               {{ item.type }}
             </p>
             <a
-              :href="website"
+              :href="item.link"
               target="_blank"
               rel="noopener noreferrer"
               class="underline text-blue-500"
