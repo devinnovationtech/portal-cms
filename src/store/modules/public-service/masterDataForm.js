@@ -131,6 +131,7 @@ const getDefaultState = () => ({
       ],
     },
   },
+  status: '',
   governmentAffairOptions: [],
   spbeRALOptions: [],
   organizationLists: [],
@@ -150,6 +151,9 @@ export default {
     },
     isLastStep(state) {
       return state.currentFormStep === 3;
+    },
+    isDraft(state) {
+      return state.status === 'DRAFT';
     },
     submitStatus(state) {
       return state.submitStatus;
@@ -516,6 +520,8 @@ export default {
       state.stepThree.additional_information.phone_number = payload.additional_information.phone_number;
       state.stepThree.additional_information.email = payload.additional_information.email;
       state.stepThree.additional_information.social_media = payload.additional_information.social_media;
+
+      state.status = payload.status;
     },
   },
   actions: {
@@ -657,12 +663,12 @@ export default {
         console.log(error);
       }
     },
-    async updateForm({ dispatch, commit }, id) {
+    async updateForm({ dispatch, commit }, { id, status }) {
       try {
         commit('SET_SUBMIT_STATUS', FORM_SUBMIT_STATUS.LOADING);
         commit('SET_SUBMIT_PROGRESS', 25);
 
-        const formData = await dispatch('generateFormData', 'ARCHIVE');
+        const formData = await dispatch('generateFormData', status);
         const response = await masterDataServiceRepository.updateMasterData(formData, id);
 
         if (response.status === 200) {

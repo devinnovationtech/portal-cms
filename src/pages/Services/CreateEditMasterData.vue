@@ -39,17 +39,7 @@
               </span>
             </BaseButton>
             <BaseButton
-              v-if="isEditMode && !isLastStep"
-              type="button"
-              class="border-green-700 hover:bg-green-50 font-lato text-sm text-green-700"
-              @click="nextStep"
-            >
-              <span>
-                Selanjutnya
-              </span>
-            </BaseButton>
-            <BaseButton
-              v-if="isCreateMode && !isLastStep"
+              v-if="!isLastStep"
               type="button"
               class="bg-green-700 hover:bg-green-600 font-lato text-sm text-white"
               @click="nextStep"
@@ -59,7 +49,7 @@
               </span>
             </BaseButton>
             <BaseButton
-              v-if="isCreateMode && isLastStep"
+              v-if="(isCreateMode || isDraft) && isLastStep"
               type="button"
               class="border-green-700 hover:bg-green-50 font-lato text-sm text-green-700"
               @click="openSaveConfirmation"
@@ -69,7 +59,7 @@
               </span>
             </BaseButton>
             <BaseButton
-              v-if="isCreateMode && isLastStep"
+              v-if="(isCreateMode || isDraft) && isLastStep"
               type="button"
               class="bg-green-700 hover:bg-green-600 font-lato text-sm text-white"
               :disabled="invalid"
@@ -80,7 +70,7 @@
               </span>
             </BaseButton>
             <BaseButton
-              v-if="isEditMode && isLastStep"
+              v-if="isEditMode && !isDraft && isLastStep"
               type="button"
               class="bg-green-700 hover:bg-green-600 font-lato text-sm text-white"
               :disabled="invalid"
@@ -127,7 +117,7 @@
           </BaseButton>
           <BaseButton
             class="bg-green-700 hover:bg-green-600 text-sm text-white"
-            @click="saveAsDraft"
+            @click="handleSaveForm"
           >
             Ya, tambahkan layanan
           </BaseButton>
@@ -141,7 +131,7 @@
       title="Tambah Layanan"
       submit-button-label="Tambah  Layanan"
       @close="closeConfirmation"
-      @submit="submitForm"
+      @submit="handleSubmition"
     />
 
     <!-- Update Confirmation -->
@@ -150,7 +140,7 @@
       title="Update Layanan"
       submit-button-label="Update Layanan"
       @close="closeConfirmation"
-      @submit="updateForm"
+      @submit="updateForm('ARCHIVE')"
     />
 
     <!-- Submit Progress -->
@@ -218,6 +208,7 @@ export default {
       'currentFormStep',
       'isFirstStep',
       'isLastStep',
+      'isDraft',
       'submitStatus',
       'submitMessage',
       'submitProgress',
@@ -263,10 +254,26 @@ export default {
       'submitConfirmation',
       'updateConfirmation',
       'submitForm',
+
     ]),
-    updateForm() {
+    handleSaveForm() {
+      if (this.isEditMode && this.isDraft) {
+        this.updateForm('DRAFT');
+      } else {
+        this.saveAsDraft();
+      }
+    },
+    handleSubmition() {
+      if (this.isEditMode && this.isDraft) {
+        this.updateForm('ARCHIVE');
+      } else {
+        this.submitForm();
+      }
+    },
+    updateForm(status) {
       const { id } = this.$route.params;
-      this.$store.dispatch('masterDataForm/updateForm', id);
+
+      this.$store.dispatch('masterDataForm/updateForm', { id, status });
     },
     handleCloseConfirmation() {
       if (this.submitStatus === 'SUCCESS') {
