@@ -99,7 +99,7 @@ export default {
       switch (this.application.status) {
         case 'AVAILABLE':
           return 'Tersedia';
-        case 'NON-AVAILABLE':
+        case 'NOT-AVAILABLE':
           return 'Tidak Tersedia';
         default:
           return '-';

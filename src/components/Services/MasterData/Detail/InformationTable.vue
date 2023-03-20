@@ -183,14 +183,20 @@
             <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
               Alamat Website Informasi Resmi
             </td>
-            <td class="font-lato text-blue-gray-500 font-bold hover:underline text-sm">
-              <a
-                :href="services.website"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {{ services.website || '-' }}
-              </a>
+            <td class="font-lato text-blue-gray-500 font-bold text-sm">
+              <template v-if="!!services.website">
+                <a
+                  :href="services.website"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="hover:underline"
+                >
+                  {{ services.website }}
+                </a>
+              </template>
+              <template v-else>
+                <span>-</span>
+              </template>
             </td>
           </tr>
           <tr>
