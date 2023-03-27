@@ -577,18 +577,32 @@ export default {
       }
     },
     generateFormData({ state }, status) {
+      let stepOnefacilities;
       let stepTwoState;
       const { technical } = state.stepOne.services.information;
+      const applicationStatus = state.stepTwo.application.status;
 
       // generate different state based on step one state (technical)
       if (technical === 'ONLINE') {
+        stepOnefacilities = getDefaultState().stepOne.services.information.facilities;
         stepTwoState = {
           ...state.stepTwo.application,
         };
       } else {
+        stepOnefacilities = state.stepOne.services.information.facilities;
         stepTwoState = {
           ...getDefaultState().stepTwo.application,
         };
+      }
+
+      // generate different state based on step two state (status)
+      if (applicationStatus === 'NOT-AVAILABLE') {
+        stepTwoState = {
+          ...getDefaultState().stepTwo.application,
+          status: 'NOT-AVAILABLE',
+        };
+      } else {
+        stepTwoState = { ...state.stepTwo.application };
       }
 
       const formData = {
@@ -598,7 +612,10 @@ export default {
             // Get only selected operational time
             operational_time: state.stepOne.services.service_detail.operational_time.filter((item) => item.selected),
           },
-          information: { ...state.stepOne.services.information },
+          information: {
+            ...state.stepOne.services.information,
+            facilities: [...stepOnefacilities],
+          },
           location: [...state.stepOne.services.location],
         },
         application: { ...stepTwoState },

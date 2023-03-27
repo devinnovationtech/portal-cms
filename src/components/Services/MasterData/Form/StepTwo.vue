@@ -27,7 +27,7 @@
           </ValidationProvider>
           <ValidationProvider
             v-slot="{ errors }"
-            rules="required"
+            :rules="applicationStatus === 'NOT-AVAILABLE' ? null : 'required'"
             class="flex flex-col gap-[6px]"
             tag="div"
           >
@@ -42,6 +42,7 @@
               v-model="applicationName"
               placeholder="Nama Aplikasi"
               :error-message="errors[0]"
+              :disabled="applicationStatus === 'NOT-AVAILABLE'"
             />
           </ValidationProvider>
         </section>
@@ -56,7 +57,7 @@
             </h3>
             <ValidationProvider
               v-slot="{ errors }"
-              rules="required"
+              :rules="applicationStatus === 'NOT-AVAILABLE' ? null : 'required'"
               class="flex flex-col gap-[6px] mb-4"
               tag="div"
             >
@@ -71,12 +72,13 @@
                 :value="applicationFeatures[index].name"
                 placeholder="Masukkan fitur aplikasi"
                 :error-message="errors[0]"
+                :disabled="applicationStatus === 'NOT-AVAILABLE'"
                 @input="setNameFeature($event, index)"
               />
             </ValidationProvider>
             <ValidationProvider
               v-slot="{ errors }"
-              rules="required"
+              :rules="applicationStatus === 'NOT-AVAILABLE' ? null : 'required'"
               class="flex flex-col mb-4"
               tag="div"
             >
@@ -89,11 +91,13 @@
               <textarea
                 id="application-feature"
                 class="w-full border border-gray-500 rounded-lg px-2 py-1 bg-gray-50 mb-1 hover:bg-white
-            hover:border-green-600 focus:outline-none focus:border-green-500 focus:outline-1 focus:outline-offset-[-2px] focus:outline-yellow-500"
+              hover:border-green-600 focus:outline-none focus:border-green-500 focus:outline-1 focus:outline-offset-[-2px] focus:outline-yellow-500
+              disabled:bg-gray-200 disabled:text-gray-400"
                 :value="applicationFeatures[index].description"
                 placeholder="Masukkan deskripsi"
                 rows="4"
                 maxlength="255"
+                :disabled="applicationStatus === 'NOT-AVAILABLE'"
                 @input="setDescriptionFeature($event.target.value, index)"
               />
               <p
@@ -135,7 +139,8 @@
         <div class="flex flex-row justify-end">
           <BaseButton
             type="button"
-            class="bg-white font-lato text-sm border-green-700 hover:bg-green-50 focus:bg-green-50 focus:shadow-[inset_0px_0px_0px_1px_rgba(255,200,0,1)]"
+            class="border-green-700 hover:bg-green-50 font-lato text-sm text-green-700"
+            :disabled="applicationStatus === 'NOT-AVAILABLE'"
             @click="addNewFeature"
           >
             <template #icon-right>
@@ -146,9 +151,9 @@
                 class="h-4 w-4"
               />
             </template>
-            <p class="text-green-700 ">
+            <span>
               Tambahkan Fitur Aplikasi
-            </p>
+            </span>
           </BaseButton>
         </div>
       </section>
