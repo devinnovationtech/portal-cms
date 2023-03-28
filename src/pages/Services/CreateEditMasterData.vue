@@ -12,7 +12,7 @@
             <BaseButton
               type="button"
               class="bg-red-400 hover:bg-red-600 font-lato text-sm text-white"
-              @click="$router.back()"
+              @click="cancelConfirmation"
             >
               <template #icon-left>
                 <JdsIcon
@@ -94,6 +94,36 @@
         </section>
       </form>
     </ValidationObserver>
+
+    <!-- Cancelation Popup -->
+    <BaseModal :open="submitStatus === 'CANCEL_CONFIRMATION'">
+      <div class="w-full h-full px-2 pb-4">
+        <h1 class="font-roboto font-medium text-green-700 text-[21px] leading-[34px] mb-6">
+          Membatalkan Layanan
+        </h1>
+        <div class="flex items-center gap-4">
+          <p class="text-sm leading-6 to-blue-gray-800">
+            Apakah Anda yakin ingin membatalkan Layanan ini ?
+          </p>
+        </div>
+      </div>
+      <template #footer>
+        <div class="flex w-full h-full items-center justify-end gap-4 p-2">
+          <BaseButton
+            class="border border-green-700 hover:bg-green-50 text-sm text-green-700"
+            @click="closeConfirmation"
+          >
+            Batal
+          </BaseButton>
+          <BaseButton
+            class="bg-red-400 hover:bg-red-600 text-sm text-white"
+            @click="handleCancelation"
+          >
+            Ya, saya yakin
+          </BaseButton>
+        </div>
+      </template>
+    </BaseModal>
 
     <!-- Confirmation Popup -->
     <BaseModal :open="submitStatus === 'SAVE_AS_DRAFT_CONFIRMATION'">
@@ -250,12 +280,16 @@ export default {
       'previousStep',
       'saveAsDraft',
       'openSaveConfirmation',
+      'cancelConfirmation',
       'closeConfirmation',
       'submitConfirmation',
       'updateConfirmation',
       'submitForm',
-
+      'resetFormData',
     ]),
+    handleCancelation() {
+      this.$router.back();
+    },
     handleSaveForm() {
       if (this.isEditMode && this.isDraft) {
         this.updateForm('DRAFT');

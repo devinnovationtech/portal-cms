@@ -70,8 +70,8 @@
           <p
             class="w-fit font-lato px-[10px] rounded-[5px] font-bold text-[14px] leading-[23px] capitalize mt-2"
             :class="{
-              'bg-green-50 text-green-700' : operationalStatus === 'ACTIVE',
-              'bg-gray-200 text-gray-600' : operationalStatus === 'NOT-ACTIVE'
+              'bg-green-50 text-green-700' : operationalStatus === 'Aktif',
+              'bg-gray-200 text-gray-600' : operationalStatus === 'Non Aktif'
             }"
           >
             <span>{{ operationalStatus.toLowerCase() }}</span>
@@ -134,14 +134,19 @@
           <p class="font-roboto text-base leading-6 text-[#627798]">
             Alamat Website Informasi Resmi:
           </p>
-          <a
-            :href="website"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="underline text-blue-500"
-          >
-            {{ website || '-' }}
-          </a>
+          <template v-if="website !== ''">
+            <a
+              :href="website"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="underline text-blue-500"
+            >
+              {{ website }}
+            </a>
+          </template>
+          <template v-else>
+            <span>-</span>
+          </template>
         </div>
 
         <div class="px-4 py-3 bg-white even:bg-[#FCFCFC]">
@@ -385,14 +390,19 @@
             <p class="font-roboto text-base leading-6 text-[#627798]">
               {{ item.type }}
             </p>
-            <a
-              :href="item.link"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="underline text-blue-500"
-            >
-              {{ item.link || '-' }}
-            </a>
+            <template v-if="item.link !== ''">
+              <a
+                :href="item.link"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="underline text-blue-500"
+              >
+                {{ item.link }}
+              </a>
+            </template>
+            <template v-else>
+              <span>-</span>
+            </template>
           </div>
         </div>
       </template>
@@ -504,7 +514,14 @@ export default {
       return this.$store.state.masterDataForm.stepOne.services.information.sub_service_spbe;
     },
     operationalStatus() {
-      return this.$store.state.masterDataForm.stepOne.services.information.operational_status;
+      switch (this.$store.state.masterDataForm.stepOne.services.information.operational_status) {
+        case 'ACTIVE':
+          return 'Aktif';
+        case 'NOT-ACTIVE':
+          return 'Non Aktif';
+        default:
+          return '-';
+      }
     },
     technical() {
       return this.$store.state.masterDataForm.stepOne.services.information.technical;

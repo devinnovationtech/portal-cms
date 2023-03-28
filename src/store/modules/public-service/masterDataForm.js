@@ -8,6 +8,7 @@ const FORM_SUBMIT_STATUS = Object.freeze({
   SAVE_AS_DRAFT_CONFIRMATION: 'SAVE_AS_DRAFT_CONFIRMATION',
   SUBMIT_CONFIRMATION: 'SUBMIT_CONFIRMATION',
   UPDATE_CONFIRMATION: 'UPDATE_CONFIRMATION',
+  CANCEL_CONFIRMATION: 'CANCEL_CONFIRMATION',
   LOADING: 'LOADING',
   SUCCESS: 'SUCCESS',
   ERROR: 'ERROR',
@@ -636,6 +637,9 @@ export default {
     },
     updateConfirmation({ commit }) {
       commit('SET_SUBMIT_STATUS', FORM_SUBMIT_STATUS.UPDATE_CONFIRMATION);
+    },
+    cancelConfirmation({ commit }) {
+      commit('SET_SUBMIT_STATUS', FORM_SUBMIT_STATUS.CANCEL_CONFIRMATION);
     },
     async saveAsDraft({ dispatch, commit }) {
       try {
