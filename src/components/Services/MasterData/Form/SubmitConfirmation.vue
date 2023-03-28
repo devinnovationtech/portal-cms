@@ -71,7 +71,7 @@
             class="w-fit font-lato px-[10px] rounded-[5px] font-bold text-[14px] leading-[23px] capitalize mt-2"
             :class="{
               'bg-green-50 text-green-700' : operationalStatus === 'Aktif',
-              'bg-gray-200 text-gray-600' : operationalStatus === 'Non Aktif'
+              'bg-gray-200 text-gray-600' : operationalStatus === 'Tidak Aktif'
             }"
           >
             <span>{{ operationalStatus.toLowerCase() }}</span>
@@ -542,7 +542,7 @@ export default {
         case 'ACTIVE':
           return 'Aktif';
         case 'NOT-ACTIVE':
-          return 'Non Aktif';
+          return 'Tidak Aktif';
         default:
           return '-';
       }
