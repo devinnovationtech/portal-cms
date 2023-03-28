@@ -903,7 +903,7 @@ export default {
         },
         {
           value: 'NOT-ACTIVE',
-          label: 'Non Aktif',
+          label: 'Tidak Aktif',
         },
       ],
       technicalOptions: [
