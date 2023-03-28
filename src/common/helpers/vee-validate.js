@@ -98,3 +98,13 @@ extend('email', {
   ...email,
   message: 'Email yang anda masukkan salah!',
 });
+
+extend('timeformat', {
+  validate(value) {
+    // regex for testing `hh:mm` time format (ex 01:00, 3:00)
+    const timeFormatPattern = new RegExp(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/gm);
+
+    return timeFormatPattern.test(value);
+  },
+  message: 'Jam yang anda masukkan salah!',
+});

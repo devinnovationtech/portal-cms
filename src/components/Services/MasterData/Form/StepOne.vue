@@ -631,7 +631,7 @@
               </div>
               <ValidationProvider
                 v-slot="{ errors }"
-                :rules="operationalTime[index].selected ? 'required': ''"
+                :rules="operationalTime[index].selected ? 'required|timeformat': ''"
                 class="flex flex-col relative"
               >
                 <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
@@ -650,7 +650,7 @@
               <ValidationProvider
                 v-slot="{ errors }"
                 class="flex flex-col relative"
-                :rules="operationalTime[index].selected ? 'required': ''"
+                :rules="operationalTime[index].selected ? 'required|timeformat': ''"
               >
                 <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
                   Pelayanan ditutup
