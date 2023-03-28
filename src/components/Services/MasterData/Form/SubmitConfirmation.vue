@@ -119,7 +119,7 @@
           <p class="font-roboto text-base leading-6 text-[#627798]">
             Fasilitas Layanan:
           </p>
-          <ul>
+          <ul v-if="technical === 'OFFLINE'">
             <li
               v-for="(facility, index) in facilities"
               :key="`facility-${index}`"
@@ -128,6 +128,7 @@
               <span v-else> - </span>
             </li>
           </ul>
+          <span v-else>-</span>
         </div>
 
         <div class="px-4 py-3 bg-white even:bg-[#FCFCFC]">
@@ -305,34 +306,57 @@
           <p class="font-roboto text-base leading-6 text-[#627798]">
             Status Ketersediaan Aplikasi:
           </p>
-          <p>{{ applicationStatus || '-' }}</p>
+          <p>{{ applicationStatusLabel || '-' }}</p>
         </div>
 
         <div class="px-4 py-3 bg-white even:bg-[#FCFCFC]">
           <p class="font-roboto text-base leading-6 text-[#627798]">
             Nama Aplikasi:
           </p>
-          <p>{{ applicationName || '-' }}</p>
+          <p v-if="applicationStatus === 'AVAILABLE'">
+            {{ applicationName }}
+          </p>
+          <p v-else>
+            -
+          </p>
         </div>
 
-        <div
-          v-for="(item, index) in applicationFeatures"
-          :key="`feature-${index}`"
-        >
+        <template v-if="applicationStatus === 'AVAILABLE'">
+          <div
+            v-for="(item, index) in applicationFeatures"
+            :key="`feature-${index}`"
+          >
+            <div class="px-4 py-3 bg-white even:bg-[#FCFCFC]">
+              <p class="font-roboto text-base leading-6 text-[#627798]">
+                Fitur Aplikasi:
+              </p>
+              <p>{{ item.name || '-' }}</p>
+            </div>
+
+            <div class="px-4 py-3 bg-white even:bg-[#FCFCFC]">
+              <p class="font-roboto text-base leading-6 text-[#627798]">
+                Deskripsi Fitur:
+              </p>
+              <p>{{ item.description || '-' }}</p>
+            </div>
+          </div>
+        </template>
+
+        <template v-else>
           <div class="px-4 py-3 bg-white even:bg-[#FCFCFC]">
             <p class="font-roboto text-base leading-6 text-[#627798]">
               Fitur Aplikasi:
             </p>
-            <p>{{ item.name || '-' }}</p>
+            <p>-</p>
           </div>
 
           <div class="px-4 py-3 bg-white even:bg-[#FCFCFC]">
             <p class="font-roboto text-base leading-6 text-[#627798]">
               Deskripsi Fitur:
             </p>
-            <p>{{ item.description || '-' }}</p>
+            <p>-</p>
           </div>
-        </div>
+        </template>
       </template>
 
       <template v-if="currentTab === 'additional_information'">
@@ -566,9 +590,10 @@ export default {
       }));
     },
     applicationStatus() {
-      const { status } = this.$store.state.masterDataForm.stepTwo.application;
-
-      return APPLICATION_STATUS_MAP[status] ?? '-';
+      return this.$store.state.masterDataForm.stepTwo.application.status;
+    },
+    applicationStatusLabel() {
+      return APPLICATION_STATUS_MAP[this.applicationStatus] ?? '-';
     },
     applicationName() {
       return this.$store.state.masterDataForm.stepTwo.application.name;
