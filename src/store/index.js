@@ -4,6 +4,7 @@ import VuexPersist from 'vuex-persist';
 import auth from './modules/auth';
 import alert from './modules/alert';
 import news from './modules/news';
+import masterDataForm from './modules/public-service/masterDataForm';
 
 Vue.use(Vuex);
 
@@ -22,6 +23,7 @@ export default new Vuex.Store({
     auth,
     alert,
     news,
+    masterDataForm,
   },
   plugins: [vuexLocalStorage.plugin],
 });

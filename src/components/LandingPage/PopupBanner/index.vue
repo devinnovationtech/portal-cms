@@ -286,12 +286,9 @@ export default {
       }
     },
     setActiveBanner() {
-      const activeBanner = this.banners.filter((banner) => banner.status === 'ACTIVE');
-      if (activeBanner.length === 0) return;
+      const activeBanner = this.banners.find((banner) => banner.is_live === 1);
 
-      this.activeBanner = {
-        ...activeBanner[0],
-      };
+      this.activeBanner = activeBanner || null;
     },
     setParams(data) {
       const newParams = { ...this.params, ...data };

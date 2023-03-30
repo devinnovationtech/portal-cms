@@ -1,10 +1,15 @@
 import { extend } from 'vee-validate';
-import { required, image, size, max } from 'vee-validate/dist/rules';
+import { required, numeric, image, size, max, email } from 'vee-validate/dist/rules';
 import { isAfter, isToday } from 'date-fns';
 
 extend('required', {
   ...required,
   message: 'Field ini wajib diisi!',
+});
+
+extend('numeric', {
+  ...numeric,
+  message: 'Field ini hanya boleh diisi dengan angka',
 });
 
 extend('image', {
@@ -20,7 +25,7 @@ extend('size', {
 extend('url', {
   validate(value) {
     // eslint-disable-next-line no-useless-escape
-    const urlPattern = new RegExp(/[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/ig);
+    const urlPattern = new RegExp(/(http(s)?):\/\/(?:www\.|(?!www))[a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/ig);
     return urlPattern.test(value);
   },
   message: 'Link yang anda masukkan salah!',
@@ -77,4 +82,29 @@ extend('nobackdate', {
     });
   },
   message: 'Tanggal yang anda pilih sudah lewat!',
+});
+
+extend('phonenumber', {
+  validate(value) {
+    // eslint-disable-next-line no-useless-escape
+    const phoneNumberPattern = new RegExp(/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,8}$/im);
+
+    return phoneNumberPattern.test(value);
+  },
+  message: 'Nomor telepon yang anda masukkan salah!',
+});
+
+extend('email', {
+  ...email,
+  message: 'Email yang anda masukkan salah!',
+});
+
+extend('timeformat', {
+  validate(value) {
+    // regex for testing `hh:mm` time format (ex 01:00, 3:00)
+    const timeFormatPattern = new RegExp(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/gm);
+
+    return timeFormatPattern.test(value);
+  },
+  message: 'Jam yang anda masukkan salah!',
 });

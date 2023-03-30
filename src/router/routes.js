@@ -55,8 +55,34 @@ export default [
   },
   {
     path: '/layanan',
-    name: 'Layanan',
-    component: () => import('@/pages/Home'),
+    name: 'Layanan Pemerintah Daerah Provinsi Jawa Barat',
+    component: () => import('@/pages/Services'),
+    meta: {
+      layout: 'AppLayoutPrivate',
+    },
+  },
+  {
+    path: '/layanan/master-data/tambah',
+    name: 'Layanan Pemerintah Daerah Provinsi Jawa Barat',
+    component: () => import('@/pages/Services/CreateEditMasterData.vue'),
+    meta: {
+      mode: 'create',
+      layout: 'AppLayoutPrivate',
+    },
+  },
+  {
+    path: '/layanan/master-data/:id/ubah',
+    name: 'Ubah Data Layanan Pemerintah Daerah Provinsi Jawa Barat',
+    component: () => import('@/pages/Services/CreateEditMasterData.vue'),
+    meta: {
+      mode: 'edit',
+      layout: 'AppLayoutPrivate',
+    },
+  },
+  {
+    path: '/layanan/master-data/detail/:id',
+    name: 'Master Data Detail',
+    component: () => import('@/pages/Services/MasterDataServiceDetail.vue'),
     meta: {
       layout: 'AppLayoutPrivate',
     },

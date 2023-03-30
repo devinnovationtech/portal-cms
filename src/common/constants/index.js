@@ -287,3 +287,57 @@ export const STATUS_MODAL = {
   SUCCESS: 'SUCCESS',
   ERROR: 'ERROR',
 };
+
+export const MASTER_DATA_TABLE_HEADER = [
+  {
+    key: 'title',
+    text: 'Nama Layanan',
+    sortable: false,
+  },
+  {
+    key: 'author',
+    text: 'Author',
+    sortable: false,
+  },
+  {
+    key: 'user',
+    text: 'Pengguna Layanan',
+    sortable: false,
+  },
+  {
+    key: 'technical',
+    text: 'Teknis Layanan',
+    sortable: false,
+  },
+  {
+    key: 'updated',
+    text: 'Diperbarui',
+    sortable: false,
+  },
+  {
+    key: 'status',
+    text: 'Status',
+    sortable: false,
+  },
+  {
+    key: 'action',
+    text: 'Aksi',
+    sortable: false,
+  },
+];
+
+export const MASTER_DATA_STATUS_MAP = {
+  ALLSERVICES: 'Semua Layanan',
+  DRAFT: 'Draf',
+  ARCHIVE: 'Tersimpan',
+};
+
+export const DAY_MAP = {
+  MONDAY: 'Senin',
+  TUESDAY: 'Selasa',
+  WEDNESDAY: 'Rabu',
+  THURSDAY: 'Kamis',
+  FRIDAY: 'Jumat',
+  SATURDAY: 'Sabtu',
+  SUNDAY: 'Minggu',
+};
