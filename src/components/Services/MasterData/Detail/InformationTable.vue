@@ -146,13 +146,13 @@
               Manfaat Layanan
             </td>
             <td class="font-lato text-blue-gray-500 text-sm">
-              <template v-if="services.benefits.length > 0">
+              <template v-if="hasBenefits">
                 <div
                   v-for="(benefit, index) in services.benefits"
                   :key="`benefit-${index}`"
                   class="mb-1"
                 >
-                  <span class="leading-[23px]">{{ index + 1 }}. {{ benefit }}</span>
+                  <span class="leading-[23px]">{{ index + 1 }}. {{ benefit.name }}</span>
                 </div>
               </template>
               <template v-else>
@@ -165,13 +165,13 @@
               Fasilitas Layanan
             </td>
             <td class="font-lato text-blue-gray-500 text-sm">
-              <template v-if="services.facilities.length > 0">
+              <template v-if="hasFacilities">
                 <div
                   v-for="(facility, index) in services.facilities"
                   :key="`facility-${index}`"
                   class="mb-1"
                 >
-                  <span class="leading-[23px]">{{ index + 1 }}. {{ facility }}</span>
+                  <span class="leading-[23px]">{{ index + 1 }}. {{ facility.name }}</span>
                 </div>
               </template>
               <template v-else>
@@ -254,13 +254,13 @@
               Syarat dan Ketentuan
             </td>
             <td class="w-full font-lato text-blue-gray-500 text-sm">
-              <template v-if="services.terms_and_conditions.length > 0">
+              <template v-if="hasTermsAndConditions">
                 <div
                   v-for="(item, index) in services.terms_and_conditions"
                   :key="`terms-and-condition-${index}`"
                   class="mb-1"
                 >
-                  <span>{{ `${index + 1}. ${item}` }}</span>
+                  <span>{{ `${index + 1}. ${item.name}` }}</span>
                 </div>
               </template>
               <span v-else>-</span>
@@ -271,13 +271,13 @@
               Prosedur Layanan
             </td>
             <td class="w-full font-lato text-blue-gray-500 text-sm">
-              <template v-if="services.terms_and_conditions.length > 0">
+              <template v-if="hasServiceProcedures">
                 <div
                   v-for="(item, index) in services.service_procedures"
                   :key="`service-procedure-${index}`"
                   class="mb-1"
                 >
-                  <span>{{ `${index + 1}. ${item}` }}</span>
+                  <span>{{ `${index + 1}. ${item.name}` }}</span>
                 </div>
               </template>
               <span v-else>-</span>
@@ -427,6 +427,22 @@ export default {
       }
 
       return { value: 'NOT-ACTIVE', label: 'Tidak Aktif' };
+    },
+    hasBenefits() {
+      return this.tableData.services.benefits.length > 0
+      && this.tableData.services.benefits.every((item) => item.name !== undefined);
+    },
+    hasFacilities() {
+      return this.tableData.services.facilities.length > 0
+      && this.tableData.services.facilities.every((item) => item.name !== undefined);
+    },
+    hasTermsAndConditions() {
+      return this.tableData.services.terms_and_conditions.length > 0
+      && this.tableData.services.terms_and_conditions.every((item) => item.name !== undefined);
+    },
+    hasServiceProcedures() {
+      return this.tableData.services.service_procedures.length > 0
+      && this.tableData.services.service_procedures.every((item) => item.name !== undefined);
     },
   },
   methods: {

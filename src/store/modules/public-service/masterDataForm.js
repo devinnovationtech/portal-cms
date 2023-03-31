@@ -33,8 +33,34 @@ const getDefaultState = () => ({
         sub_service_spbe: '',
         operational_status: '',
         technical: '',
-        benefits: [''],
-        facilities: [''],
+        benefits: {
+          title: '',
+          is_active: 1,
+          items: [
+            {
+              name: '',
+              image: {
+                file_name: '',
+                file_download_uri: '',
+                size: 0,
+              },
+            },
+          ],
+        },
+        facilities: {
+          title: '',
+          is_active: 1,
+          items: [
+            {
+              name: '',
+              image: {
+                file_name: '',
+                file_download_uri: '',
+                size: 0,
+              },
+            },
+          ],
+        },
         website: '',
         links: [
           {
@@ -45,8 +71,36 @@ const getDefaultState = () => ({
         ],
       },
       service_detail: {
-        terms_and_conditions: [''],
-        service_procedures: [''],
+        terms_and_conditions: {
+          title: '',
+          is_active: 1,
+          items: [
+            {
+              name: '',
+              link: '',
+            },
+          ],
+          cover: {
+            file_name: '',
+            file_download_uri: '',
+            size: 0,
+          },
+        },
+        service_procedures: {
+          title: '',
+          is_active: 1,
+          items: [
+            {
+              name: '',
+              link: '',
+            },
+          ],
+          cover: {
+            file_name: '',
+            file_download_uri: '',
+            size: 0,
+          },
+        },
         service_fee: '',
         operational_time: [
           {
@@ -292,24 +346,38 @@ export default {
       state.stepOne.services.information.technical = payload;
     },
     ADD_STEP_ONE_BENEFIT(state) {
-      state.stepOne.services.information.benefits.push('');
+      state.stepOne.services.information.benefits.items.push({
+        name: '',
+        image: {
+          file_name: '',
+          file_download_uri: '',
+          size: 0,
+        },
+      });
     },
     REMOVE_STEP_ONE_BENEFIT(state, index) {
-      state.stepOne.services.information.benefits.splice(index, 1);
+      state.stepOne.services.information.benefits.items.splice(index, 1);
     },
     SET_STEP_ONE_BENEFIT(state, payload) {
       const { value, index } = payload;
-      state.stepOne.services.information.benefits[index] = value;
+      state.stepOne.services.information.benefits.items[index].name = value;
     },
     ADD_STEP_ONE_FACILITIES(state) {
-      state.stepOne.services.information.facilities.push('');
+      state.stepOne.services.information.facilities.items.push({
+        name: '',
+        image: {
+          file_name: '',
+          file_download_uri: '',
+          size: 0,
+        },
+      });
     },
     REMOVE_STEP_ONE_FACILITIES(state, index) {
-      state.stepOne.services.information.facilities.splice(index, 1);
+      state.stepOne.services.information.facilities.items.splice(index, 1);
     },
     SET_STEP_ONE_FACILITIES(state, payload) {
       const { value, index } = payload;
-      state.stepOne.services.information.facilities[index] = value;
+      state.stepOne.services.information.facilities.items[index].name = value;
     },
     SET_STEP_ONE_WEBSITE(state, payload) {
       state.stepOne.services.information.website = payload;
@@ -337,24 +405,30 @@ export default {
       state.stepOne.services.information.links[index].tautan = value;
     },
     ADD_STEP_ONE_TERM_AND_CONDITION(state) {
-      state.stepOne.services.service_detail.terms_and_conditions.push('');
+      state.stepOne.services.service_detail.terms_and_conditions.items.push({
+        name: '',
+        link: '',
+      });
     },
     REMOVE_STEP_ONE_TERM_AND_CONDITION(state, index) {
-      state.stepOne.services.service_detail.terms_and_conditions.splice(index, 1);
+      state.stepOne.services.service_detail.terms_and_conditions.items.splice(index, 1);
     },
     SET_STEP_ONE_TERM_AND_CONDITION(state, payload) {
       const { value, index } = payload;
-      state.stepOne.services.service_detail.terms_and_conditions[index] = value;
+      state.stepOne.services.service_detail.terms_and_conditions.items[index].name = value;
     },
     ADD_STEP_ONE_SERVICE_PROCEDURE(state) {
-      state.stepOne.services.service_detail.service_procedures.push('');
+      state.stepOne.services.service_detail.service_procedures.items.push({
+        name: '',
+        link: '',
+      });
     },
     REMOVE_STEP_ONE_SERVICE_PROCEDURE(state, index) {
-      state.stepOne.services.service_detail.service_procedures.splice(index, 1);
+      state.stepOne.services.service_detail.service_procedures.items.splice(index, 1);
     },
     SET_STEP_ONE_SERVICE_PROCEDURE(state, payload) {
       const { value, index } = payload;
-      state.stepOne.services.service_detail.service_procedures[index] = value;
+      state.stepOne.services.service_detail.service_procedures.items[index].name = value;
     },
     SET_STEP_ONE_SERVICE_FEE(state, payload) {
       state.stepOne.services.service_detail.service_fee = payload;
@@ -616,7 +690,7 @@ export default {
           },
           information: {
             ...state.stepOne.services.information,
-            facilities: [...stepOnefacilities],
+            facilities: { ...stepOnefacilities },
           },
           location: [...state.stepOne.services.location],
         },

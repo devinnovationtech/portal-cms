@@ -244,7 +244,7 @@
               Manfaat Layanan
             </label>
             <JdsInputText
-              :value="benefits[index]"
+              :value="benefits[index].name"
               placeholder="Masukkan manfaat layanan"
               :error-message="errors[0]"
               @input="setBenefitByIndex($event, index)"
@@ -309,7 +309,7 @@
               Fasilitas Layanan
             </label>
             <JdsInputText
-              :value="facilities[index]"
+              :value="facilities[index].name"
               placeholder="Masukkan fasilitas layanan"
               :disabled="technical === 'ONLINE'"
               :error-message="errors[0]"
@@ -469,7 +469,7 @@
               Syarat dan Ketentuan Layanan
             </label>
             <JdsInputText
-              :value="termsAndConditions[index]"
+              :value="termsAndConditions[index].name"
               placeholder="Masukkan syarat dan ketentuan layanan"
               :error-message="errors[0]"
               @input="setTermAndConditionByIndex($event, index)"
@@ -528,7 +528,7 @@
               Prosedur Layanan
             </label>
             <JdsInputText
-              :value="serviceProcedures[index]"
+              :value="serviceProcedures[index].name"
               placeholder="Masukkan prosedur layanan"
               :error-message="errors[0]"
               @input="setServiceProcedureByIndex($event, index)"
@@ -1083,10 +1083,10 @@ export default {
       },
     },
     benefits() {
-      return this.$store.state.masterDataForm.stepOne.services.information.benefits;
+      return this.$store.state.masterDataForm.stepOne.services.information.benefits.items;
     },
     facilities() {
-      return this.$store.state.masterDataForm.stepOne.services.information.facilities;
+      return this.$store.state.masterDataForm.stepOne.services.information.facilities.items;
     },
     website: {
       get() {
@@ -1100,10 +1100,10 @@ export default {
       return this.$store.state.masterDataForm.stepOne.services.information.links;
     },
     termsAndConditions() {
-      return this.$store.state.masterDataForm.stepOne.services.service_detail.terms_and_conditions;
+      return this.$store.state.masterDataForm.stepOne.services.service_detail.terms_and_conditions.items;
     },
     serviceProcedures() {
-      return this.$store.state.masterDataForm.stepOne.services.service_detail.service_procedures;
+      return this.$store.state.masterDataForm.stepOne.services.service_detail.service_procedures.items;
     },
     serviceFee: {
       get() {
