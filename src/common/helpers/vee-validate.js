@@ -1,6 +1,6 @@
 import { extend } from 'vee-validate';
 import { required, numeric, image, size, max, email } from 'vee-validate/dist/rules';
-import { isAfter, isToday } from 'date-fns';
+import { isAfter, isToday, differenceInMinutes } from 'date-fns';
 
 extend('required', {
   ...required,
@@ -107,4 +107,27 @@ extend('timeformat', {
     return timeFormatPattern.test(value);
   },
   message: 'Jam yang anda masukkan salah!',
+});
+
+extend('timebefore', {
+  params: ['time'],
+  validate(value, { time }) {
+    const timeFormatPattern = new RegExp(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/gm);
+
+    if (time && timeFormatPattern.test(time)) {
+      const today = new Date();
+      const selectedTime = value.split(':');
+      const validatorTime = time.split(':');
+
+      const selectedDateTime = new Date(today.getFullYear(), today.getMonth(), today.getDate(), selectedTime[0], selectedTime[1]);
+      const validatorDateTime = new Date(today.getFullYear(), today.getMonth(), today.getDate(), validatorTime[0], validatorTime[1]);
+
+      const minuteDifferences = differenceInMinutes(selectedDateTime, validatorDateTime);
+
+      return minuteDifferences < 0;
+    }
+
+    return true;
+  },
+  message: 'Waktu yang dipilih tidak boleh sama atau melebihi {time}',
 });

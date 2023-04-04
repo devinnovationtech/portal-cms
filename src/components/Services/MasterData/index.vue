@@ -44,7 +44,7 @@
 
     <!-- Action Prompt -->
     <BaseModal :open="modalState === 'DELETE_CONFIRMATION'">
-      <div class="w-full h-full">
+      <div class="w-full">
         <h1 class="font-roboto text-xl leading-8 font-medium text-green-700 mb-6">
           {{ modalMessage.title }}
         </h1>
@@ -293,7 +293,7 @@ export default {
       this.modalState = MODAL_STATE.DELETE_CONFIRMATION;
 
       this.setModalMessage({
-        title: 'Hapus Program!',
+        title: 'Hapus Layanan',
         message: 'Apakah Anda yakin ingin menghapus Layanan ini?',
         action: () => this.deleteMasterDataById(id),
       });

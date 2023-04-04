@@ -576,13 +576,6 @@
             </BaseButton>
           </div>
 
-          <JdsSectionMessage
-            show
-            variant="info"
-            class="col-span-2"
-            message="Tidak boleh menggunakan titik"
-          />
-
           <ValidationProvider
             v-slot="{ errors }"
             class="flex flex-col col-span-2"
@@ -591,6 +584,14 @@
             <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
               Tarif Layanan
             </label>
+
+            <JdsSectionMessage
+              show
+              variant="info"
+              class="col-span-2 mb-3"
+              message="Tidak boleh menggunakan titik"
+            />
+
             <JdsInputText
               v-model="serviceFee"
               placeholder="cth: 7000"
@@ -631,7 +632,7 @@
               </div>
               <ValidationProvider
                 v-slot="{ errors }"
-                :rules="operationalTime[index].selected ? 'required|timeformat': ''"
+                :rules="operationalTime[index].selected ? `required|timeformat|timebefore:${operationalTime[index].end}`: ''"
                 class="flex flex-col relative"
               >
                 <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
