@@ -1,9 +1,18 @@
 <template>
-  <section class="p-8 bg-white rounded-xl">
-    <h2 class="text-green-700 text-2xl font-medium mb-3">
+  <section
+    data-cy="login__form-container"
+    class="p-8 bg-white rounded-xl"
+  >
+    <h2
+      data-cy="login__form-title"
+      class="text-green-700 text-2xl font-medium mb-3"
+    >
       Log In
     </h2>
-    <p class="text-xs text-gray-700 leading-5 mb-5">
+    <p
+      data-cy="login__form-subtitle"
+      class="text-xs text-gray-700 leading-5 mb-5"
+    >
       Selamat Datang! Silakan masukkan e-mail dan kata sandi untuk masuk ke Portal Jabar Content Management System.
     </p>
     <div v-if="isError">
@@ -13,6 +22,7 @@
         dismissible
         :message="error.message"
         class="mb-5"
+        data-cy="login__error-message"
         @click:close="clearErrorMessage"
       />
     </div>
@@ -20,6 +30,7 @@
       <div class="flex flex-col gap-1 mb-5">
         <label
           for="email"
+          data-cy="login__email-label"
           class="text-gray-800 text-[15px]"
         >
           E-mail
@@ -36,6 +47,7 @@
             id="email"
             ref="email-input"
             v-model.trim="email"
+            data-cy="login__email-input"
             type="email"
             placeholder="Contoh: agus.permadi@gmail.com"
             :disabled="isError"
@@ -47,6 +59,7 @@
       <div class="flex flex-col gap-1 mb-4">
         <label
           for="password"
+          data-cy="login__password-label"
           class="text-gray-800 text-[15px]"
         >
           Kata Sandi
@@ -63,6 +76,7 @@
             id="password"
             ref="password-input"
             v-model="password"
+            data-cy="login__password-input"
             :type="passwordInputType"
             placeholder="Masukkan kata sandi"
             :disabled="isError"
@@ -72,6 +86,7 @@
           <div
             v-show="isPasswordIconVisible"
             class="p-2 flex justify-center items-center cursor-pointer"
+            data-cy="login__password-visibility"
             @click="togglePasswordInputVisibility"
           >
             <JdsIcon
@@ -94,6 +109,7 @@
       <button
         v-if="!isLoading"
         ref="login-button"
+        data-cy="login__login-button"
         type="submit"
         :disabled="!isValidInput || isError"
         class="rounded-lg text-sm py-[9px] w-full font-bold leading-6 uppercase focus:outline-none"
@@ -104,6 +120,7 @@
       <button
         v-else
         ref="login-button"
+        data-cy="login__login-button--loading"
         type="submit"
         :disabled="!isValidInput"
         class="flex justify-between items-center text-gray-500 bg-gray-200 rounded-lg text-sm px-4 py-[9px] w-full font-bold leading-6 focus:outline-none"
@@ -117,6 +134,7 @@
     </form>
     <ForgotPassword
       ref="forgot-password-modal"
+      data-cy="login__forgot-password-modal"
       :open="isForgotPasswordModalOpen"
       @close="toggleForgotPasswordModal"
     />

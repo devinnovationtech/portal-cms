@@ -1,10 +1,12 @@
 <template>
   <aside
     ref="sidebar"
+    data-cy="sidebar__container"
     class="min-h-screen h-full flex flex-col bg-green-600 p-6"
   >
     <section
       ref="sidebar-title"
+      data-cy="sidebar__header"
       class="flex gap-2"
     >
       <img
@@ -22,7 +24,10 @@
           height="38px"
           class="mb-1"
         >
-        <h1 class="font-lato text-white text-sm font-bold leading-5 whitespace-nowrap">
+        <h1
+          data-cy="sidebar__header-title"
+          class="font-lato text-white text-sm font-bold leading-5 whitespace-nowrap"
+        >
           CONTENT MANAGEMENT<br>
           SYSTEM
         </h1>
@@ -30,6 +35,7 @@
     </section>
     <nav
       ref="sidebar-navigation"
+      data-cy="sidebar__navigation"
       class="w-full mt-10"
     >
       <router-link
@@ -73,6 +79,7 @@
     </nav>
     <section
       ref="sidebar-bottom-nav"
+      data-cy="sidebar__bottom-nav"
       class="mt-auto"
     >
       <router-link
