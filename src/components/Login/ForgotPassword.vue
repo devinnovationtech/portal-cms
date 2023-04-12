@@ -1,7 +1,13 @@
 <template>
   <BaseModal :open="open">
-    <div class="w-full h-full px-2 pb-4">
-      <h1 class="font-roboto font-medium text-green-700 text-[21px] leading-[34px] mb-6">
+    <div
+      data-cy="forgot-password-modal__container"
+      class="w-full h-full px-2 pb-4"
+    >
+      <h1
+        data-cy="forgot-password-modal__title"
+        class="font-roboto font-medium text-green-700 text-[21px] leading-[34px] mb-6"
+      >
         Lupa Kata Sandi
       </h1>
       <div class="flex gap-8">
@@ -33,6 +39,7 @@
           <div class="flex flex-col gap-1">
             <label
               for="email"
+              data-cy="forgot-password-modal__email-label"
               class="text-gray-800 text-[15px]"
             >
               Email
@@ -49,6 +56,7 @@
                 id="email"
                 ref="email-input"
                 v-model.trim="email"
+                data-cy="forgot-password-modal__email-input"
                 type="email"
                 placeholder="Contoh: agus.permadi@gmail.com"
                 class="text-sm placeholder:text-gray-600 p-2 w-full bg-white focus:outline-none"
@@ -60,6 +68,7 @@
         </div>
         <div
           v-else
+          data-cy="forgot-password-modal__submit-message"
           class="max-w-sm"
         >
           <p class="text-sm leading-6 to-blue-gray-800 mb-4">
@@ -74,12 +83,14 @@
         class="flex w-full h-full items-center justify-end gap-4 p-2"
       >
         <BaseButton
+          data-cy="forgot-password-modal__cancel-button"
           class="border-green-700 hover:bg-green-50 text-sm text-green-700"
           @click="onClose"
         >
           Batal
         </BaseButton>
         <BaseButton
+          data-cy="forgot-password-modal__submit-button"
           class="bg-green-700 hover:bg-green-600 text-sm text-white"
           @click="onSubmit"
         >
@@ -91,6 +102,7 @@
         class="flex w-full h-full items-center justify-center gap-4 p-2"
       >
         <BaseButton
+          data-cy="forgot-password-modal__accept-button"
           class="bg-green-700 hover:bg-green-600 text-sm text-white"
           @click="onClose"
         >
