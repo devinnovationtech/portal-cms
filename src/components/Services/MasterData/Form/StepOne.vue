@@ -576,11 +576,7 @@
             </BaseButton>
           </div>
 
-          <ValidationProvider
-            v-slot="{ errors }"
-            class="flex flex-col col-span-2"
-            rules="required|numeric"
-          >
+          <div class="flex flex-col col-span-2">
             <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
               Tarif Layanan
             </label>
@@ -588,16 +584,20 @@
             <JdsSectionMessage
               show
               variant="info"
-              class="col-span-2 mb-3"
+              class="col-span-2 mb-4"
               message="Tidak boleh menggunakan titik"
             />
-
-            <JdsInputText
-              v-model="serviceFee"
-              placeholder="cth: 7000"
-              :error-message="errors[0]"
-            />
-          </ValidationProvider>
+            <ValidationProvider
+              v-slot="{ errors }"
+              rules="required|numeric"
+            >
+              <JdsInputText
+                v-model="serviceFee"
+                placeholder="cth: 7000"
+                :error-message="errors[0]"
+              />
+            </ValidationProvider>
+          </div>
 
           <div class="flex flex-col col-span-2">
             <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
