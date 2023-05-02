@@ -110,6 +110,7 @@ const getDefaultState = () => ({
     application: {
       status: '',
       name: '',
+      title: '',
       features: [
         {
           name: '',

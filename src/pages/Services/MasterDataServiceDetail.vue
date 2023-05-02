@@ -299,7 +299,7 @@ export default {
     showDeleteConfirmationModal(id) {
       this.modalState = MODAL_STATE.DELETE_CONFIRMATION;
       this.setModalMessage({
-        title: 'Hapus Program!',
+        title: 'Hapus Layanan',
         message: 'Apakah Anda yakin ingin menghapus Layanan ini?',
         action: () => this.deleteMasterData(id),
       });

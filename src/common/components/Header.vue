@@ -1,10 +1,12 @@
 <template>
   <header
     ref="header"
+    data-cy="header__container"
     class="z-50 w-full h-[72px] sticky top-0 px-6 flex items-center justify-between bg-white"
   >
     <h1
       ref="header-title"
+      data-cy="header__title"
       class="font-roboto text-xl font-bold text-blue-gray-800 mr-4"
     >
       {{ pageName }}
@@ -31,6 +33,7 @@
       <!-- User Dropdown -->
       <div
         ref="header-user"
+        data-cy="header__user"
         class="ml-4"
       >
         <JdsPopover :value="isUserDropdownOpen">
@@ -41,6 +44,7 @@
             >
               <img
                 ref="header-user-avatar"
+                data-cy="header__user-avatar"
                 :src="userAvatar"
                 alt="user avatar"
                 width="34"
@@ -49,12 +53,14 @@
               >
               <button
                 ref="header-user-dropdown-button"
+                data-cy="header__user-dropdown-button"
                 class="flex items-center"
                 :title="userRole"
                 @click="toggleUserDropdown"
               >
                 <p
                   ref="header-user-name"
+                  data-cy="header__user-name"
                   class="max-w-[100px] text-left font-lato font-semibold text-sm text-blue-gray-800 line-clamp-1 mr-2"
                 >
                   {{ userRole }}
@@ -72,6 +78,7 @@
           <div class="relative z-50 w-full bg-white rounded-lg shadow-xl p-2">
             <ul
               ref="header-user-dropdown-menu"
+              data-cy="header__user-dropdown-menu"
               class="flex flex-col gap-2"
             >
               <router-link
@@ -92,6 +99,7 @@
                 </li>
               </router-link>
               <button
+                data-cy="header__user-logout-button"
                 class="p-2 rounded-md group hover:bg-green-50"
                 @click="openLogoutModal"
               >
@@ -111,26 +119,35 @@
     <!-- Logout Modal -->
     <BaseModal
       ref="header-logout-modal"
+      data-cy="header__logout-modal"
       :open="isLogoutModalOpen"
       @close="closeLogoutModal"
     >
       <div class="w-full h-full">
-        <h1 class="font-roboto font-bold text-center text-green-700 text-[21px] leading-[34px] mb-4">
+        <h1
+          data-cy="header__logout-modal-title"
+          class="font-roboto font-bold text-center text-green-700 text-[21px] leading-[34px] mb-4"
+        >
           Keluar CMS
         </h1>
-        <p class="text-center text-sm text-gray-800">
+        <p
+          data-cy="header__logout-modal-subtitle"
+          class="text-center text-sm text-gray-800"
+        >
           Apakah Anda yakin akan keluar dari CMS Portal Jabar?
         </p>
       </div>
       <template #footer>
         <div class="flex w-full h-full items-center justify-center gap-4">
           <BaseButton
+            data-cy="header__logout-modal-cancel-button"
             class="border-green-700 hover:bg-green-50 text-sm text-green-700"
             @click="closeLogoutModal"
           >
             Batal
           </BaseButton>
           <BaseButton
+            data-cy="header__logout-modal-logout-button"
             class="bg-green-700 hover:bg-green-600 text-sm text-white"
             @click="onLogout"
           >
