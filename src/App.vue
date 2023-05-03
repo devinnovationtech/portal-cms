@@ -22,5 +22,12 @@ export default {
     Toast,
     ForbiddenAccessModal,
   },
+  metaInfo() {
+    return {
+      meta: [
+        { name: 'robots', content: 'noindex' }, // prevent search engine to index this site
+      ],
+    };
+  },
 };
 </script>
