@@ -25,7 +25,9 @@ export default [
     component: () => import('@/pages/LandingPage'),
     meta: {
       layout: 'AppLayoutPrivate',
+      permission: 'landing-page.manage',
     },
+    beforeEnter: userHasPermission,
   },
   {
     path: '/popup-banner/tambah',
