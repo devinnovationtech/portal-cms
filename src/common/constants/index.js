@@ -3,29 +3,34 @@ export const NAVIGATION_MENU = [
     link: '/',
     label: 'Dashboard',
     icon: 'DashboardIcon',
+    permission: null,
   },
   {
     link: '/landing-page',
     label: 'Landing Page',
     icon: 'LandingPageIcon',
     arrow: true,
+    permission: 'landing-page.manage',
   },
   {
     link: '/layanan',
     label: 'Layanan',
     icon: 'ServiceIcon',
     arrow: true,
+    permission: null,
   },
   {
     link: '/agenda',
     label: 'Agenda',
     icon: 'AgendaIcon',
+    permission: null,
   },
   {
     link: '/berita-dan-artikel',
     label: 'Berita dan Artikel',
     icon: 'NewsIcon',
     arrow: true,
+    permission: null,
   },
 ];
 

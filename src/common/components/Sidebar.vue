@@ -47,6 +47,7 @@
         custom
       >
         <li
+          v-if="isAllowedToAccess(navigation.permission)"
           class="w-full min-h-[50px] p-[15px] flex items-center rounded-lg font-lato
           font-bold text-sm text-white hover:bg-green-700 mb-2"
           :class="{'bg-green-700' : isActive}"
@@ -130,6 +131,19 @@ export default {
     return {
       navigationMenu: NAVIGATION_MENU,
     };
+  },
+  methods: {
+    isAllowedToAccess(permission) {
+      if (!permission || permission === null) {
+        return true;
+      }
+
+      if (permission && this.$hasPermission(permission)) {
+        return true;
+      }
+
+      return false;
+    },
   },
 };
 </script>
