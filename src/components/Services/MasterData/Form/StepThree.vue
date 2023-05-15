@@ -184,7 +184,7 @@ export default {
           },
           {
             value: 'INSTAGRAM',
-            label: 'Intragram',
+            label: 'Instagram',
           },
           {
             value: 'TWITTER',
@@ -193,6 +193,10 @@ export default {
           {
             value: 'YOUTUBE',
             label: 'Youtube',
+          },
+          {
+            value: 'TIKTOK',
+            label: 'Tiktok',
           },
         ],
       },
