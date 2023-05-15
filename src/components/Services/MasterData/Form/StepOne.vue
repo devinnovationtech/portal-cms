@@ -962,6 +962,18 @@ export default {
           label: 'BLUD',
           value: 'BLUD',
         },
+        {
+          label: 'Dinas',
+          value: 'DINAS',
+        },
+        {
+          label: 'Badan',
+          value: 'BADAN',
+        },
+        {
+          label: 'Biro',
+          value: 'BIRO',
+        },
       ],
       dayMap: DAY_MAP,
     };
