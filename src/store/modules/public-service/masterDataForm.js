@@ -1,5 +1,6 @@
 /* eslint-disable camelcase */
 import { RepositoryFactory } from '@/repositories/RepositoryFactory';
+import { EventBus } from '@/common/helpers/event-bus';
 
 const masterDataServiceRepository = RepositoryFactory.get('masterDataService');
 
@@ -773,7 +774,9 @@ export default {
           commit('SET_INITIAL_FORM_DATA', data);
         }
       } catch (error) {
-        console.log(error);
+        if (error.response?.status === 403) {
+          EventBus.$emit('error:forbidden');
+        }
       }
     },
     async updateForm({ dispatch, commit }, { id, status }) {
