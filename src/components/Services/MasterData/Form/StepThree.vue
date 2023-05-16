@@ -69,7 +69,7 @@
         title="Sosial Media"
         class="mb-5"
       >
-        <section class="flex flex-col gap-4">
+        <section class="flex flex-col gap-4 pb-12">
           <div
             v-for="(_,index) in socialMedias"
             :key="index"
