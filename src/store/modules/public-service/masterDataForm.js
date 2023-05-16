@@ -25,7 +25,6 @@ const getDefaultState = () => ({
         sub_government_affair: '',
         form: '',
         type: '',
-        sub_service_type: '',
         name: '',
         program_name: '',
         description: '',
@@ -101,7 +100,13 @@ const getDefaultState = () => ({
             size: 0,
           },
         },
-        service_fee: '',
+        service_fee: {
+          has_range: 0,
+          minimum_fee: '',
+          maximum_fee: '',
+          has_description: 0,
+          description: '',
+        },
         operational_time: [
           {
             selected: false,
@@ -321,9 +326,6 @@ export default {
     SET_STEP_ONE_SERVICE_TYPE(state, payload) {
       state.stepOne.services.information.type = payload;
     },
-    SET_STEP_ONE_SUB_SERVICE_TYPE(state, payload) {
-      state.stepOne.services.information.sub_service_type = payload;
-    },
     SET_STEP_ONE_SERVICE_NAME(state, payload) {
       state.stepOne.services.information.name = payload;
     },
@@ -430,8 +432,20 @@ export default {
       const { value, index } = payload;
       state.stepOne.services.service_detail.service_procedures.items[index].name = value;
     },
-    SET_STEP_ONE_SERVICE_FEE(state, payload) {
-      state.stepOne.services.service_detail.service_fee = payload;
+    SET_STEP_ONE_SERVICE_FEE_HAS_RANGE(state, payload) {
+      state.stepOne.services.service_detail.service_fee.has_range = payload ? 1 : 0;
+    },
+    SET_STEP_ONE_SERVICE_FEE_MINIMUM_FEE(state, payload) {
+      state.stepOne.services.service_detail.service_fee.minimum_fee = payload;
+    },
+    SET_STEP_ONE_SERVICE_FEE_MAXIMUM_FEE(state, payload) {
+      state.stepOne.services.service_detail.service_fee.maximum_fee = payload;
+    },
+    SET_STEP_ONE_SERVICE_FEE_HAS_DESCRIPTION(state, payload) {
+      state.stepOne.services.service_detail.service_fee.has_description = payload ? 1 : 0;
+    },
+    SET_STEP_ONE_SERVICE_FEE_DESCRIPTION(state, payload) {
+      state.stepOne.services.service_detail.service_fee.description = payload;
     },
     SET_STEP_ONE_OPERATIONAL_TIME_DAY(state, payload) {
       const { index } = payload;
@@ -555,7 +569,6 @@ export default {
       state.stepOne.services.information.sub_government_affair = payload.services.sub_government_affair;
       state.stepOne.services.information.form = payload.services.form;
       state.stepOne.services.information.type = payload.services.type;
-      state.stepOne.services.information.sub_service_type = payload.services.sub_service_type;
       state.stepOne.services.information.name = payload.services.name;
       state.stepOne.services.information.program_name = payload.services.program_name;
       state.stepOne.services.information.description = payload.services.description;
@@ -570,7 +583,11 @@ export default {
 
       state.stepOne.services.service_detail.terms_and_conditions = payload.services.terms_and_conditions;
       state.stepOne.services.service_detail.service_procedures = payload.services.service_procedures;
-      state.stepOne.services.service_detail.service_fee = payload.services.service_fee;
+      state.stepOne.services.service_detail.service_fee.has_range = payload.services.service_fee.has_range;
+      state.stepOne.services.service_detail.service_fee.minimum_fee = payload.services.service_fee.minimum_fee;
+      state.stepOne.services.service_detail.service_fee.maximum_fee = payload.services.service_fee.maximum_fee;
+      state.stepOne.services.service_detail.service_fee.has_description = payload.services.service_fee.has_description;
+      state.stepOne.services.service_detail.service_fee.description = payload.services.service_fee.description;
       state.stepOne.services.service_detail.hotline_number = payload.services.hotline_number;
       state.stepOne.services.service_detail.hotline_mail = payload.services.hotline_mail;
 

@@ -217,7 +217,21 @@
           <p class="font-roboto text-base leading-6 text-[#627798]">
             Tarif Layanan:
           </p>
-          <p>{{ serviceFee || '-' }}</p>
+          <p v-if="!!minimumFee || !!maximumFee">
+            {{ minimumFee }} <span v-if="!!maximumFee">-</span> {{ maximumFee }}
+          </p>
+          <p v-else>
+            -
+          </p>
+        </div>
+
+        <div class="px-4 py-3 bg-white even:bg-[#FCFCFC]">
+          <p class="font-roboto text-base leading-6 text-[#627798]">
+            Keterangan Khusus:
+          </p>
+          <p>
+            {{ specialDescription || '-' }}
+          </p>
         </div>
 
         <div class="px-4 py-3 bg-white even:bg-[#FCFCFC]">
@@ -568,8 +582,14 @@ export default {
     serviceProcedures() {
       return this.$store.state.masterDataForm.stepOne.services.service_detail.service_procedures.items;
     },
-    serviceFee() {
-      return this.$store.state.masterDataForm.stepOne.services.service_detail.service_fee;
+    minimumFee() {
+      return this.$store.state.masterDataForm.stepOne.services.service_detail.service_fee.minimum_fee;
+    },
+    maximumFee() {
+      return this.$store.state.masterDataForm.stepOne.services.service_detail.service_fee.maximum_fee;
+    },
+    specialDescription() {
+      return this.$store.state.masterDataForm.stepOne.services.service_detail.service_fee.description;
     },
     operationalTime() {
       const operationalTimes = this.$store.state.masterDataForm.stepOne.services.service_detail.operational_time;

@@ -81,7 +81,7 @@
           <ValidationProvider
             v-slot="{ errors }"
             rules="required"
-            class="flex flex-col"
+            class="flex flex-col col-span-2"
           >
             <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
               Jenis Layanan
@@ -89,21 +89,6 @@
             <JdsInputText
               v-model="serviceType"
               placeholder="Masukkan jenis layanan"
-              :error-message="errors[0]"
-            />
-          </ValidationProvider>
-
-          <ValidationProvider
-            v-slot="{ errors }"
-            rules="required"
-            class="flex flex-col"
-          >
-            <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
-              Sub Jenis Layanan
-            </label>
-            <JdsInputText
-              v-model="subServiceType"
-              placeholder="Masukkan sub jenis layanan"
               :error-message="errors[0]"
             />
           </ValidationProvider>
@@ -577,23 +562,81 @@
           </div>
 
           <div class="flex flex-col col-span-2">
-            <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
-              Tarif Layanan
-            </label>
-
             <JdsSectionMessage
               show
               variant="info"
               class="col-span-2 mb-4"
               message="Tidak boleh menggunakan titik"
             />
+            <div class="w-full flex flex-row gap-2">
+              <div class="w-full flex flex-col gap-y-2">
+                <label class="font-lato text-blue-gray-800 text-[15px] leading-[23px]">
+                  Tarif Layanan
+                </label>
+                <ValidationProvider
+                  v-slot="{ errors }"
+                  :rules="!hasDescription ? 'required|numeric' : ''"
+                >
+                  <JdsInputText
+                    v-model="minimumFee"
+                    class="w-full"
+                    placeholder="cth: 7000"
+                    :error-message="errors[0]"
+                    :disabled="!!hasDescription"
+                  />
+                </ValidationProvider>
+              </div>
+              <hr class="w-[10px] h-[2px] bg-gray-500 mt-[50px]">
+              <div class="w-full grid grid-cols-2 gap-y-2">
+                <label class="font-lato text-blue-gray-800 text-[15px]">
+                  Tarif Maksimal <span class="text-gray-500">(Opsional)</span>
+                </label>
+                <JdsToggle
+                  v-model="hasRange"
+                  :class="{
+                    'justify-self-end' : true,
+                    'pointer-events-none' : hasDescription
+                  }
+                  "
+                />
+                <ValidationProvider
+                  v-slot="{ errors }"
+                  :rules="!!hasRange ? 'required|numeric' : ''"
+                  class="col-span-4 mb-6"
+                >
+                  <JdsInputText
+                    v-model="maximumFee"
+                    class="w-full"
+                    placeholder="cth: 7000"
+                    :error-message="errors[0]"
+                    :disabled="!hasRange"
+                  />
+                </ValidationProvider>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex flex-col col-span-2">
+            <div class="flex flex-row gap-2">
+              <JdsCheckbox
+                class="mb-2"
+                :checked="!!hasDescription"
+                @change="setDescription($event)"
+              />
+              <label class="font-lato text-blue-gray-800 text-[15px]">
+                Keterangan Khusus <span class="text-gray-500">(Opsional)</span>
+              </label>
+            </div>
             <ValidationProvider
               v-slot="{ errors }"
-              rules="required|numeric"
+              :rules="!!hasDescription ? 'required' : ''"
+              class="mb-6 w-full block"
             >
               <JdsInputText
-                v-model="serviceFee"
-                placeholder="cth: 7000"
+                v-model="specialDescription"
+                class="w-full"
+                placeholder="Masukkan keterangan khusus berupa text atau link"
+                :disabled="!hasDescription"
                 :error-message="errors[0]"
               />
             </ValidationProvider>
@@ -869,6 +912,8 @@ export default {
   },
   data() {
     return {
+      // @TODO: remove isChecked and serviceMaxFee variable when the data ready in publication store
+      isChecked: false,
       serviceFormOptions: [
         {
           value: 'ADMINISTRATIF',
@@ -1021,14 +1066,6 @@ export default {
         this.$store.commit('masterDataForm/SET_STEP_ONE_SERVICE_TYPE', value);
       },
     },
-    subServiceType: {
-      get() {
-        return this.$store.state.masterDataForm.stepOne.services.information.sub_service_type;
-      },
-      set(value) {
-        this.$store.commit('masterDataForm/SET_STEP_ONE_SUB_SERVICE_TYPE', value);
-      },
-    },
     serviceName: {
       get() {
         return this.$store.state.masterDataForm.stepOne.services.information.name;
@@ -1117,13 +1154,40 @@ export default {
     serviceProcedures() {
       return this.$store.state.masterDataForm.stepOne.services.service_detail.service_procedures.items;
     },
-    serviceFee: {
+    hasRange: {
       get() {
-        return this.$store.state.masterDataForm.stepOne.services.service_detail.service_fee;
+        return this.$store.state.masterDataForm.stepOne.services.service_detail.service_fee.has_range === 1;
       },
       set(value) {
-        this.$store.commit('masterDataForm/SET_STEP_ONE_SERVICE_FEE', value);
+        this.$store.commit('masterDataForm/SET_STEP_ONE_SERVICE_FEE_HAS_RANGE', value);
       },
+    },
+    minimumFee: {
+      get() {
+        return this.$store.state.masterDataForm.stepOne.services.service_detail.service_fee.minimum_fee;
+      },
+      set(value) {
+        this.$store.commit('masterDataForm/SET_STEP_ONE_SERVICE_FEE_MINIMUM_FEE', value);
+      },
+    },
+    maximumFee: {
+      get() {
+        return this.$store.state.masterDataForm.stepOne.services.service_detail.service_fee.maximum_fee;
+      },
+      set(value) {
+        this.$store.commit('masterDataForm/SET_STEP_ONE_SERVICE_FEE_MAXIMUM_FEE', value);
+      },
+    },
+    specialDescription: {
+      get() {
+        return this.$store.state.masterDataForm.stepOne.services.service_detail.service_fee.description;
+      },
+      set(value) {
+        this.$store.commit('masterDataForm/SET_STEP_ONE_SERVICE_FEE_DESCRIPTION', value);
+      },
+    },
+    hasDescription() {
+      return this.$store.state.masterDataForm.stepOne.services.service_detail.service_fee.has_description;
     },
     operationalTime() {
       return this.$store.state.masterDataForm.stepOne.services.service_detail.operational_time;
@@ -1149,6 +1213,16 @@ export default {
     },
     organizationOptions() {
       return this.$store.getters['masterDataForm/organizationOptions'];
+    },
+  },
+  watch: {
+    hasRange() {
+      this.$store.commit('masterDataForm/SET_STEP_ONE_SERVICE_FEE_MAXIMUM_FEE', '');
+    },
+    hasDescription() {
+      this.$store.commit('masterDataForm/SET_STEP_ONE_SERVICE_FEE_DESCRIPTION', '');
+      // Mutate the minimum fees
+      this.$store.commit('masterDataForm/SET_STEP_ONE_SERVICE_FEE_MINIMUM_FEE', '');
     },
   },
   deactivated() {
@@ -1206,6 +1280,11 @@ export default {
     },
     setServiceProcedureByIndex(value, index) {
       this.$store.commit('masterDataForm/SET_STEP_ONE_SERVICE_PROCEDURE', { value, index });
+    },
+    setDescription(value) {
+      // Condition to disable toggle range fee
+      if (value) this.hasRange = false;
+      this.$store.commit('masterDataForm/SET_STEP_ONE_SERVICE_FEE_HAS_DESCRIPTION', value);
     },
     setOperationalTimeDayByIndex(index) {
       this.$store.commit('masterDataForm/SET_STEP_ONE_OPERATIONAL_TIME_DAY', { index });
