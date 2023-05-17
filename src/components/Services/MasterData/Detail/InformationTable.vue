@@ -294,7 +294,7 @@
             </td>
             <td class="w-full font-lato font-bold text-blue-gray-500 text-sm">
               <a
-                v-if="validUrl"
+                v-if="hasServiceFeeDescription && validUrl"
                 :href="services.service_fee.description"
                 class="whitespace-nowrap hover:underline"
                 rel="noopener noreferrer"
@@ -302,6 +302,9 @@
               >
                 {{ services.service_fee.description }}
               </a>
+              <p v-else-if="hasServiceFeeDescription">
+                {{ services.service_fee.description }}
+              </p>
               <p v-else>
                 -
               </p>
@@ -451,6 +454,9 @@ export default {
     hasBenefits() {
       return this.tableData.services.benefits.length > 0
       && this.tableData.services.benefits.every((item) => item.name !== undefined);
+    },
+    hasServiceFeeDescription() {
+      return this.tableData.services.service_fee.description !== null;
     },
     hasFacilities() {
       return this.tableData.services.facilities.length > 0
