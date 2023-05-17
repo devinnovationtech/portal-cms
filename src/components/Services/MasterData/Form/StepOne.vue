@@ -601,7 +601,7 @@
                 />
                 <ValidationProvider
                   v-slot="{ errors }"
-                  :rules="!!hasRange ? 'required|numeric' : ''"
+                  :rules="!!hasRange ? `required|numeric|numbergreaterthan:${minimumFee}` : ''"
                   class="col-span-4 mb-6"
                 >
                   <JdsInputText
