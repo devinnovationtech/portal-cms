@@ -55,14 +55,6 @@
           </tr>
           <tr>
             <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
-              Sub Jenis Layanan
-            </td>
-            <td class="w-full font-lato text-blue-gray-500 text-sm">
-              {{ services.sub_service_type || '-' }}
-            </td>
-          </tr>
-          <tr>
-            <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
               Nama Layanan
             </td>
             <td class="font-lato text-blue-gray-500 text-sm">
@@ -288,7 +280,31 @@
               Tarif Layanan
             </td>
             <td class="w-full font-lato text-blue-gray-500 text-sm">
-              {{ services.service_fee || '-' }}
+              <p v-if="hasServiceFee">
+                {{ services.service_fee.minimum_fee }}<span>-</span>{{ services.service_fee.maximum_fee }}
+              </p>
+              <p v-else>
+                -
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
+              Keterangan Khusus
+            </td>
+            <td class="w-full font-lato font-bold text-blue-gray-500 text-sm">
+              <a
+                v-if="validUrl"
+                :href="services.service_fee.description"
+                class="whitespace-nowrap hover:underline"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                {{ services.service_fee.description }}
+              </a>
+              <p v-else>
+                -
+              </p>
             </td>
           </tr>
           <tr>
@@ -405,6 +421,7 @@
 
 <script>
 import { DAY_MAP } from '@/common/constants';
+import { isValidUrl } from '@/common/helpers/validation';
 
 export default {
   props: {
@@ -414,6 +431,9 @@ export default {
     },
   },
   computed: {
+    validUrl() {
+      return isValidUrl(this.tableData.services.service_fee.description);
+    },
     services() {
       return this.tableData.services;
     },
@@ -443,6 +463,9 @@ export default {
     hasServiceProcedures() {
       return this.tableData.services.service_procedures.length > 0
       && this.tableData.services.service_procedures.every((item) => item.name !== undefined);
+    },
+    hasServiceFee() {
+      return !!this.tableData.services.service_fee.minimum_fee || !!this.tableData.services.service_fee.maximum_fee;
     },
   },
   methods: {
