@@ -55,14 +55,6 @@
           </tr>
           <tr>
             <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
-              Sub Jenis Layanan
-            </td>
-            <td class="w-full font-lato text-blue-gray-500 text-sm">
-              {{ services.sub_service_type || '-' }}
-            </td>
-          </tr>
-          <tr>
-            <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
               Nama Layanan
             </td>
             <td class="font-lato text-blue-gray-500 text-sm">
@@ -146,13 +138,13 @@
               Manfaat Layanan
             </td>
             <td class="font-lato text-blue-gray-500 text-sm">
-              <template v-if="services.benefits.length > 0">
+              <template v-if="hasBenefits">
                 <div
                   v-for="(benefit, index) in services.benefits"
                   :key="`benefit-${index}`"
                   class="mb-1"
                 >
-                  <span class="leading-[23px]">{{ index + 1 }}. {{ benefit }}</span>
+                  <span class="leading-[23px]">{{ index + 1 }}. {{ benefit.name }}</span>
                 </div>
               </template>
               <template v-else>
@@ -165,13 +157,13 @@
               Fasilitas Layanan
             </td>
             <td class="font-lato text-blue-gray-500 text-sm">
-              <template v-if="services.facilities.length > 0">
+              <template v-if="hasFacilities">
                 <div
                   v-for="(facility, index) in services.facilities"
                   :key="`facility-${index}`"
                   class="mb-1"
                 >
-                  <span class="leading-[23px]">{{ index + 1 }}. {{ facility }}</span>
+                  <span class="leading-[23px]">{{ index + 1 }}. {{ facility.name }}</span>
                 </div>
               </template>
               <template v-else>
@@ -254,13 +246,13 @@
               Syarat dan Ketentuan
             </td>
             <td class="w-full font-lato text-blue-gray-500 text-sm">
-              <template v-if="services.terms_and_conditions.length > 0">
+              <template v-if="hasTermsAndConditions">
                 <div
                   v-for="(item, index) in services.terms_and_conditions"
                   :key="`terms-and-condition-${index}`"
                   class="mb-1"
                 >
-                  <span>{{ `${index + 1}. ${item}` }}</span>
+                  <span>{{ `${index + 1}. ${item.name}` }}</span>
                 </div>
               </template>
               <span v-else>-</span>
@@ -271,13 +263,13 @@
               Prosedur Layanan
             </td>
             <td class="w-full font-lato text-blue-gray-500 text-sm">
-              <template v-if="services.terms_and_conditions.length > 0">
+              <template v-if="hasServiceProcedures">
                 <div
                   v-for="(item, index) in services.service_procedures"
                   :key="`service-procedure-${index}`"
                   class="mb-1"
                 >
-                  <span>{{ `${index + 1}. ${item}` }}</span>
+                  <span>{{ `${index + 1}. ${item.name}` }}</span>
                 </div>
               </template>
               <span v-else>-</span>
@@ -288,7 +280,34 @@
               Tarif Layanan
             </td>
             <td class="w-full font-lato text-blue-gray-500 text-sm">
-              {{ services.service_fee || '-' }}
+              <p v-if="hasServiceFee">
+                {{ services.service_fee.minimum_fee }}<span v-if="hasMaximumFee"> - </span>{{ services.service_fee.maximum_fee }}
+              </p>
+              <p v-else>
+                -
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
+              Keterangan Khusus
+            </td>
+            <td class="w-full font-lato font-bold text-blue-gray-500 text-sm">
+              <a
+                v-if="hasServiceFeeDescription && validUrl"
+                :href="services.service_fee.description"
+                class="whitespace-nowrap hover:underline"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                {{ services.service_fee.description }}
+              </a>
+              <p v-else-if="hasServiceFeeDescription">
+                {{ services.service_fee.description }}
+              </p>
+              <p v-else>
+                -
+              </p>
             </td>
           </tr>
           <tr>
@@ -405,6 +424,7 @@
 
 <script>
 import { DAY_MAP } from '@/common/constants';
+import { isValidUrl } from '@/common/helpers/validation';
 
 export default {
   props: {
@@ -414,6 +434,9 @@ export default {
     },
   },
   computed: {
+    validUrl() {
+      return isValidUrl(this.tableData.services.service_fee.description);
+    },
     services() {
       return this.tableData.services;
     },
@@ -427,6 +450,31 @@ export default {
       }
 
       return { value: 'NOT-ACTIVE', label: 'Tidak Aktif' };
+    },
+    hasBenefits() {
+      return this.tableData.services.benefits.length > 0
+      && this.tableData.services.benefits.every((item) => item.name !== undefined);
+    },
+    hasServiceFeeDescription() {
+      return this.tableData.services.service_fee.description !== null;
+    },
+    hasFacilities() {
+      return this.tableData.services.facilities.length > 0
+      && this.tableData.services.facilities.every((item) => item.name !== undefined);
+    },
+    hasTermsAndConditions() {
+      return this.tableData.services.terms_and_conditions.length > 0
+      && this.tableData.services.terms_and_conditions.every((item) => item.name !== undefined);
+    },
+    hasServiceProcedures() {
+      return this.tableData.services.service_procedures.length > 0
+      && this.tableData.services.service_procedures.every((item) => item.name !== undefined);
+    },
+    hasServiceFee() {
+      return !!this.tableData.services.service_fee.minimum_fee || !!this.tableData.services.service_fee.maximum_fee;
+    },
+    hasMaximumFee() {
+      return this.tableData.services.service_fee?.maximum_fee !== undefined;
     },
   },
   methods: {

@@ -69,7 +69,7 @@
         title="Sosial Media"
         class="mb-5"
       >
-        <section class="flex flex-col gap-4">
+        <section class="flex flex-col gap-4 pb-12">
           <div
             v-for="(_,index) in socialMedias"
             :key="index"
@@ -184,7 +184,7 @@ export default {
           },
           {
             value: 'INSTAGRAM',
-            label: 'Intragram',
+            label: 'Instagram',
           },
           {
             value: 'TWITTER',
@@ -193,6 +193,10 @@ export default {
           {
             value: 'YOUTUBE',
             label: 'Youtube',
+          },
+          {
+            value: 'TIKTOK',
+            label: 'Tiktok',
           },
         ],
       },

@@ -131,3 +131,11 @@ extend('timebefore', {
   },
   message: 'Waktu yang dipilih tidak boleh sama atau melebihi {time}',
 });
+
+extend('numbergreaterthan', {
+  params: ['target'],
+  validate(value, { target }) {
+    return +value > +target;
+  },
+  message: 'Angka tidak boleh sama atau kurang dari {target}',
+});

@@ -81,7 +81,7 @@
           <ValidationProvider
             v-slot="{ errors }"
             rules="required"
-            class="flex flex-col"
+            class="flex flex-col col-span-2"
           >
             <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
               Jenis Layanan
@@ -89,21 +89,6 @@
             <JdsInputText
               v-model="serviceType"
               placeholder="Masukkan jenis layanan"
-              :error-message="errors[0]"
-            />
-          </ValidationProvider>
-
-          <ValidationProvider
-            v-slot="{ errors }"
-            rules="required"
-            class="flex flex-col"
-          >
-            <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
-              Sub Jenis Layanan
-            </label>
-            <JdsInputText
-              v-model="subServiceType"
-              placeholder="Masukkan sub jenis layanan"
               :error-message="errors[0]"
             />
           </ValidationProvider>
@@ -244,7 +229,7 @@
               Manfaat Layanan
             </label>
             <JdsInputText
-              :value="benefits[index]"
+              :value="benefits[index].name"
               placeholder="Masukkan manfaat layanan"
               :error-message="errors[0]"
               @input="setBenefitByIndex($event, index)"
@@ -309,7 +294,7 @@
               Fasilitas Layanan
             </label>
             <JdsInputText
-              :value="facilities[index]"
+              :value="facilities[index].name"
               placeholder="Masukkan fasilitas layanan"
               :disabled="technical === 'ONLINE'"
               :error-message="errors[0]"
@@ -469,7 +454,7 @@
               Syarat dan Ketentuan Layanan
             </label>
             <JdsInputText
-              :value="termsAndConditions[index]"
+              :value="termsAndConditions[index].name"
               placeholder="Masukkan syarat dan ketentuan layanan"
               :error-message="errors[0]"
               @input="setTermAndConditionByIndex($event, index)"
@@ -528,7 +513,7 @@
               Prosedur Layanan
             </label>
             <JdsInputText
-              :value="serviceProcedures[index]"
+              :value="serviceProcedures[index].name"
               placeholder="Masukkan prosedur layanan"
               :error-message="errors[0]"
               @input="setServiceProcedureByIndex($event, index)"
@@ -577,23 +562,83 @@
           </div>
 
           <div class="flex flex-col col-span-2">
-            <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
-              Tarif Layanan
-            </label>
-
             <JdsSectionMessage
               show
               variant="info"
               class="col-span-2 mb-4"
               message="Tidak boleh menggunakan titik"
             />
+            <div class="w-full flex flex-row gap-2">
+              <div class="w-full flex flex-col gap-y-2">
+                <label class="font-lato text-blue-gray-800 text-[15px] leading-[23px]">
+                  Tarif Layanan
+                </label>
+                <ValidationProvider
+                  v-slot="{ errors }"
+                  :rules="!hasDescription ? 'required|numeric' : ''"
+                >
+                  <JdsInputText
+                    v-model="minimumFee"
+                    class="w-full"
+                    placeholder="cth: 7000"
+                    :error-message="errors[0]"
+                    :disabled="!!hasDescription"
+                  />
+                </ValidationProvider>
+              </div>
+              <hr class="w-[10px] h-[2px] bg-gray-500 mt-[50px]">
+              <div class="w-full grid grid-cols-2 gap-y-2">
+                <label class="font-lato text-blue-gray-800 text-[15px]">
+                  Tarif Maksimal <span class="text-gray-500">(Opsional)</span>
+                </label>
+                <JdsToggle
+                  v-model="hasRange"
+                  :class="{
+                    'justify-self-end' : true,
+                    'pointer-events-none' : hasDescription
+                  }
+                  "
+                  @change="changeMaximumFee"
+                />
+                <ValidationProvider
+                  v-slot="{ errors }"
+                  :rules="!!hasRange ? `required|numeric|numbergreaterthan:${minimumFee}` : ''"
+                  class="col-span-4 mb-6"
+                >
+                  <JdsInputText
+                    v-model="maximumFee"
+                    class="w-full"
+                    placeholder="cth: 7000"
+                    :error-message="errors[0]"
+                    :disabled="!hasRange"
+                  />
+                </ValidationProvider>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex flex-col col-span-2">
+            <div class="flex flex-row gap-2">
+              <JdsCheckbox
+                class="mb-2"
+                :checked="!!hasDescription"
+                @change="setDescription($event)"
+                @input="mutateServiceFee"
+              />
+              <label class="font-lato text-blue-gray-800 text-[15px]">
+                Keterangan Khusus <span class="text-gray-500">(Opsional)</span>
+              </label>
+            </div>
             <ValidationProvider
               v-slot="{ errors }"
-              rules="required|numeric"
+              :rules="!!hasDescription ? 'required' : ''"
+              class="mb-6 w-full block"
             >
               <JdsInputText
-                v-model="serviceFee"
-                placeholder="cth: 7000"
+                v-model="specialDescription"
+                class="w-full"
+                placeholder="Masukkan keterangan khusus berupa text atau link"
+                :disabled="!hasDescription"
                 :error-message="errors[0]"
               />
             </ValidationProvider>
@@ -869,6 +914,8 @@ export default {
   },
   data() {
     return {
+      // @TODO: remove isChecked and serviceMaxFee variable when the data ready in publication store
+      isChecked: false,
       serviceFormOptions: [
         {
           value: 'ADMINISTRATIF',
@@ -962,6 +1009,18 @@ export default {
           label: 'BLUD',
           value: 'BLUD',
         },
+        {
+          label: 'Dinas',
+          value: 'DINAS',
+        },
+        {
+          label: 'Badan',
+          value: 'BADAN',
+        },
+        {
+          label: 'Biro',
+          value: 'BIRO',
+        },
       ],
       dayMap: DAY_MAP,
     };
@@ -1007,14 +1066,6 @@ export default {
       },
       set(value) {
         this.$store.commit('masterDataForm/SET_STEP_ONE_SERVICE_TYPE', value);
-      },
-    },
-    subServiceType: {
-      get() {
-        return this.$store.state.masterDataForm.stepOne.services.information.sub_service_type;
-      },
-      set(value) {
-        this.$store.commit('masterDataForm/SET_STEP_ONE_SUB_SERVICE_TYPE', value);
       },
     },
     serviceName: {
@@ -1083,10 +1134,10 @@ export default {
       },
     },
     benefits() {
-      return this.$store.state.masterDataForm.stepOne.services.information.benefits;
+      return this.$store.state.masterDataForm.stepOne.services.information.benefits.items;
     },
     facilities() {
-      return this.$store.state.masterDataForm.stepOne.services.information.facilities;
+      return this.$store.state.masterDataForm.stepOne.services.information.facilities.items;
     },
     website: {
       get() {
@@ -1100,18 +1151,45 @@ export default {
       return this.$store.state.masterDataForm.stepOne.services.information.links;
     },
     termsAndConditions() {
-      return this.$store.state.masterDataForm.stepOne.services.service_detail.terms_and_conditions;
+      return this.$store.state.masterDataForm.stepOne.services.service_detail.terms_and_conditions.items;
     },
     serviceProcedures() {
-      return this.$store.state.masterDataForm.stepOne.services.service_detail.service_procedures;
+      return this.$store.state.masterDataForm.stepOne.services.service_detail.service_procedures.items;
     },
-    serviceFee: {
+    hasRange: {
       get() {
-        return this.$store.state.masterDataForm.stepOne.services.service_detail.service_fee;
+        return this.$store.state.masterDataForm.stepOne.services.service_detail.service_fee.has_range === 1;
       },
       set(value) {
-        this.$store.commit('masterDataForm/SET_STEP_ONE_SERVICE_FEE', value);
+        this.$store.commit('masterDataForm/SET_STEP_ONE_SERVICE_FEE_HAS_RANGE', value);
       },
+    },
+    minimumFee: {
+      get() {
+        return this.$store.state.masterDataForm.stepOne.services.service_detail.service_fee.minimum_fee;
+      },
+      set(value) {
+        this.$store.commit('masterDataForm/SET_STEP_ONE_SERVICE_FEE_MINIMUM_FEE', value);
+      },
+    },
+    maximumFee: {
+      get() {
+        return this.$store.state.masterDataForm.stepOne.services.service_detail.service_fee.maximum_fee;
+      },
+      set(value) {
+        this.$store.commit('masterDataForm/SET_STEP_ONE_SERVICE_FEE_MAXIMUM_FEE', value);
+      },
+    },
+    specialDescription: {
+      get() {
+        return this.$store.state.masterDataForm.stepOne.services.service_detail.service_fee.description;
+      },
+      set(value) {
+        this.$store.commit('masterDataForm/SET_STEP_ONE_SERVICE_FEE_DESCRIPTION', value);
+      },
+    },
+    hasDescription() {
+      return this.$store.state.masterDataForm.stepOne.services.service_detail.service_fee.has_description;
     },
     operationalTime() {
       return this.$store.state.masterDataForm.stepOne.services.service_detail.operational_time;
@@ -1144,6 +1222,15 @@ export default {
     this.$refs.formStepOne.validate();
   },
   methods: {
+    changeMaximumFee() {
+      this.$store.commit('masterDataForm/SET_STEP_ONE_SERVICE_FEE_MAXIMUM_FEE', '');
+    },
+    mutateServiceFee() {
+      this.$store.commit('masterDataForm/SET_STEP_ONE_SERVICE_FEE_DESCRIPTION', '');
+      // Mutate the minimum and maximum fee
+      this.$store.commit('masterDataForm/SET_STEP_ONE_SERVICE_FEE_MINIMUM_FEE', '');
+      this.$store.commit('masterDataForm/SET_STEP_ONE_SERVICE_FEE_MAXIMUM_FEE', '');
+    },
     addBenefit() {
       this.$store.commit('masterDataForm/ADD_STEP_ONE_BENEFIT');
     },
@@ -1194,6 +1281,11 @@ export default {
     },
     setServiceProcedureByIndex(value, index) {
       this.$store.commit('masterDataForm/SET_STEP_ONE_SERVICE_PROCEDURE', { value, index });
+    },
+    setDescription(value) {
+      // Condition to disable toggle range fee
+      if (value) this.hasRange = false;
+      this.$store.commit('masterDataForm/SET_STEP_ONE_SERVICE_FEE_HAS_DESCRIPTION', value);
     },
     setOperationalTimeDayByIndex(index) {
       this.$store.commit('masterDataForm/SET_STEP_ONE_OPERATIONAL_TIME_DAY', { index });

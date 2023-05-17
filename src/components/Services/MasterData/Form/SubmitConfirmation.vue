@@ -109,7 +109,7 @@
               v-for="(benefit, index) in benefits"
               :key="`benefit-${index}`"
             >
-              <span v-if="benefit !== ''">{{ index + 1 }}. {{ benefit }}</span>
+              <span v-if="benefit !== ''">{{ index + 1 }}. {{ benefit.name }}</span>
               <span v-else> - </span>
             </li>
           </ul>
@@ -124,7 +124,7 @@
               v-for="(facility, index) in facilities"
               :key="`facility-${index}`"
             >
-              <span v-if="facility !== ''">{{ index + 1 }}. {{ facility }}</span>
+              <span v-if="facility !== ''">{{ index + 1 }}. {{ facility.name }}</span>
               <span v-else> - </span>
             </li>
           </ul>
@@ -192,7 +192,7 @@
               v-for="(item, index) in termsAndConditions"
               :key="`terms-${index}`"
             >
-              <span v-if="item !== ''">{{ index + 1 }}. {{ item }}</span>
+              <span v-if="item !== ''">{{ index + 1 }}. {{ item.name }}</span>
               <span v-else> - </span>
             </li>
           </ul>
@@ -207,7 +207,7 @@
               v-for="(item, index) in serviceProcedures"
               :key="`procedure-${index}`"
             >
-              <span v-if="item !== ''">{{ index + 1 }}. {{ item }}</span>
+              <span v-if="item !== ''">{{ index + 1 }}. {{ item.name }}</span>
               <span v-else> - </span>
             </li>
           </ul>
@@ -217,7 +217,21 @@
           <p class="font-roboto text-base leading-6 text-[#627798]">
             Tarif Layanan:
           </p>
-          <p>{{ serviceFee || '-' }}</p>
+          <p v-if="!!minimumFee || !!maximumFee">
+            {{ minimumFee }} <span v-if="!!maximumFee">-</span> {{ maximumFee }}
+          </p>
+          <p v-else>
+            -
+          </p>
+        </div>
+
+        <div class="px-4 py-3 bg-white even:bg-[#FCFCFC]">
+          <p class="font-roboto text-base leading-6 text-[#627798]">
+            Keterangan Khusus:
+          </p>
+          <p>
+            {{ specialDescription || '-' }}
+          </p>
         </div>
 
         <div class="px-4 py-3 bg-white even:bg-[#FCFCFC]">
@@ -551,10 +565,10 @@ export default {
       return this.$store.state.masterDataForm.stepOne.services.information.technical;
     },
     benefits() {
-      return this.$store.state.masterDataForm.stepOne.services.information.benefits;
+      return this.$store.state.masterDataForm.stepOne.services.information.benefits.items;
     },
     facilities() {
-      return this.$store.state.masterDataForm.stepOne.services.information.facilities;
+      return this.$store.state.masterDataForm.stepOne.services.information.facilities.items;
     },
     website() {
       return this.$store.state.masterDataForm.stepOne.services.information.website;
@@ -563,13 +577,19 @@ export default {
       return this.$store.state.masterDataForm.stepOne.services.information.links;
     },
     termsAndConditions() {
-      return this.$store.state.masterDataForm.stepOne.services.service_detail.terms_and_conditions;
+      return this.$store.state.masterDataForm.stepOne.services.service_detail.terms_and_conditions.items;
     },
     serviceProcedures() {
-      return this.$store.state.masterDataForm.stepOne.services.service_detail.service_procedures;
+      return this.$store.state.masterDataForm.stepOne.services.service_detail.service_procedures.items;
     },
-    serviceFee() {
-      return this.$store.state.masterDataForm.stepOne.services.service_detail.service_fee;
+    minimumFee() {
+      return this.$store.state.masterDataForm.stepOne.services.service_detail.service_fee.minimum_fee;
+    },
+    maximumFee() {
+      return this.$store.state.masterDataForm.stepOne.services.service_detail.service_fee.maximum_fee;
+    },
+    specialDescription() {
+      return this.$store.state.masterDataForm.stepOne.services.service_detail.service_fee.description;
     },
     operationalTime() {
       const operationalTimes = this.$store.state.masterDataForm.stepOne.services.service_detail.operational_time;

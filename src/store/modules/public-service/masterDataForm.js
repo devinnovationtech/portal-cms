@@ -1,5 +1,6 @@
 /* eslint-disable camelcase */
 import { RepositoryFactory } from '@/repositories/RepositoryFactory';
+import { EventBus } from '@/common/helpers/event-bus';
 
 const masterDataServiceRepository = RepositoryFactory.get('masterDataService');
 
@@ -25,7 +26,6 @@ const getDefaultState = () => ({
         sub_government_affair: '',
         form: '',
         type: '',
-        sub_service_type: '',
         name: '',
         program_name: '',
         description: '',
@@ -33,8 +33,34 @@ const getDefaultState = () => ({
         sub_service_spbe: '',
         operational_status: '',
         technical: '',
-        benefits: [''],
-        facilities: [''],
+        benefits: {
+          title: '',
+          is_active: 1,
+          items: [
+            {
+              name: '',
+              image: {
+                file_name: '',
+                file_download_uri: '',
+                size: 0,
+              },
+            },
+          ],
+        },
+        facilities: {
+          title: '',
+          is_active: 1,
+          items: [
+            {
+              name: '',
+              image: {
+                file_name: '',
+                file_download_uri: '',
+                size: 0,
+              },
+            },
+          ],
+        },
         website: '',
         links: [
           {
@@ -45,9 +71,43 @@ const getDefaultState = () => ({
         ],
       },
       service_detail: {
-        terms_and_conditions: [''],
-        service_procedures: [''],
-        service_fee: '',
+        terms_and_conditions: {
+          title: '',
+          is_active: 1,
+          items: [
+            {
+              name: '',
+              link: '',
+            },
+          ],
+          cover: {
+            file_name: '',
+            file_download_uri: '',
+            size: 0,
+          },
+        },
+        service_procedures: {
+          title: '',
+          is_active: 1,
+          items: [
+            {
+              name: '',
+              link: '',
+            },
+          ],
+          cover: {
+            file_name: '',
+            file_download_uri: '',
+            size: 0,
+          },
+        },
+        service_fee: {
+          has_range: 0,
+          minimum_fee: '',
+          maximum_fee: '',
+          has_description: 0,
+          description: '',
+        },
         operational_time: [
           {
             selected: false,
@@ -267,9 +327,6 @@ export default {
     SET_STEP_ONE_SERVICE_TYPE(state, payload) {
       state.stepOne.services.information.type = payload;
     },
-    SET_STEP_ONE_SUB_SERVICE_TYPE(state, payload) {
-      state.stepOne.services.information.sub_service_type = payload;
-    },
     SET_STEP_ONE_SERVICE_NAME(state, payload) {
       state.stepOne.services.information.name = payload;
     },
@@ -292,24 +349,38 @@ export default {
       state.stepOne.services.information.technical = payload;
     },
     ADD_STEP_ONE_BENEFIT(state) {
-      state.stepOne.services.information.benefits.push('');
+      state.stepOne.services.information.benefits.items.push({
+        name: '',
+        image: {
+          file_name: '',
+          file_download_uri: '',
+          size: 0,
+        },
+      });
     },
     REMOVE_STEP_ONE_BENEFIT(state, index) {
-      state.stepOne.services.information.benefits.splice(index, 1);
+      state.stepOne.services.information.benefits.items.splice(index, 1);
     },
     SET_STEP_ONE_BENEFIT(state, payload) {
       const { value, index } = payload;
-      state.stepOne.services.information.benefits[index] = value;
+      state.stepOne.services.information.benefits.items[index].name = value;
     },
     ADD_STEP_ONE_FACILITIES(state) {
-      state.stepOne.services.information.facilities.push('');
+      state.stepOne.services.information.facilities.items.push({
+        name: '',
+        image: {
+          file_name: '',
+          file_download_uri: '',
+          size: 0,
+        },
+      });
     },
     REMOVE_STEP_ONE_FACILITIES(state, index) {
-      state.stepOne.services.information.facilities.splice(index, 1);
+      state.stepOne.services.information.facilities.items.splice(index, 1);
     },
     SET_STEP_ONE_FACILITIES(state, payload) {
       const { value, index } = payload;
-      state.stepOne.services.information.facilities[index] = value;
+      state.stepOne.services.information.facilities.items[index].name = value;
     },
     SET_STEP_ONE_WEBSITE(state, payload) {
       state.stepOne.services.information.website = payload;
@@ -337,27 +408,45 @@ export default {
       state.stepOne.services.information.links[index].tautan = value;
     },
     ADD_STEP_ONE_TERM_AND_CONDITION(state) {
-      state.stepOne.services.service_detail.terms_and_conditions.push('');
+      state.stepOne.services.service_detail.terms_and_conditions.items.push({
+        name: '',
+        link: '',
+      });
     },
     REMOVE_STEP_ONE_TERM_AND_CONDITION(state, index) {
-      state.stepOne.services.service_detail.terms_and_conditions.splice(index, 1);
+      state.stepOne.services.service_detail.terms_and_conditions.items.splice(index, 1);
     },
     SET_STEP_ONE_TERM_AND_CONDITION(state, payload) {
       const { value, index } = payload;
-      state.stepOne.services.service_detail.terms_and_conditions[index] = value;
+      state.stepOne.services.service_detail.terms_and_conditions.items[index].name = value;
     },
     ADD_STEP_ONE_SERVICE_PROCEDURE(state) {
-      state.stepOne.services.service_detail.service_procedures.push('');
+      state.stepOne.services.service_detail.service_procedures.items.push({
+        name: '',
+        link: '',
+      });
     },
     REMOVE_STEP_ONE_SERVICE_PROCEDURE(state, index) {
-      state.stepOne.services.service_detail.service_procedures.splice(index, 1);
+      state.stepOne.services.service_detail.service_procedures.items.splice(index, 1);
     },
     SET_STEP_ONE_SERVICE_PROCEDURE(state, payload) {
       const { value, index } = payload;
-      state.stepOne.services.service_detail.service_procedures[index] = value;
+      state.stepOne.services.service_detail.service_procedures.items[index].name = value;
     },
-    SET_STEP_ONE_SERVICE_FEE(state, payload) {
-      state.stepOne.services.service_detail.service_fee = payload;
+    SET_STEP_ONE_SERVICE_FEE_HAS_RANGE(state, payload) {
+      state.stepOne.services.service_detail.service_fee.has_range = payload ? 1 : 0;
+    },
+    SET_STEP_ONE_SERVICE_FEE_MINIMUM_FEE(state, payload) {
+      state.stepOne.services.service_detail.service_fee.minimum_fee = payload;
+    },
+    SET_STEP_ONE_SERVICE_FEE_MAXIMUM_FEE(state, payload) {
+      state.stepOne.services.service_detail.service_fee.maximum_fee = payload;
+    },
+    SET_STEP_ONE_SERVICE_FEE_HAS_DESCRIPTION(state, payload) {
+      state.stepOne.services.service_detail.service_fee.has_description = payload ? 1 : 0;
+    },
+    SET_STEP_ONE_SERVICE_FEE_DESCRIPTION(state, payload) {
+      state.stepOne.services.service_detail.service_fee.description = payload;
     },
     SET_STEP_ONE_OPERATIONAL_TIME_DAY(state, payload) {
       const { index } = payload;
@@ -481,7 +570,6 @@ export default {
       state.stepOne.services.information.sub_government_affair = payload.services.sub_government_affair;
       state.stepOne.services.information.form = payload.services.form;
       state.stepOne.services.information.type = payload.services.type;
-      state.stepOne.services.information.sub_service_type = payload.services.sub_service_type;
       state.stepOne.services.information.name = payload.services.name;
       state.stepOne.services.information.program_name = payload.services.program_name;
       state.stepOne.services.information.description = payload.services.description;
@@ -496,7 +584,11 @@ export default {
 
       state.stepOne.services.service_detail.terms_and_conditions = payload.services.terms_and_conditions;
       state.stepOne.services.service_detail.service_procedures = payload.services.service_procedures;
-      state.stepOne.services.service_detail.service_fee = payload.services.service_fee;
+      state.stepOne.services.service_detail.service_fee.has_range = payload.services.service_fee.has_range;
+      state.stepOne.services.service_detail.service_fee.minimum_fee = payload.services.service_fee.minimum_fee ? payload.services.service_fee.minimum_fee.toString() : '';
+      state.stepOne.services.service_detail.service_fee.maximum_fee = payload.services.service_fee.maximum_fee ? payload.services.service_fee.maximum_fee.toString() : '';
+      state.stepOne.services.service_detail.service_fee.has_description = payload.services.service_fee.has_description;
+      state.stepOne.services.service_detail.service_fee.description = payload.services.service_fee.description;
       state.stepOne.services.service_detail.hotline_number = payload.services.hotline_number;
       state.stepOne.services.service_detail.hotline_mail = payload.services.hotline_mail;
 
@@ -613,10 +705,19 @@ export default {
             ...state.stepOne.services.service_detail,
             // Get only selected operational time
             operational_time: state.stepOne.services.service_detail.operational_time.filter((item) => item.selected),
+
+            // Parse minimum and maximum fee from String into Integer
+            service_fee: {
+              ...state.stepOne.services.service_detail.service_fee,
+              // eslint-disable-next-line radix
+              minimum_fee: state.stepOne.services.service_detail.service_fee.minimum_fee ? parseInt(state.stepOne.services.service_detail.service_fee.minimum_fee) : null,
+              // eslint-disable-next-line radix
+              maximum_fee: state.stepOne.services.service_detail.service_fee.maximum_fee ? parseInt(state.stepOne.services.service_detail.service_fee.maximum_fee) : null,
+            },
           },
           information: {
             ...state.stepOne.services.information,
-            facilities: [...stepOnefacilities],
+            facilities: { ...stepOnefacilities },
           },
           location: [...state.stepOne.services.location],
         },
@@ -682,7 +783,9 @@ export default {
           commit('SET_INITIAL_FORM_DATA', data);
         }
       } catch (error) {
-        console.log(error);
+        if (error.response?.status === 403) {
+          EventBus.$emit('error:forbidden');
+        }
       }
     },
     async updateForm({ dispatch, commit }, { id, status }) {
