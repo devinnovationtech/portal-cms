@@ -281,7 +281,7 @@
             </td>
             <td class="w-full font-lato text-blue-gray-500 text-sm">
               <p v-if="hasServiceFee">
-                {{ services.service_fee.minimum_fee }}<span> - </span>{{ services.service_fee.maximum_fee }}
+                {{ services.service_fee.minimum_fee }}<span v-if="hasMaximumFee"> - </span>{{ services.service_fee.maximum_fee }}
               </p>
               <p v-else>
                 -
@@ -472,6 +472,9 @@ export default {
     },
     hasServiceFee() {
       return !!this.tableData.services.service_fee.minimum_fee || !!this.tableData.services.service_fee.maximum_fee;
+    },
+    hasMaximumFee() {
+      return this.tableData.services.service_fee?.maximum_fee !== undefined;
     },
   },
   methods: {

@@ -598,6 +598,7 @@
                     'pointer-events-none' : hasDescription
                   }
                   "
+                  @change="changeMaximumFee"
                 />
                 <ValidationProvider
                   v-slot="{ errors }"
@@ -622,6 +623,7 @@
                 class="mb-2"
                 :checked="!!hasDescription"
                 @change="setDescription($event)"
+                @input="mutateServiceFee"
               />
               <label class="font-lato text-blue-gray-800 text-[15px]">
                 Keterangan Khusus <span class="text-gray-500">(Opsional)</span>
@@ -1215,21 +1217,20 @@ export default {
       return this.$store.getters['masterDataForm/organizationOptions'];
     },
   },
-  watch: {
-    hasRange() {
-      this.$store.commit('masterDataForm/SET_STEP_ONE_SERVICE_FEE_MAXIMUM_FEE', '');
-    },
-    hasDescription() {
-      this.$store.commit('masterDataForm/SET_STEP_ONE_SERVICE_FEE_DESCRIPTION', '');
-      // Mutate the minimum fees
-      this.$store.commit('masterDataForm/SET_STEP_ONE_SERVICE_FEE_MINIMUM_FEE', '');
-    },
-  },
   deactivated() {
     // Trigger validation message when component deactivated
     this.$refs.formStepOne.validate();
   },
   methods: {
+    changeMaximumFee() {
+      this.$store.commit('masterDataForm/SET_STEP_ONE_SERVICE_FEE_MAXIMUM_FEE', '');
+    },
+    mutateServiceFee() {
+      this.$store.commit('masterDataForm/SET_STEP_ONE_SERVICE_FEE_DESCRIPTION', '');
+      // Mutate the minimum and maximum fee
+      this.$store.commit('masterDataForm/SET_STEP_ONE_SERVICE_FEE_MINIMUM_FEE', '');
+      this.$store.commit('masterDataForm/SET_STEP_ONE_SERVICE_FEE_MAXIMUM_FEE', '');
+    },
     addBenefit() {
       this.$store.commit('masterDataForm/ADD_STEP_ONE_BENEFIT');
     },
