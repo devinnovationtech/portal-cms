@@ -281,7 +281,7 @@
             </td>
             <td class="w-full font-lato text-blue-gray-500 text-sm">
               <p v-if="hasServiceFee">
-                {{ services.service_fee.minimum_fee }}<span>-</span>{{ services.service_fee.maximum_fee }}
+                {{ services.service_fee.minimum_fee }}<span> - </span>{{ services.service_fee.maximum_fee }}
               </p>
               <p v-else>
                 -

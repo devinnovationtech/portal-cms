@@ -585,8 +585,8 @@ export default {
       state.stepOne.services.service_detail.terms_and_conditions = payload.services.terms_and_conditions;
       state.stepOne.services.service_detail.service_procedures = payload.services.service_procedures;
       state.stepOne.services.service_detail.service_fee.has_range = payload.services.service_fee.has_range;
-      state.stepOne.services.service_detail.service_fee.minimum_fee = payload.services.service_fee.minimum_fee;
-      state.stepOne.services.service_detail.service_fee.maximum_fee = payload.services.service_fee.maximum_fee;
+      state.stepOne.services.service_detail.service_fee.minimum_fee = payload.services.service_fee.minimum_fee.toString();
+      state.stepOne.services.service_detail.service_fee.maximum_fee = payload.services.service_fee.maximum_fee.toString();
       state.stepOne.services.service_detail.service_fee.has_description = payload.services.service_fee.has_description;
       state.stepOne.services.service_detail.service_fee.description = payload.services.service_fee.description;
       state.stepOne.services.service_detail.hotline_number = payload.services.hotline_number;
@@ -705,6 +705,15 @@ export default {
             ...state.stepOne.services.service_detail,
             // Get only selected operational time
             operational_time: state.stepOne.services.service_detail.operational_time.filter((item) => item.selected),
+
+            // Parse minimum and maximum fee from String into Integer
+            service_fee: {
+              ...state.stepOne.services.service_detail.service_fee,
+              // eslint-disable-next-line radix
+              minimum_fee: parseInt(state.stepOne.services.service_detail.service_fee.minimum_fee),
+              // eslint-disable-next-line radix
+              maximum_fee: parseInt(state.stepOne.services.service_detail.service_fee.maximum_fee),
+            },
           },
           information: {
             ...state.stepOne.services.information,
