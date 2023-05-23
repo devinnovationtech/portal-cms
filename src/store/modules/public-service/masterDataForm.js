@@ -671,32 +671,37 @@ export default {
       }
     },
     generateFormData({ state }, status) {
-      let stepOnefacilities;
-      let stepTwoState;
       const { technical } = state.stepOne.services.information;
       const applicationStatus = state.stepTwo.application.status;
+      const defaultApplicationState = getDefaultState().stepTwo.application;
+      const defaultFacilityState = getDefaultState().stepOne.services.information.facilities;
+
+      let stepOnefacilities;
+      let stepTwoState;
 
       // generate different state based on step one state (technical)
       if (technical === 'ONLINE') {
-        stepOnefacilities = getDefaultState().stepOne.services.information.facilities;
-        stepTwoState = {
-          ...state.stepTwo.application,
-        };
-      } else {
-        stepOnefacilities = state.stepOne.services.information.facilities;
-        stepTwoState = {
-          ...getDefaultState().stepTwo.application,
-        };
+        stepOnefacilities = defaultFacilityState;
+        stepTwoState = { ...state.stepTwo };
       }
 
       // generate different state based on step two state (status)
-      if (applicationStatus === 'NOT-AVAILABLE') {
+      if (technical === 'ONLINE' && applicationStatus === 'NOT-AVAILABLE') {
         stepTwoState = {
-          ...getDefaultState().stepTwo.application,
-          status: 'NOT-AVAILABLE',
+          application: {
+            ...defaultApplicationState,
+            status: 'NOT-AVAILABLE',
+          },
         };
-      } else {
-        stepTwoState = { ...state.stepTwo.application };
+      }
+
+      if (technical === 'OFFLINE') {
+        stepOnefacilities = { ...state.stepOne.services.information.facilities };
+        stepTwoState = {
+          application: {
+            ...defaultApplicationState,
+          },
+        };
       }
 
       const formData = {
@@ -721,7 +726,7 @@ export default {
           },
           location: [...state.stepOne.services.location],
         },
-        application: { ...stepTwoState },
+        application: { ...stepTwoState.application },
         additional_information: { ...state.stepThree.additional_information },
         status,
       };
