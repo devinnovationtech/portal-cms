@@ -111,7 +111,7 @@
           </tr>
           <tr>
             <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
-              Jenis Layanan
+              Teknis Layanan
             </td>
             <td class="font-lato text-blue-gray-500 text-sm">
               <div
