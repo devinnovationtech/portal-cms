@@ -18,7 +18,7 @@
               Cover Gambar
             </td>
             <td class="w-full font-lato text-blue-gray-500 text-sm">
-              <template v-if="(!!serviceDescription.cover.image.file_download_uri && !!serviceDescription.cover.video)">
+              <template v-if="(!!serviceDescription.cover.image.file_download_uri || !!serviceDescription.cover.video)">
                 <img
                   v-if="!!serviceDescription.cover.image.file_download_uri"
                   :src="serviceDescription.cover.image.file_download_uri"
