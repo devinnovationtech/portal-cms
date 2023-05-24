@@ -673,20 +673,22 @@ export default {
     generateFormData({ state }, status) {
       const { technical } = state.stepOne.services.information;
       const applicationStatus = state.stepTwo.application.status;
+
       const defaultApplicationState = getDefaultState().stepTwo.application;
       const defaultFacilityState = getDefaultState().stepOne.services.information.facilities;
 
-      let stepOnefacilities;
+      let stepOneFacilities;
       let stepTwoState;
 
       // generate different state based on step one state (technical)
       if (technical === 'ONLINE') {
-        stepOnefacilities = defaultFacilityState;
+        stepOneFacilities = { ...defaultFacilityState };
         stepTwoState = { ...state.stepTwo };
       }
 
       // generate different state based on step two state (status)
       if (technical === 'ONLINE' && applicationStatus === 'NOT-AVAILABLE') {
+        stepOneFacilities = { ...defaultFacilityState };
         stepTwoState = {
           application: {
             ...defaultApplicationState,
@@ -696,12 +698,17 @@ export default {
       }
 
       if (technical === 'OFFLINE') {
-        stepOnefacilities = { ...state.stepOne.services.information.facilities };
+        stepOneFacilities = { ...state.stepOne.services.information.facilities };
         stepTwoState = {
           application: {
             ...defaultApplicationState,
           },
         };
+      }
+
+      if (!technical) {
+        stepOneFacilities = { ...state.stepOne.services.information.facilities };
+        stepTwoState = { ...state.stepTwo };
       }
 
       const formData = {
@@ -722,7 +729,7 @@ export default {
           },
           information: {
             ...state.stepOne.services.information,
-            facilities: { ...stepOnefacilities },
+            facilities: { ...stepOneFacilities },
           },
           location: [...state.stepOne.services.location],
         },
