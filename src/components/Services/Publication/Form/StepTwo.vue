@@ -228,14 +228,11 @@
                   {{ index + 1 }}.
                 </label>
                 <ValidationProvider
-                  v-slot="{ errors }"
                   class="w-full"
-                  rules="required"
                   tag="div"
                 >
                   <JdsInputText
                     :disabled="!isTermAndCondition || !isMasterDataSelected"
-                    :error-message="errors[0]"
                     :value="termAndContiditionItems[index].name"
                     class="w-full"
                     placeholder="Berisi Syarat dan Ketentuan"
@@ -343,15 +340,12 @@
                   {{ index + 1 }}.
                 </p>
                 <ValidationProvider
-                  v-slot="{ errors }"
                   class="w-full"
-                  rules="required"
                   tag="div"
                 >
                   <JdsInputText
                     :value="procedureItems[index].name"
                     :disabled="!isProcedure || !isMasterDataSelected"
-                    :error-message="errors[0]"
                     class="w-full"
                     placeholder="Berisi alur atau prosedur"
                     readonly
@@ -426,13 +420,9 @@
             variant="info"
             message="Tidak boleh menggunakan titik"
           />
-          <ValidationProvider
-            v-slot="{ errors }"
-            rules="required|numeric"
-          >
+          <ValidationProvider>
             <JdsInputText
-              v-model="serviceFee"
-              :error-message="errors[0]"
+              v-model="serviceFee.minimum_fee"
               placeholder="cth: 7000"
               :disabled="!isMasterDataSelected"
               readonly
@@ -471,11 +461,7 @@
                 :readonly="true"
               />
             </div>
-            <ValidationProvider
-              v-slot="{ errors }"
-              :rules="operationalTime[index].selected ? 'required|timeformat': ''"
-              class="flex flex-col relative"
-            >
+            <ValidationProvider class="flex flex-col relative">
               <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
                 Pelayanan dibuka
               </label>
@@ -488,13 +474,8 @@
                 placeholder="cth: 06:00"
                 @input="setOperationalStartTimeByIndex($event, index)"
               />
-              <span class="absolute bottom-[-24px] font-lato text-[13px] text-red-700 mt-1">{{ errors[0] }}</span>
             </ValidationProvider>
-            <ValidationProvider
-              v-slot="{ errors }"
-              class="flex flex-col relative"
-              :rules="operationalTime[index].selected ? 'required|timeformat': ''"
-            >
+            <ValidationProvider class="flex flex-col relative">
               <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
                 Pelayanan ditutup
               </label>
@@ -507,14 +488,11 @@
                 placeholder="cth: 17:00"
                 @input="setOperationalEndTimeByIndex($event, index)"
               />
-              <span class="absolute bottom-[-24px] font-lato text-[13px] text-red-700 mt-1">{{ errors[0] }}</span>
             </ValidationProvider>
           </div>
 
           <ValidationProvider
-            v-slot="{ errors }"
             class="flex flex-col mb-4"
-            rules="required|phonenumber"
             tag="div"
           >
             <label class="font-lato text-blue-gray-800 mb-3 text-[15px] mt-20">
@@ -523,16 +501,13 @@
             <JdsInputText
               v-model="hotlineNumber"
               :disabled="!isMasterDataSelected"
-              :error-message="errors[0]"
               placeholder="Berisi Hotline Layanan (HP/Telp)"
               readonly
             />
           </ValidationProvider>
 
           <ValidationProvider
-            v-slot="{ errors }"
             class="flex flex-col"
-            rules="required|email"
             tag="div"
           >
             <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
@@ -541,7 +516,6 @@
             <JdsInputText
               v-model="hotlineMail"
               :disabled="!isMasterDataSelected"
-              :error-message="errors[0]"
               placeholder="Berisi Layanan (Email)"
               readonly
             />
@@ -665,8 +639,6 @@
           </h3>
 
           <ValidationProvider
-            v-slot="{ errors }"
-            rules="required"
             class="flex flex-col mb-4"
             tag="div"
           >
@@ -675,7 +647,6 @@
             </label>
             <JdsInputText
               :disabled="!isMasterDataSelected"
-              :error-message="errors[0]"
               :value="locations[index].type"
               placeholder="Berisi Jenis Lokasi"
               readonly
@@ -684,8 +655,6 @@
           </ValidationProvider>
 
           <ValidationProvider
-            v-slot="{ errors }"
-            rules="required"
             class="flex flex-col mb-4"
             tag="div"
           >
@@ -698,7 +667,6 @@
             <JdsInputText
               :value="locations[index].organization"
               :disabled="!isMasterDataSelected"
-              :error-message="errors[0]"
               placeholder="Berisi Penanggung Jawab Lokasi"
               readonly
               @input="onChangeOrganization($event, index)"
@@ -706,9 +674,7 @@
           </ValidationProvider>
 
           <ValidationProvider
-            v-slot="{ errors }"
             class="flex flex-col gap-4 mb-4"
-            rules="required"
             tag="div"
           >
             <label
@@ -720,7 +686,6 @@
             <JdsInputText
               id="locationName"
               :disabled="!isMasterDataSelected"
-              :error-message="errors[0]"
               :value="locations[index].name"
               placeholder="Berisi nama lokasi"
               readonly
@@ -729,9 +694,7 @@
           </ValidationProvider>
 
           <ValidationProvider
-            v-slot="{ errors }"
             class="flex flex-col gap-4 mb-4"
-            rules="required"
             tag="div"
           >
             <label
@@ -743,7 +706,6 @@
             <JdsInputText
               id="address"
               :disabled="!isMasterDataSelected"
-              :error-message="errors[0]"
               :value="locations[index].address"
               placeholder="Berisi alamat lokasi"
               readonly
@@ -751,11 +713,7 @@
             />
           </ValidationProvider>
 
-          <ValidationProvider
-            v-slot="{ errors }"
-            class="flex flex-col "
-            rules="required|phonenumber"
-          >
+          <ValidationProvider class="flex flex-col">
             <label
               for="phoneNumber"
               class="font-lato text-blue-gray-800 mb-3 text-[15px]"
@@ -765,7 +723,6 @@
             <JdsInputText
               id="phoneNumber"
               :disabled="!isMasterDataSelected"
-              :error-message="errors[0]"
               :value="locations[index].phone_number"
               placeholder="Berisi kontak lokasi"
               readonly
@@ -780,8 +737,6 @@
         class="mb-4 grid grid-cols-1 gap-4"
       >
         <ValidationProvider
-          v-slot="{ errors }"
-          rules="required"
           class="flex flex-col gap-4 mb-4"
           tag="div"
         >
@@ -795,15 +750,12 @@
             id="statusApplication"
             v-model="statusApplication"
             :disabled="!isMasterDataSelected"
-            :error-message="errors[0]"
             placeholder="Berisi status ketersediaan"
             readonly
           />
         </ValidationProvider>
 
         <ValidationProvider
-          v-slot="{ errors }"
-          :rules="statusApplication === 'NOT-AVAILABLE' ? null : 'required'"
           class="flex flex-col gap-4 mb-4"
           tag="div"
         >
@@ -816,7 +768,6 @@
           <JdsInputText
             id="applicationName"
             v-model="applicationName"
-            :error-message="errors[0]"
             :disabled="statusApplication === 'NOT-AVAILABLE' || !isMasterDataSelected"
             placeholder="Nama Aplikasi"
             readonly
@@ -862,8 +813,6 @@
               :key="index"
             >
               <ValidationProvider
-                v-slot="{ errors }"
-                :rules="statusApplication === 'NOT-AVAILABLE' ? null : 'required'"
                 class="flex flex-col mb-4"
                 tag="div"
               >
@@ -874,7 +823,6 @@
                   <JdsInputText
                     :value="applicationFeatures[index].name"
                     :disabled="!isApplication || statusApplication === 'NOT-AVAILABLE' || !isMasterDataSelected"
-                    :error-message="errors[0]"
                     placeholder="Berisi fitur aplikasi"
                     readonly
                     @input="setNameFeature($event, index)"
@@ -882,8 +830,6 @@
                 </div>
               </ValidationProvider>
               <ValidationProvider
-                v-slot="{ errors }"
-                :rules="statusApplication === 'NOT-AVAILABLE' ? null : 'required'"
                 class="flex flex-col gap-4 pl-7"
                 tag="div"
               >
@@ -905,7 +851,6 @@
                 >
                   Tersisa {{ applicationFeatures[index].description && 255 - applicationFeatures[index].description.length }} karakter
                 </p>
-                <span class="font-lato text-[13px] text-red-600 mt-1">{{ errors[0] }}</span>
               </ValidationProvider>
             </div>
           </section>
@@ -916,11 +861,7 @@
           :key="`links-${index}`"
           class="col-span-2 grid grid-cols-2 gap-x-8 gap-y-4 mb-4"
         >
-          <ValidationProvider
-            v-slot="{ errors }"
-            class="flex flex-col"
-            rules="required|url"
-          >
+          <ValidationProvider class="flex flex-col">
             <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
               Tautan Layanan
             </label>
@@ -931,23 +872,17 @@
               :prefix-config="serviceLinkOptions"
               placeholder="https://"
               readonly
-              :error-message="errors[0]"
               @input="setLinkByIndex($event, index)"
               @change:prefix-text="setLinkTypeByIndex($event, index)"
             />
           </ValidationProvider>
 
-          <ValidationProvider
-            v-slot="{ errors }"
-            class="flex flex-col"
-            rules="required"
-          >
+          <ValidationProvider class="flex flex-col">
             <label class="font-lato text-blue-gray-800 mb-3 text-[15px]">
               Label Tautan
             </label>
             <JdsInputText
               :disabled="!isMasterDataSelected"
-              :error-message="errors[0]"
               :value="links[index].label"
               placeholder="Berisi label tautan"
               readonly
@@ -973,10 +908,8 @@
               {{ index + 1 }}. Sosial Media
             </h3>
             <ValidationProvider
-              v-slot="{ errors }"
               tag="div"
               class="flex flex-col col-span-2"
-              rules="required"
             >
               <label
                 for="socialMedia"
@@ -987,7 +920,6 @@
               <JdsInputText
                 id="socialMedia"
                 :disabled="!isMasterDataSelected"
-                :error-message="errors[0]"
                 :value="socialMedias[index].name"
                 placeholder="Berisi nama sosial media"
                 readonly
@@ -995,10 +927,8 @@
               />
             </ValidationProvider>
             <ValidationProvider
-              v-slot="{ errors }"
               tag="div"
               class="flex flex-col col-span-2"
-              rules="required|url"
             >
               <label
                 for="socialMedia"
@@ -1014,7 +944,6 @@
                 :prefix-config="linkOptions"
                 placeholder="https://"
                 readonly
-                :error-message="errors[0]"
                 @input="setSocialMediaLink($event, index)"
                 @change:prefix-text="changePrefix($event, index)"
               />
@@ -1252,13 +1181,8 @@ export default {
     procedureImageSize() {
       return this.$store.state.publicationForm.stepTwo.service_description.service_procedures.cover.size;
     },
-    serviceFee: {
-      get() {
-        return this.$store.state.publicationForm.stepTwo.service_description.service_fee;
-      },
-      set(value) {
-        this.$store.commit('publicationForm/SET_STEP_TWO_SERVICE_DESCRIPTION_SERVICE_FEE', value);
-      },
+    serviceFee() {
+      return this.$store.state.publicationForm.stepTwo.service_description.service_fee;
     },
     socialMedias() {
       return this.$store.state.publicationForm.stepTwo.service_description.social_media;

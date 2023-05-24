@@ -130,7 +130,13 @@ const getDefaultState = () => ({
           image_upload_status: IMAGE_UPLOAD_STATUS.NONE,
         },
       },
-      service_fee: '',
+      service_fee: {
+        has_range: 0,
+        minimum_fee: '',
+        maximum_fee: '',
+        has_description: 0,
+        description: '',
+      },
       operational_times: [
         {
           selected: false,
