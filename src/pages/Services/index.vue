@@ -19,12 +19,13 @@ export default {
     TabBar,
     Maintenance: () => import('@/common/components/Maintenance'),
     MasterData: () => import('@/components/Services/MasterData'),
+    Publication: () => import('@/components/Services/Publication'),
   },
   data() {
     return {
       tabs: [
         { key: 'service', label: 'Daftar Layanan' },
-        { key: 'publication', label: 'Daftar Publikasi' },
+        { key: 'publication', label: 'Daftar Publikasi Layanan' },
         { key: 'program', label: 'Program Unggulan' },
       ],
       currentTab: 'service',
@@ -36,7 +37,7 @@ export default {
         case 'service':
           return 'MasterData';
         case 'publication':
-          return 'Maintenance';
+          return 'Publication';
         case 'program':
           return 'Maintenance';
         default:

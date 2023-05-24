@@ -1,19 +1,15 @@
 <template>
   <main class="w-full pb-20">
     <section class="w-full border-2 border-green-600 bg-green-600 rounded-lg overflow-hidden">
-      <MasterDataTabBar
+      <PublicationTabBar
         :tabs="tabs"
         :current-tab.sync="currentTab"
-        @update:currentTab="filterMasterDataByStatus"
+        @update:currentTab="filterPublicationByStatus"
       />
       <section class="w-full bg-white py-6 px-3">
         <div class="full flex justify-between mb-5 items-center">
-          <SearchBar
-            v-if="isShowSearchBar"
-            placeholder="Cari layanan"
-          />
           <LinkButton
-            href="/layanan/master-data/tambah"
+            href="/layanan/daftar-publikasi/tambah"
             title="Tambah Layanan"
             class="ml-auto"
           >
@@ -24,19 +20,19 @@
                 fill="#fff"
               />
             </template>
-            <p class="font-lato font-bold text-snm text-white leading-none">
+            <p class="font-lato font-bold text-sm text-white leading-none">
               Tambah Layanan
             </p>
           </LinkButton>
         </div>
         <div class="w-full overflow-auto">
-          <MasterDataTable
+          <PublicationTable
             :items="services"
             :loading="loading"
             :meta="meta"
             class="min-w-[1000px]"
             @update:pagination="onUpdatePagination($event)"
-            @delete="handleDeleteMasterData($event)"
+            @delete="handleDeletePublication($event)"
           />
         </div>
       </section>
@@ -44,7 +40,7 @@
 
     <!-- Action Prompt -->
     <BaseModal :open="modalState === 'DELETE_CONFIRMATION'">
-      <div class="w-full">
+      <div class="w-full h-full">
         <h1 class="font-roboto text-xl leading-8 font-medium text-green-700 mb-6">
           {{ modalMessage.title }}
         </h1>
@@ -66,7 +62,7 @@
           <BaseButton
             class="bg-red-500 hover:bg-red-400 text-sm text-white"
             :disabled="modalState === 'LOADING'"
-            @click="modalMessage.action(serviceDetail.id)"
+            @click="modalMessage.action"
           >
             <p
               v-if="modalState === 'LOADING'"
@@ -126,16 +122,15 @@
 </template>
 
 <script>
+import { formatDate } from '@/common/helpers/date';
 import BaseButton from '@/common/components/BaseButton';
 import BaseModal from '@/common/components/BaseModal';
-import MasterDataTabBar from '@/components/Services/MasterData/MasterDataTabBar';
-import MasterDataTable from '@/components/Services/MasterData/MasterDataTable';
 import LinkButton from '@/common/components/LinkButton';
-import SearchBar from '@/common/components/SearchBar';
-import { formatDate } from '@/common/helpers/date';
+import PublicationTable from '@/components/Services/Publication/PublicationTable';
+import PublicationTabBar from '@/components/Services/Publication/PublicationTabBar';
 import { RepositoryFactory } from '@/repositories/RepositoryFactory';
 
-const masterDataRepository = RepositoryFactory.get('masterDataService');
+const masterDataPublicationRepository = RepositoryFactory.get('masterDataPublication');
 
 const MODAL_STATE = Object.freeze({
   NONE: 'NONE',
@@ -146,17 +141,21 @@ const MODAL_STATE = Object.freeze({
 });
 
 export default {
-  name: 'ListServices',
+  name: 'ListPublication',
   components: {
     BaseButton,
     BaseModal,
-    MasterDataTabBar,
-    MasterDataTable,
     LinkButton,
-    SearchBar,
+    PublicationTabBar,
+    PublicationTable,
   },
   data() {
     return {
+      currentTab: 'ALL',
+      formatDate,
+      loading: false,
+      services: [],
+      serviceDetail: {},
       tabs: [
         {
           key: 'ALL',
@@ -165,24 +164,24 @@ export default {
           count: null,
         },
         {
-          key: 'DRAFT',
+          key: 'ARCHIVE',
           label: 'Draf',
           icon: 'DraftIcon',
           count: null,
         },
         {
-          key: 'ARCHIVE',
-          label: 'Tersimpan',
-          icon: 'ArchiveIcon',
+          key: 'PUBLISH',
+          label: 'Terbit',
+          icon: 'PublishIcon',
           count: null,
         },
       ],
-      // @TODO: remove isShowSearchBar varible when search feature is develop
-      isShowSearchBar: false,
-      services: [],
-      serviceDetail: {},
-      currentTab: 'ALL',
-      loading: false,
+      params: {
+        per_page: 10,
+        page: 1,
+        q: '',
+        status: '',
+      },
       meta: {
         total_count: 0,
         total_page: 0,
@@ -195,52 +194,45 @@ export default {
         message: '',
         action: null,
       },
-      params: {
-        per_page: 10,
-        page: 1,
-        q: '',
-      },
-      formatDate,
     };
   },
   mounted() {
-    this.fetchMasterData();
+    this.fetchPublicationData();
     this.fetchStatusCounter();
   },
   methods: {
-    async deleteMasterDataById(id) {
+    async deletePublication(id) {
       try {
         this.modalState = MODAL_STATE.LOADING;
-        const response = await masterDataRepository.deleteMasterDataById(id);
+        const response = await masterDataPublicationRepository.deletePublicationById(id);
         if (response.status === 204) {
           this.setModalMessage({
             title: 'Berhasil dihapus!',
-            message: `Program ${this.serviceDetail.service_name} berhasil dihapus.`,
+            message: `Layanan ${this.serviceDetail.service_name} berhasil dihapus.`,
           });
           this.modalState = MODAL_STATE.SUCCESS;
         }
       } catch {
         this.setModalMessage({
-          title: 'Hapus Program Gagal',
+          title: 'Hapus Layanan Gagal',
           message: 'Layanan Anda gagal dihapus.',
         });
         this.modalState = MODAL_STATE.ERROR;
       } finally {
-        // @TODO: update status counter with dispatch the status counter publication action
         this.fetchStatusCounter();
       }
     },
-    async fetchMasterData() {
+    async fetchPublicationData() {
       try {
         this.loading = true;
-        const response = await masterDataRepository.getMasterDataList(this.params);
+        const response = await masterDataPublicationRepository.getPublicationList(this.params);
         const { data, meta } = response.data;
         this.meta = meta;
         this.services = data;
       } catch {
         this.$toast({
           type: 'error',
-          message: 'Gagal mendapatkan data Master Data Layanan, silakan coba beberapa saat lagi',
+          message: 'Gagal mendapatkan data Publikasi Layanan, silakan coba beberapa saat lagi',
         });
       } finally {
         this.loading = false;
@@ -248,7 +240,7 @@ export default {
     },
     async fetchStatusCounter() {
       try {
-        const response = await masterDataRepository.getStatusCounter();
+        const response = await masterDataPublicationRepository.getStatusCounter();
         const { data = [] } = response.data;
         const newTabs = [];
 
@@ -260,7 +252,7 @@ export default {
           });
         });
 
-        // Get total master data off all status
+        // Get total publication off all status
         const totalCount = data.map((item) => item.count).reduce((a, b) => a + b, 0);
 
         // Mutate the first index (object with the key of `ALL`) count property
@@ -270,51 +262,58 @@ export default {
       } catch {
         this.$toast({
           type: 'error',
-          message: 'Gagal mendapatkan data Total Berita, silakan coba beberapa saat lagi',
+          message: 'Gagal mendapatkan data Total daftar publikasi layanan, silakan coba beberapa saat lagi',
         });
       }
+    },
+    filterPublicationByStatus(status) {
+      if (status === 'ALL') {
+        this.setParams({
+          per_page: 10,
+          page: 1,
+          status: null,
+        });
+      } else {
+        this.setParams({
+          per_page: 10,
+          page: 1,
+          status,
+        });
+      }
+      this.fetchPublicationData();
     },
     async handleCloseModal() {
       this.resetModalState();
       await this.$nextTick();
-      this.fetchMasterData();
+      this.fetchPublicationData();
     },
-    filterMasterDataByStatus(status) {
-      if (status === 'ALL') {
-        this.setParams({ status: null });
-      } else {
-        this.setParams({ status });
-      }
-      this.fetchMasterData();
-    },
-    handleDeleteMasterData(id) {
+    handleDeletePublication(id) {
       const selectedService = this.services.find((service) => service.id === id);
       this.serviceDetail = { ...selectedService };
-
       this.modalState = MODAL_STATE.DELETE_CONFIRMATION;
 
       this.setModalMessage({
         title: 'Hapus Layanan',
         message: 'Apakah Anda yakin ingin menghapus Layanan ini?',
-        action: () => this.deleteMasterDataById(id),
+        action: () => this.deletePublication(id),
       });
     },
-    onUpdatePagination(data) {
-      this.setParams(data);
-      this.fetchMasterData();
-    },
-    resetModalState() {
-      this.modalState = MODAL_STATE.NONE;
-      this.modalMessage.title = '';
-      this.modalMessage.body = '';
-      this.modalMessage.action = null;
+    onUpdatePagination(params) {
+      this.setParams(params);
+      this.fetchPublicationData();
     },
     setModalMessage(messageObj) {
       this.modalMessage = { ...messageObj };
     },
-    setParams(data) {
-      const newParams = { ...this.params, ...data };
+    setParams(params) {
+      const newParams = { ...this.params, ...params };
       this.params = { ...newParams };
+    },
+    resetModalState() {
+      this.modalState = MODAL_STATE.NONE;
+      this.modalMessage.title = '';
+      this.modalMessage.message = '';
+      this.modalMessage.action = null;
     },
   },
 };

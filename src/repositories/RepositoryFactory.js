@@ -9,6 +9,7 @@ import registrationRepository from './registrationRepository';
 import templateRepository from './templateRepository';
 import popupBannersRepository from './popupBannerRepository';
 import masterDataServiceRepository from './masterDataServiceRepository';
+import masterDataPublicationRepository from './masterDatapublicationRepository';
 
 const repositories = {
   auth: authRepository,
@@ -22,6 +23,7 @@ const repositories = {
   template: templateRepository,
   popupBanner: popupBannersRepository,
   masterDataService: masterDataServiceRepository,
+  masterDataPublication: masterDataPublicationRepository,
 };
 
 export const RepositoryFactory = {

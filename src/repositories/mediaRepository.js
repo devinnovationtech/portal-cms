@@ -8,15 +8,16 @@ export default {
    * @param {Object} formData
    * @returns {Promise}
    */
-  uploadMedia(formData) {
+  uploadMedia(formData, params) {
     return Repository.post(`${resource}/upload`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
+      params,
     });
   },
 
-  uploadMediaWithProgress(formData, callback) {
+  uploadMediaWithProgress(formData, callback, params) {
     const config = {
       onUploadProgress(progressEvent) {
         const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
@@ -27,6 +28,7 @@ export default {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
+      params,
       ...config,
     });
   },
