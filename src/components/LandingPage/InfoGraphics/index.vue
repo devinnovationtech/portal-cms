@@ -30,8 +30,8 @@
               </p>
             </BaseButton>
             <LinkButton
-              href="/popup-banner/tambah"
-              title="Tambah Pop-up Banner"
+              href="/infographics-banner/tambah"
+              title="Tambah Infographics Banner"
               class="ml-auto"
             >
               <template #icon-left>
