@@ -346,3 +346,30 @@ export const DAY_MAP = {
   SATURDAY: 'Sabtu',
   SUNDAY: 'Minggu',
 };
+
+export const INFO_GRAPHICS_BANNER_TABLE_HEADER = [
+  {
+    key: 'title',
+    text: 'Judul Banner',
+  },
+  {
+    key: 'preview',
+    text: 'Preview',
+  },
+  {
+    key: 'order',
+    text: 'Urutan',
+  },
+  {
+    key: 'link',
+    text: 'Link Redirect',
+  },
+  {
+    key: 'status',
+    text: 'Status',
+  },
+  {
+    key: 'action',
+    text: 'Aksi',
+  },
+];

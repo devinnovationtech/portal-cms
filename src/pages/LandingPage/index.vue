@@ -18,6 +18,7 @@ export default {
   components: {
     TabBar,
     PopupBanner: () => import('@/components/LandingPage/PopupBanner'),
+    InfoGraphicsBanner: () => import('@/components/LandingPage/InfoGraphics'),
     Maintenance: () => import('@/common/components/Maintenance'),
 
   },
@@ -25,7 +26,7 @@ export default {
     return {
       tabs: [
         { key: 'popup-banner', label: 'Popup Banner' },
-        { key: 'infografis-banner', label: 'Infografis Banner' },
+        { key: 'infographics-banner', label: 'Infografis Banner' },
         { key: 'layanan-terpopuler', label: 'Layanan Terpopuler' },
         { key: 'akses-cepat', label: 'Akses Cepat' },
       ],
@@ -37,6 +38,8 @@ export default {
       switch (this.currentTab) {
         case 'popup-banner':
           return 'PopupBanner';
+        case 'infographics-banner':
+          return 'InfoGraphicsBanner';
         default:
           return 'Maintenance';
       }
