@@ -411,21 +411,57 @@
           </section>
         </section>
 
-        <div class="flex flex-col col-span-2 gap-4 mb-5">
-          <p class="font-lato text-blue-gray-800 mb-3 text-[15px] leading-[23px]">
-            Tarif Layanan
-          </p>
+        <div class="flex flex-col col-span-2">
           <JdsSectionMessage
             show
             variant="info"
+            class="col-span-2 mb-4"
             message="Tidak boleh menggunakan titik"
           />
-          <ValidationProvider>
+          <div class="w-full flex flex-row gap-2">
+            <div class="w-full flex flex-col gap-y-2">
+              <label class="font-lato text-blue-gray-800 text-[15px] leading-[23px]">
+                Tarif Layanan
+              </label>
+              <ValidationProvider>
+                <JdsInputText
+                  v-model="minimumFee"
+                  class="w-full"
+                  placeholder="cth: 7000"
+                  readonly
+                  :disabled="hasDescription"
+                />
+              </ValidationProvider>
+            </div>
+            <hr class="w-[10px] h-[2px] bg-gray-500 mt-[50px]">
+            <div class="w-full grid grid-cols-2 gap-y-2">
+              <label class="font-lato text-blue-gray-800 text-[15px]">
+                Tarif Maksimal
+              </label>
+              <ValidationProvider class="col-span-4 mb-6">
+                <JdsInputText
+                  v-model="maximumFee"
+                  class="w-full"
+                  placeholder="cth: 7000"
+                  readonly
+                  :disabled="hasDescription || !maximumFee"
+                />
+              </ValidationProvider>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex flex-col col-span-2 gap-y-2">
+          <label class="font-lato text-blue-gray-800 text-[15px]">
+            Keterangan Khusus
+          </label>
+          <ValidationProvider class="mb-6 w-full block">
             <JdsInputText
-              v-model="serviceFee.minimum_fee"
-              placeholder="cth: 7000"
-              :disabled="!isMasterDataSelected"
+              v-model="specialDescription"
+              class="w-full"
+              placeholder="Masukkan keterangan khusus berupa text atau link"
               readonly
+              :disabled="!hasDescription"
             />
           </ValidationProvider>
         </div>
@@ -1181,8 +1217,21 @@ export default {
     procedureImageSize() {
       return this.$store.state.publicationForm.stepTwo.service_description.service_procedures.cover.size;
     },
-    serviceFee() {
-      return this.$store.state.publicationForm.stepTwo.service_description.service_fee;
+    // service fee minimum fee
+    minimumFee() {
+      return this.$store.state.publicationForm.stepTwo.service_description.service_fee.minimum_fee;
+    },
+    // service fee maximum fee
+    maximumFee() {
+      return this.$store.state.publicationForm.stepTwo.service_description.service_fee.maximum_fee;
+    },
+    // service fee has description
+    hasDescription() {
+      return !!this.$store.state.publicationForm.stepTwo.service_description.service_fee.has_description;
+    },
+    // service fee special description
+    specialDescription() {
+      return this.$store.state.publicationForm.stepTwo.service_description.service_fee.description;
     },
     socialMedias() {
       return this.$store.state.publicationForm.stepTwo.service_description.social_media;

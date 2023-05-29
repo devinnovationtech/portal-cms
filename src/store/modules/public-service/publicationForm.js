@@ -341,7 +341,11 @@ export default {
       state.stepTwo.service_description.service_procedures.items = payload.services.service_procedures.items.map((item) => ({
         ...item,
       }));
-      state.stepTwo.service_description.service_fee = payload.services.service_fee;
+
+      state.stepTwo.service_description.service_fee.minimum_fee = payload.services.service_fee.minimum_fee ? payload.services.service_fee.minimum_fee.toString() : '';
+      state.stepTwo.service_description.service_fee.maximum_fee = payload.services.service_fee.maximum_fee ? payload.services.service_fee.maximum_fee.toString() : '';
+      state.stepTwo.service_description.service_fee.has_description = payload.services.service_fee.has_description;
+      state.stepTwo.service_description.service_fee.description = payload.services.service_fee.description;
 
       // Set Active Operational Time
       const defaultOperationalTime = state.stepTwo.service_description.operational_times;
