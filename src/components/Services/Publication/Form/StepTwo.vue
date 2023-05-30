@@ -28,6 +28,7 @@
             tag="div"
           >
             <Dropzone
+              accept="image/jpeg, image/png, image/jpg"
               :disabled="isDisable || !!coverImageFile"
               :is-error="errors.length > 0"
               :is-youtube-field="true"
@@ -51,7 +52,7 @@
               :image-url="coverImageUrl"
               :image-size="coverImageSize"
               class="mt-4"
-              @retry="handleRetryUpload(coverImageFile.name)"
+              @retry="handleRetryUploadCoverImage(coverImageFile)"
               @delete="handleDeleteCoverImage(coverImageFile.name)"
             />
           </transition>
@@ -110,13 +111,14 @@
             :key="index"
           >
             <ValidationProvider
-              :ref="`imageUploader - ${index}`"
+              ref="contentImageUploader"
               v-slot="{ errors }"
               rules="required|image|size:5000|maxdimensions:816,460"
               class="col-span-2"
               tag="div"
             >
               <Dropzone
+                accept="image/jpeg, image/png, image/jpg"
                 :is-error="errors.length > 0"
                 :disabled="!!contentImages[index].image_file"
                 @change="handleUploadImage($event, index)"
@@ -138,7 +140,7 @@
                 :image-url="contentImages[index].file_download_uri"
                 :image-size="contentImages[index].size"
                 class="mt-4"
-                @retry="handleRetryUpload(contentImages[index].file_name, index)"
+                @retry="handleRetryUpload(contentImages[index].image_file, index)"
                 @delete="handleDeleteUpload(contentImages[index].file_name, index)"
               />
             </transition>
@@ -266,11 +268,12 @@
             <ValidationProvider
               ref="desktopImageUploader"
               v-slot="{ errors }"
-              rules="image|size:2000|maxdimensions:525,525"
+              rules="required|image|size:2000|maxdimensions:525,525"
               class="col-span-2"
               tag="div"
             >
               <Dropzone
+                accept="image/jpeg, image/png, image/jpg"
                 :is-error="errors.length > 0"
                 :disabled="!isTermAndCondition || !!termAndConditionImageFile"
                 @change="handleUploadTermAndConditionImage($event)"
@@ -292,7 +295,7 @@
                 :image-url="termAndConditionImageUri"
                 :image-size="termAndConditionImageSize"
                 class="mt-4"
-                @retry="handleRetryUploadTermAndConditionImage(termAndConditionImageFile.name)"
+                @retry="handleRetryUploadTermAndConditionImage(termAndConditionImageFile)"
                 @delete="handleDeleteTermAndConditionImage(termAndConditionImageFile.name)"
               />
             </transition>
@@ -378,11 +381,12 @@
             <ValidationProvider
               ref="procedureImageUploader"
               v-slot="{ errors }"
-              rules="image|size:2000|maxdimensions:520,650"
+              rules="required|image|size:2000|maxdimensions:520,650"
               class="col-span-2"
               tag="div"
             >
               <Dropzone
+                accept="image/jpeg, image/png, image/jpg"
                 :is-error="errors.length > 0"
                 :disabled="!isProcedure || !!procedureImageFile"
                 @change="handleUploadProcedureImage($event)"
@@ -404,7 +408,7 @@
                 :image-url="procedureImageUri"
                 :image-size="procedureImageSize"
                 class="mt-4"
-                @retry="handleRetryUploadProcedureImage(procedureImageFile.name)"
+                @retry="handleRetryUploadProcedureImage(procedureImageFile)"
                 @delete="handleDeleteProcedureImage(procedureImageFile.name)"
               />
             </transition>
@@ -589,6 +593,7 @@
                 tag="div"
               >
                 <Dropzone
+                  accept="image/jpeg, image/png, image/jpg"
                   :is-error="errors.length > 0"
                   :disabled="!isInfographic || !!infographics[index].image_file"
                   @change="handleUploadInfographicImage($event, index)"
@@ -609,7 +614,7 @@
                     :image-url="infographics[index].file_download_uri"
                     :image-size="infographics[index].size"
                     class="mt-4"
-                    @retry="handleRetryInfographicImage(infographics[index].file_name, index)"
+                    @retry="handleRetryInfographicImage(infographics[index].image_file, index)"
                     @delete="handleDeleteInfographicImage(infographics[index].file_name, index)"
                   />
                 </transition>
@@ -1288,9 +1293,6 @@ export default {
     },
   },
   methods: {
-    onSelect() {
-      return false;
-    },
     addContentImages() {
       this.$store.commit('publicationForm/ADD_STEP_TWO_SERVICE_DESCRIPTION_IMAGES');
     },
@@ -1320,35 +1322,50 @@ export default {
     handleDeleteInfographicImage(fileName, index) {
       this.$store.dispatch('publicationForm/handleDeleteInfographicImage', { fileName, index });
     },
-    handleRetryUpload(fileName, index) {
-      this.$store.dispatch('publicationForm/handleUploadImage', { fileName, index });
-    },
-    handleRetryUploadCoverImage(fileName) {
-      this.$store.dispatch('publicationForm/handleUploadCoverImage', fileName);
-    },
-    handleRetryUploadTermAndConditionImage(fileName) {
-      this.$store.dispatch('publicationForm/handleUploadTermAndConditionImage', fileName);
-    },
-    handleRetryUploadProcedureImage(fileName) {
-      this.$store.dispatch('publicationForm/handleUploadProcedureImage', fileName);
-    },
-    handleRetryInfographicImage(fileName, index) {
-      this.$store.dispatch('publicationForm/handleUploadInfographicImage', { fileName, index });
-    },
-    handleUploadImage(file, index) {
+    handleRetryUpload(file, index) {
       this.$store.dispatch('publicationForm/handleUploadImage', { file, index });
     },
-    handleUploadCoverImage(file) {
+    handleRetryUploadCoverImage(file) {
       this.$store.dispatch('publicationForm/handleUploadCoverImage', file);
     },
-    handleUploadTermAndConditionImage(file) {
+    handleRetryUploadTermAndConditionImage(file) {
       this.$store.dispatch('publicationForm/handleUploadTermAndConditionImage', file);
     },
-    handleUploadProcedureImage(file) {
+    handleRetryUploadProcedureImage(file) {
       this.$store.dispatch('publicationForm/handleUploadProcedureImage', file);
     },
-    handleUploadInfographicImage(file, index) {
+    handleRetryInfographicImage(file, index) {
       this.$store.dispatch('publicationForm/handleUploadInfographicImage', { file, index });
+    },
+    async handleUploadImage(file, index) {
+      const { valid } = await this.$refs.contentImageUploader[index].validate(file);
+      if (valid) {
+        this.$store.dispatch('publicationForm/handleUploadImage', { file, index });
+      }
+    },
+    async handleUploadCoverImage(file) {
+      const { valid } = await this.$refs.coverImageUploader.validate(file);
+      if (valid) {
+        this.$store.dispatch('publicationForm/handleUploadCoverImage', file);
+      }
+    },
+    async handleUploadTermAndConditionImage(file) {
+      const { valid } = await this.$refs.desktopImageUploader.validate(file);
+      if (valid) {
+        this.$store.dispatch('publicationForm/handleUploadTermAndConditionImage', file);
+      }
+    },
+    async handleUploadProcedureImage(file) {
+      const { valid } = await this.$refs.procedureImageUploader.validate(file);
+      if (valid) {
+        this.$store.dispatch('publicationForm/handleUploadProcedureImage', file);
+      }
+    },
+    async handleUploadInfographicImage(file, index) {
+      const { valid } = await this.$refs.infographicImage[index].validate(file);
+      if (valid) {
+        this.$store.dispatch('publicationForm/handleUploadInfographicImage', { file, index });
+      }
     },
     onChangeTypeLocation(value, index) {
       this.$store.commit('publicationForm/SET_STEP_TWO_SERVICE_DESCRIPTION_LOCATIONS_TYPE', { value, index });
@@ -1417,6 +1434,9 @@ export default {
     showLinkYoutubeField() {
       this.isYoutubeLinkChosen = !this.isYoutubeLinkChosen;
       this.isDisable = true;
+
+      // Reset error message when user choose youtube field
+      this.$refs.coverImageUploader.reset();
     },
     removeContentImage(index) {
       this.$store.commit('publicationForm/REMOVE_STEP_TWO_SERVICE_DESCRIPTION_IMAGES', index);

@@ -551,8 +551,8 @@ export default {
       state.stepTwo.service_description.images[index].image_upload_status = imageUploadStatus;
     },
     SET_STEP_TWO_SERVICE_DESCRIPTION_IMAGES_FILE_NAME(state, payload) {
-      const { file, index } = payload;
-      state.stepTwo.service_description.images[index].file_name = file;
+      const { fileName, index } = payload;
+      state.stepTwo.service_description.images[index].file_name = fileName;
     },
     SET_STEP_TWO_SERVICE_DESCRIPTION_IMAGES_URI(state, payload) {
       const { uri, index } = payload;
@@ -661,8 +661,8 @@ export default {
       state.stepTwo.service_description.infographics.is_active = payload ? 1 : 0;
     },
     SET_STEP_TWO_SERVICE_DESCRIPTION_INFOGRAPHICS_IMAGE_FILE_NAME(state, payload) {
-      const { file, index } = payload;
-      state.stepTwo.service_description.infographics.images[index].file_name = file;
+      const { fileName, index } = payload;
+      state.stepTwo.service_description.infographics.images[index].file_name = fileName;
     },
     SET_STEP_TWO_SERVICE_DESCRIPTION_INFOGRAPHICS_IMAGE_URI(state, payload) {
       const { uri, index } = payload;
@@ -944,13 +944,13 @@ export default {
 
         if (response.status === 201) {
           const { data } = response;
-          commit('SET_STEP_TWO_SERVICE_DESCRIPTION_IMAGES_FILE_NAME', { file: data.file_name, index });
+          commit('SET_STEP_TWO_SERVICE_DESCRIPTION_IMAGES_FILE_NAME', { fileName: data.file_name, index });
           commit('SET_STEP_TWO_SERVICE_DESCRIPTION_IMAGES_URI', { uri: data.file_download_uri, index });
           commit('SET_STEP_TWO_SERVICE_DESCRIPTION_IMAGES_SIZE', { size: data.size, index });
         }
       } catch {
         commit('SET_STEP_TWO_SERVICE_DESCRIPTION_IMAGES_STATUS', { imageUploadStatus: IMAGE_UPLOAD_STATUS.ERROR, index });
-        commit('SET_STEP_TWO_SERVICE_DESCRIPTION_IMAGES_FILE_NAME', { file: '', index });
+        commit('SET_STEP_TWO_SERVICE_DESCRIPTION_IMAGES_FILE_NAME', { fileName: '', index });
         commit('SET_STEP_TWO_SERVICE_DESCRIPTION_IMAGES_URI', { uri: '', index });
         commit('SET_STEP_TWO_SERVICE_DESCRIPTION_IMAGES_SIZE', { size: 0, index });
       }
@@ -1052,13 +1052,13 @@ export default {
 
         if (response.status === 201) {
           const { data } = response;
-          commit('SET_STEP_TWO_SERVICE_DESCRIPTION_INFOGRAPHICS_IMAGE_FILE_NAME', { file: data.file_name, index });
+          commit('SET_STEP_TWO_SERVICE_DESCRIPTION_INFOGRAPHICS_IMAGE_FILE_NAME', { fileName: data.file_name, index });
           commit('SET_STEP_TWO_SERVICE_DESCRIPTION_INFOGRAPHICS_IMAGE_URI', { uri: data.file_download_uri, index });
           commit('SET_STEP_TWO_SERVICE_DESCRIPTION_INFOGRAPHICS_IMAGE_SIZE', { size: data.size, index });
         }
       } catch {
         commit('SET_STEP_TWO_SERVICE_DESCRIPTION_INFOGRAPHICS_IMAGES_STATUS', { imageUploadStatus: IMAGE_UPLOAD_STATUS.ERROR, index });
-        commit('SET_STEP_TWO_SERVICE_DESCRIPTION_INFOGRAPHICS_IMAGE_FILE_NAME', { file: '', index });
+        commit('SET_STEP_TWO_SERVICE_DESCRIPTION_INFOGRAPHICS_IMAGE_FILE_NAME', { fileName: '', index });
         commit('SET_STEP_TWO_SERVICE_DESCRIPTION_INFOGRAPHICS_IMAGE_URI', { uri: '', index });
         commit('SET_STEP_TWO_SERVICE_DESCRIPTION_INFOGRAPHICS_IMAGE_SIZE', { size: 0, index });
       }
