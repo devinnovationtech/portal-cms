@@ -56,6 +56,15 @@ export default [
     },
   },
   {
+    path: '/infographics-banner/tambah',
+    name: 'Tambah Infografis Banner',
+    component: () => import('@/pages/LandingPage/CreateEditInfographicsBanner.vue'),
+    meta: {
+      mode: 'create',
+      layout: 'AppLayoutPrivate',
+    },
+  },
+  {
     path: '/layanan',
     name: 'Layanan Pemerintah Daerah Provinsi Jawa Barat',
     component: () => import('@/pages/Services'),
