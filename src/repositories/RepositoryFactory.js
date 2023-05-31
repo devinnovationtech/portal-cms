@@ -8,6 +8,7 @@ import userRepository from './userRepository';
 import registrationRepository from './registrationRepository';
 import templateRepository from './templateRepository';
 import popupBannersRepository from './popupBannerRepository';
+import infographicsBannerRepository from './infographicsBannerRepository';
 import masterDataServiceRepository from './masterDataServiceRepository';
 
 const repositories = {
@@ -21,6 +22,7 @@ const repositories = {
   registration: registrationRepository,
   template: templateRepository,
   popupBanner: popupBannersRepository,
+  infographicsBanner: infographicsBannerRepository,
   masterDataService: masterDataServiceRepository,
 };
 
