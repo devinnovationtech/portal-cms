@@ -33,11 +33,11 @@
       </template>
 
       <!-- eslint-disable-next-line vue/valid-v-slot -->
-      <template #item.order="{item}">
+      <template #item.sequence="{item}">
         <p
-          :title="item.order"
+          :title="item.sequence"
         >
-          {{ item.order }}
+          {{ item.sequence }}
         </p>
       </template>
 
@@ -93,6 +93,11 @@ export default {
       type: Boolean,
       default: false,
     },
+    meta: {
+      type: Object,
+      require: false,
+      default: () => ({}),
+    },
   },
   data() {
     return {
@@ -104,6 +109,19 @@ export default {
         itemsPerPageOptions: [5, 10, 15, 30],
       },
     };
+  },
+  watch: {
+    meta: {
+      handler() {
+        this.pagination = {
+          ...this.pagination,
+          currentPage: this.meta?.current_page || 1,
+          itemsPerPage: this.meta?.per_page || 5,
+          totalRows: this.meta?.total_count || 0,
+        };
+      },
+      immediate: true,
+    },
   },
   methods: {
     getStatusLabel(isActive) {

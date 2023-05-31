@@ -357,7 +357,7 @@ export const INFO_GRAPHICS_BANNER_TABLE_HEADER = [
     text: 'Preview',
   },
   {
-    key: 'order',
+    key: 'sequence',
     text: 'Urutan',
   },
   {

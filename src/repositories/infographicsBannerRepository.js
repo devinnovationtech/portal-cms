@@ -1,6 +1,6 @@
 import Repository from './Repository';
 
-const resource = '/infographics-banners';
+const resource = '/infographic-banners';
 
 export default {
 
