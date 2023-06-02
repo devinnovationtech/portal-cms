@@ -28,7 +28,11 @@
           Detail
         </li>
         <li class="font-lato text-sm leading-4 text-gray-800">
-          Ubah
+          <router-link
+            :to="`/infographics-banner/detail/${item.id}/ubah`"
+          >
+            Ubah
+          </router-link>
         </li>
         <li>
           <button

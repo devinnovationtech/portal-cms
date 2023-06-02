@@ -290,16 +290,8 @@ export default {
         next();
       } else {
         const { id } = to.params;
-        const response = await bannerRepository.getBannerById(id);
-
-        // TODO: re confirm if this page this isLive
-        const { is_live: isLive } = response.data.data;
-
-        if (isLive === 0) {
-          next();
-        } else {
-          next('/landing-page');
-        }
+        await bannerRepository.getBannerById(id);
+        next();
       }
     } catch (error) {
       next('/landing-page');
@@ -602,19 +594,19 @@ export default {
       this.imageDesktopUploadStatus = IMAGE_UPLOAD_STATUS.HASDEFAULT;
       this.imageMobileUploadStatus = IMAGE_UPLOAD_STATUS.HASDEFAULT;
 
-      this.form.image.desktop.url = data.image?.desktop?.file_download_uri;
-      this.form.image.desktop.fileName = data.image?.desktop?.file_name;
-      this.form.image.desktop.size = data.image?.desktop?.size;
+      this.form.image.desktop.url = data.image_metadata?.desktop?.file_download_uri;
+      this.form.image.desktop.fileName = data.image_metadata?.desktop?.file_name;
+      this.form.image.desktop.size = data.image_metadata?.desktop?.size;
 
-      this.form.image.mobile.url = data.image?.mobile?.file_download_uri;
-      this.form.image.mobile.fileName = data.image?.mobile?.file_name;
-      this.form.image.mobile.size = data.image?.mobile?.size;
+      this.form.image.mobile.url = data.image_metadata?.mobile?.file_download_uri;
+      this.form.image.mobile.fileName = data.image_metadata?.mobile?.file_name;
+      this.form.image.mobile.size = data.image_metadata?.mobile?.size;
 
       this.form.title = data.title;
       this.form.link = data.link;
 
-      this.imageDesktopFile = new File([''], data.image?.desktop?.file_name);
-      this.imageMobileFile = new File([''], data.image?.mobile?.file_name);
+      this.imageDesktopFile = new File([''], data.image_metadata?.desktop?.file_name);
+      this.imageMobileFile = new File([''], data.image_metadata?.mobile?.file_name);
     },
     resetSubmitState() {
       this.submitStatus = FORM_SUBMIT_STATUS.NONE;

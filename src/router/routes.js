@@ -56,6 +56,15 @@ export default [
     },
   },
   {
+    path: '/infographics-banner/detail/:id/ubah',
+    name: 'Ubah Infografis Banner',
+    component: () => import('@/pages/LandingPage/CreateEditInfographicsBanner.vue'),
+    meta: {
+      mode: 'edit',
+      layout: 'AppLayoutPrivate',
+    },
+  },
+  {
     path: '/infographics-banner/tambah',
     name: 'Tambah Infografis Banner',
     component: () => import('@/pages/LandingPage/CreateEditInfographicsBanner.vue'),
