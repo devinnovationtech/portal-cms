@@ -26,7 +26,7 @@
             :error-message="errors[0]"
             @keyup.enter="addKeyword($event.target.value)"
           >
-          <div class="flex flex-row flex-wrap gap-4 w-full h-full p-4 border border-gray-200">
+          <div class="flex flex-row flex-wrap gap-4 w-full h-full p-4 border border-gray-200 rounded-lg">
             <div
               v-for="(keyword, index) in keywordNews"
               :key="index"
