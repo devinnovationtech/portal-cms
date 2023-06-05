@@ -28,6 +28,7 @@
             tag="div"
           >
             <Dropzone
+              id="coverImage"
               accept="image/jpeg, image/png, image/jpg"
               :disabled="isDisable || !!coverImageFile"
               :is-error="errors.length > 0"
@@ -118,6 +119,7 @@
               tag="div"
             >
               <Dropzone
+                :id="`contentImage-${index}`"
                 accept="image/jpeg, image/png, image/jpg"
                 :is-error="errors.length > 0"
                 :disabled="!!contentImages[index].image_file"
@@ -273,6 +275,7 @@
               tag="div"
             >
               <Dropzone
+                id="termAndConditionImage"
                 accept="image/jpeg, image/png, image/jpg"
                 :is-error="errors.length > 0"
                 :disabled="!isTermAndCondition || !!termAndConditionImageFile"
@@ -386,6 +389,7 @@
               tag="div"
             >
               <Dropzone
+                id="procedureImage"
                 accept="image/jpeg, image/png, image/jpg"
                 :is-error="errors.length > 0"
                 :disabled="!isProcedure || !!procedureImageFile"
@@ -593,6 +597,7 @@
                 tag="div"
               >
                 <Dropzone
+                  :id="`infographic-${index}`"
                   accept="image/jpeg, image/png, image/jpg"
                   :is-error="errors.length > 0"
                   :disabled="!isInfographic || !!infographics[index].image_file"
@@ -907,6 +912,7 @@
               Tautan Layanan
             </label>
             <JdsInputText
+              class="service-link"
               :disabled="!isMasterDataSelected"
               :value="links[index].tautan"
               :prefix-text="links[index].type"
@@ -979,6 +985,7 @@
               </label>
               <JdsInputText
                 id="socialMedia"
+                class="social-media"
                 :disabled="!isMasterDataSelected"
                 :value="socialMedias[index].link"
                 :prefix-text="socialMedias[index].type"
@@ -1309,18 +1316,28 @@ export default {
     },
     handleDeleteUpload(fileName, index) {
       this.$store.dispatch('publicationForm/handleDeleteUpload', { fileName, index });
+      // Note: reset input type file value
+      document.querySelector(`#contentImage-${index} input`).value = '';
     },
     handleDeleteCoverImage(fileName) {
       this.$store.dispatch('publicationForm/handleDeleteCoverImage', fileName);
+      // Note: reset input type file value
+      document.querySelector('#coverImage input').value = '';
     },
     handleDeleteTermAndConditionImage(fileName) {
       this.$store.dispatch('publicationForm/handleDeleteTermAndConditionImage', fileName);
+      // Note: reset input type file value
+      document.querySelector('#termAndConditionImage input').value = '';
     },
     handleDeleteProcedureImage(fileName) {
       this.$store.dispatch('publicationForm/handleDeleteProcedureImage', fileName);
+      // Note: reset input type file value
+      document.querySelector('#procedureImage input').value = '';
     },
     handleDeleteInfographicImage(fileName, index) {
       this.$store.dispatch('publicationForm/handleDeleteInfographicImage', { fileName, index });
+      // Note: reset input type file value
+      document.querySelector(`#infographic-${index} input`).value = '';
     },
     handleRetryUpload(file, index) {
       this.$store.dispatch('publicationForm/handleUploadImage', { file, index });
@@ -1467,4 +1484,8 @@ export default {
   background-color: #ffffff !important;
 }
 
+.service-link .jds-input-text__input-wrapper .jds-input-text-edge,
+.social-media .jds-input-text__input-wrapper .jds-input-text-edge {
+  pointer-events: none;
+}
 </style>
