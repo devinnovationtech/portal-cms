@@ -153,18 +153,20 @@
                 />
               </div>
             </ValidationProvider>
+            <div class="font-lato text-blue-gray-800 mb-3 text-[15px] flex justify-between">
+              <label>
+                Link Redirect
+              </label>
+              <JdsToggle v-model="isActiveLink" />
+            </div>
             <ValidationProvider
               v-slot="{ errors }"
-              rules="required|url"
+              rules="url"
             >
               <div class="flex flex-col">
-                <label
-                  class="font-lato text-blue-gray-800 mb-3 text-[15px]"
-                >
-                  Link Redirect
-                </label>
                 <JdsInputText
                   v-model="form.link"
+                  :disabled="!isActiveLink"
                   placeholder="contoh: https://"
                   :error-message="errors[0]"
                 />
@@ -331,6 +333,7 @@ export default {
         title: '',
         body: '',
       },
+      isActiveLink: false,
     };
   },
   computed: {
@@ -351,6 +354,16 @@ export default {
     },
     messageIconClassName() {
       return this.submitStatus === 'SUCCESS' ? 'text-green-600' : 'text-red-600';
+    },
+  },
+  watch: {
+    isActiveLink: {
+      handler() {
+        if (!this.isActiveLink) {
+          this.form.link = '';
+        }
+      },
+      immediate: true,
     },
   },
   async mounted() {
