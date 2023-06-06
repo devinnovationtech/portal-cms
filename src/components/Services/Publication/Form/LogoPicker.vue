@@ -24,7 +24,7 @@
       <ValidationProvider
         v-slot="{ errors, valid }"
         ref="serviceLogo"
-        rules="required|maxdimensions:200,200"
+        rules="required|image|size:1000|maxdimensions:200,200"
         class="flex flex-col col-span-2"
       >
         <div class="flex items-center mb-4">

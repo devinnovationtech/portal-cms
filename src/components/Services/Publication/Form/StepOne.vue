@@ -213,7 +213,8 @@
 
               <ValidationProvider
                 v-slot="{ errors }"
-                rules="required|image|size:2000"
+                ref="benefitImageUploader"
+                rules="required|image|size:1000|maxdimensions:392,200"
                 class="col-span-2"
               >
                 <Dropzone
@@ -224,8 +225,7 @@
                 >
                   <template #description>
                     <span class="mt-auto text-sm text-blue-gray-300 text-center">
-                      Ukuran Maksimal file upload 2 Mb. <br>
-                      (.jpg dan.png )
+                      Ukuran Maksimal file upload 1 Mb dengan Resolusi yang disarankan  392 x 200 Pixel .(.jpg dan.png )
                     </span>
                   </template>
                 </Dropzone>
@@ -250,7 +250,10 @@
         </section>
       </Collapse>
 
-      <Collapse class="mb-4">
+      <Collapse
+        v-if="isShowFacilitySection"
+        class="mb-4"
+      >
         <template #header>
           <div class="flex">
             <JdsToggle
@@ -304,8 +307,9 @@
               </ValidationProvider>
 
               <ValidationProvider
+                ref="facilityImageUploader"
                 v-slot="{ errors }"
-                rules="required|image|size:2000"
+                rules="required|image|size:1000|maxdimensions:392,200"
                 class="col-span-2"
               >
                 <Dropzone
@@ -316,8 +320,7 @@
                 >
                   <template #description>
                     <span class="mt-auto text-sm text-blue-gray-300 text-center">
-                      Ukuran Maksimal file upload 2 Mb. <br>
-                      (.jpg dan.png )
+                      Ukuran Maksimal file upload 1 Mb dengan Resolusi yang disarankan  392 x 200 Pixel .(.jpg dan.png )
                     </span>
                   </template>
                 </Dropzone>
@@ -549,6 +552,18 @@ export default {
         this.$store.commit('publicationForm/SET_STEP_ONE_URL_CUSTOMIZATION', value);
       },
     },
+    isShowFacilitySection() {
+      // show section on intial render
+      if (this.masterDataId === null) {
+        return true;
+      }
+
+      if (this.masterDataId && this.isMasterDataSelected) {
+        return this.$store.state.publicationForm.stepOne.default_information.technical === 'OFFLINE';
+      }
+
+      return false;
+    },
   },
   methods: {
     handleUploadServiceLogo(file) {
@@ -557,8 +572,12 @@ export default {
     handleDeleteServiceLogo() {
       this.$store.dispatch('publicationForm/handleDeleteServiceLogo');
     },
-    handleUploadBenefitImage(file, index) {
-      this.$store.dispatch('publicationForm/handleUploadBenefitImage', { file, index });
+    async handleUploadBenefitImage(file, index) {
+      const { valid } = await this.$refs.benefitImageUploader[index].validate(file);
+
+      if (valid) {
+        this.$store.dispatch('publicationForm/handleUploadBenefitImage', { file, index });
+      }
     },
     handleDeleteBenefitImage(fileName, index) {
       this.$store.dispatch('publicationForm/handleDeleteBenefitImage', { fileName, index });
@@ -568,8 +587,12 @@ export default {
     handleRetryBenefitImage(file, index) {
       this.$store.dispatch('publicationForm/handleUploadBenefitImage', { file, index });
     },
-    handleUploadFacilityImage(file, index) {
-      this.$store.dispatch('publicationForm/handleUploadFacilityImage', { file, index });
+    async handleUploadFacilityImage(file, index) {
+      const { valid } = await this.$refs.facilityImageUploader[index].validate(file);
+
+      if (valid) {
+        this.$store.dispatch('publicationForm/handleUploadFacilityImage', { file, index });
+      }
     },
     handleDeleteFacilityImage(fileName, index) {
       this.$store.dispatch('publicationForm/handleDeleteFacilityImage', { fileName, index });

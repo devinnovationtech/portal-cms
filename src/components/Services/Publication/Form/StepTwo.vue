@@ -779,6 +779,7 @@
       </Collapse>
 
       <Collapse
+        v-if="isShowApplicationSection"
         title="Aplikasi"
         class="mb-4 grid grid-cols-1 gap-4"
       >
@@ -1099,6 +1100,9 @@ export default {
     };
   },
   computed: {
+    masterDataId() {
+      return this.$store.state.publicationForm.masterDataId;
+    },
     applicationFeatures() {
       return this.$store.state.publicationForm.stepTwo.service_description.application.features;
     },
@@ -1297,6 +1301,18 @@ export default {
       set(value) {
         this.$store.commit('publicationForm/SET_STEP_TWO_SERVICE_DESCRIPTION_COVER_VIDEO_LINK', value);
       },
+    },
+    isShowApplicationSection() {
+      // show section on intial render
+      if (this.masterDataId === null) {
+        return true;
+      }
+
+      if (this.masterDataId && this.isMasterDataSelected) {
+        return this.$store.state.publicationForm.stepOne.default_information.technical === 'ONLINE';
+      }
+
+      return false;
     },
   },
   methods: {
