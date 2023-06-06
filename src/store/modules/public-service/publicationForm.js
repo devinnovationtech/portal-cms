@@ -17,7 +17,7 @@ const IMAGE_UPLOAD_STATUS = Object.freeze({
 const FORM_SUBMIT_STATUS = Object.freeze({
   NONE: 'NONE',
   SAVE_AS_ARCHIVE_CONFIRMATION: 'SAVE_AS_ARCHIVE_CONFIRMATION',
-  SUBMIT_CONFIRMATION: 'SUBMIT_CONFIRMATION',
+  PUBLISH_CONFIRMATION: 'PUBLISH_CONFIRMATION',
   UPDATE_CONFIRMATION: 'UPDATE_CONFIRMATION',
   CANCEL_CONFIRMATION: 'CANCEL_CONFIRMATION',
   LOADING: 'LOADING',
@@ -276,7 +276,9 @@ export default {
       return state.currentFormStep === 3;
     },
     isDraft(state) {
-      return state.status === 'DRAFT';
+      // on master data publication, unfinished form (or draft) has status `ARCHIVE`
+      // due to it's relation with master data service
+      return state.status === 'ARCHIVE';
     },
     submitStatus(state) {
       return state.submitStatus;
@@ -912,9 +914,21 @@ export default {
     openSaveConfirmation({ commit }) {
       commit('SET_SUBMIT_STATUS', FORM_SUBMIT_STATUS.SAVE_AS_ARCHIVE_CONFIRMATION);
     },
+    publishConfirmation({ commit }) {
+      commit('SET_SUBMIT_STATUS', FORM_SUBMIT_STATUS.PUBLISH_CONFIRMATION);
+    },
     async saveAsArchive({ dispatch, commit }) {
       try {
         const formData = await dispatch('generateFormData', 'ARCHIVE');
+        await masterDataPublicationRepository.createPublication(formData);
+        commit('SET_SUBMIT_STATUS', FORM_SUBMIT_STATUS.SUCCESS);
+      } catch (error) {
+        commit('SET_SUBMIT_STATUS', FORM_SUBMIT_STATUS.ERROR);
+      }
+    },
+    async publishForm({ dispatch, commit }) {
+      try {
+        const formData = await dispatch('generateFormData', 'PUBLISH');
         await masterDataPublicationRepository.createPublication(formData);
         commit('SET_SUBMIT_STATUS', FORM_SUBMIT_STATUS.SUCCESS);
       } catch (error) {

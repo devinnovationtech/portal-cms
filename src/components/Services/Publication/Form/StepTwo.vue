@@ -779,7 +779,7 @@
       </Collapse>
 
       <Collapse
-        v-if="isShowApplicationSection"
+        v-show="isShowApplicationSection"
         title="Aplikasi"
         class="mb-4 grid grid-cols-1 gap-4"
       >
@@ -844,7 +844,7 @@
           <section class="border border-gray-300 rounded-xl h-full w-full px-[10px] py-3 flex flex-col gap-4">
             <ValidationProvider
               v-slot="{ errors }"
-              rules="required"
+              :rules="isShowApplicationSection ? 'required' : ''"
               class="flex flex-col gap-4 "
               tag="div"
             >
@@ -1314,6 +1314,10 @@ export default {
 
       return false;
     },
+  },
+  deactivated() {
+    // Trigger validation message when component deactivated
+    this.$refs.formStepTwo.validate();
   },
   methods: {
     addContentImages() {

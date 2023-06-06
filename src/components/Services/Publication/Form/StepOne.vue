@@ -277,7 +277,7 @@
         <section class="border border-gray-300 rounded-xl py-4 px-10 mb-3 grid grid-cols-2 gap-x-8 gap-y-4">
           <ValidationProvider
             v-slot="{ errors }"
-            rules="required"
+            :rules="isShowFacilitySection ? 'required' : ''"
             class="col-span-2 mb-3"
           >
             <JdsInputText
@@ -564,6 +564,10 @@ export default {
 
       return false;
     },
+  },
+  deactivated() {
+    // Trigger validation message when component deactivated
+    this.$refs.formStepOne.validate();
   },
   methods: {
     handleUploadServiceLogo(file) {

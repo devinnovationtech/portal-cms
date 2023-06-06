@@ -7,6 +7,7 @@
       >
         <ValidationProvider
           v-slot="{ errors }"
+          ref="keywordNewsValidator"
           tag="div"
           class="flex flex-col gap-y-4 col-span-2"
           rules="required"
@@ -42,6 +43,8 @@
               </div>
             </div>
           </div>
+
+          <span class="font-lato text-[13px] text-red-600 mt-1">{{ errors[0] }}</span>
         </ValidationProvider>
       </Collapse>
 
@@ -221,6 +224,10 @@ export default {
       return this.$store.state.publicationForm.stepThree.additional_information.faq.items;
     },
   },
+  deactivated() {
+    // Trigger validation message when component deactivated
+    this.$refs.formStepThree.validate();
+  },
   methods: {
     addFaq() {
       this.$store.commit('publicationForm/ADD_STEP_THREE_ADDITIONAL_INFORMATION_FAQ_ITEMS');
@@ -237,9 +244,16 @@ export default {
     addKeyword(value) {
       this.$store.commit('publicationForm/ADD_STEP_THREE_ADDITIONAL_INFORMATION_KEYWORDS', value);
       this.$refs.keywordsNews.value = '';
+
+      this.validateKeywordNews();
     },
     removeKeyowrd(index) {
       this.$store.commit('publicationForm/REMOVE_STEP_THREE_ADDITIONAL_INFORMATION_KEYWORDS', index);
+
+      this.validateKeywordNews();
+    },
+    validateKeywordNews() {
+      this.$refs.keywordNewsValidator.validate(this.keywordNews);
     },
   },
 };
