@@ -42,4 +42,12 @@ export default {
   getPublicationById(id = null) {
     return Repository.get(`${resource}/${id}`);
   },
+
+  /**
+   * Store publication form data
+   * @returns {Promise}
+   */
+  createPublication(body) {
+    return Repository.post(`${resource}`, body);
+  },
 };

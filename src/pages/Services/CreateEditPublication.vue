@@ -13,6 +13,7 @@
             <BaseButton
               type="button"
               class="bg-red-400 hover:bg-red-600 font-lato text-sm text-white"
+              @click="cancelConfirmation"
             >
               <template #icon-left>
                 <JdsIcon
@@ -52,6 +53,8 @@
               v-if="(isCreateMode || isDraft) && isLastStep"
               type="button"
               class="border-green-700 hover:bg-green-50 font-lato text-sm text-green-700"
+              :disabled="!isMasterDataSelected"
+              @click="openSaveConfirmation"
             >
               <span>
                 Simpan
@@ -91,6 +94,94 @@
         </section>
       </form>
     </ValidationObserver>
+
+    <!-- Cancelation Popup -->
+    <BaseModal :open="submitStatus === 'CANCEL_CONFIRMATION'">
+      <div class="w-full h-full px-2 pb-4">
+        <h1 class="font-roboto font-medium text-green-700 text-[21px] leading-[34px] mb-6">
+          Membatalkan Layanan
+        </h1>
+        <div class="flex items-center gap-4">
+          <p class="text-sm leading-6 to-blue-gray-800">
+            Apakah Anda yakin ingin membatalkan Layanan ini ?
+          </p>
+        </div>
+      </div>
+      <template #footer>
+        <div class="flex w-full h-full items-center justify-end gap-4 p-2">
+          <BaseButton
+            class="border border-green-700 hover:bg-green-50 text-sm text-green-700"
+            @click="closeConfirmation"
+          >
+            Batal
+          </BaseButton>
+          <BaseButton
+            class="bg-red-400 hover:bg-red-600 text-sm text-white"
+            @click="handleCancelation"
+          >
+            Ya, saya yakin
+          </BaseButton>
+        </div>
+      </template>
+    </BaseModal>
+
+    <!-- Confirmation Popup -->
+    <BaseModal :open="submitStatus === 'SAVE_AS_ARCHIVE_CONFIRMATION'">
+      <div class="w-full h-full px-2 pb-4">
+        <h1 class="font-roboto font-medium text-green-700 text-[21px] leading-[34px] mb-6">
+          Simpan Layanan
+        </h1>
+        <div class="flex items-center gap-4">
+          <p class="text-sm leading-6 to-blue-gray-800">
+            Apakah Anda ingin menyimpan perubahan pada layanan ini?
+          </p>
+        </div>
+      </div>
+      <template #footer>
+        <div class="flex w-full h-full items-center justify-end gap-4 p-2">
+          <BaseButton
+            class="border border-green-700 hover:bg-green-50 text-sm text-green-700"
+            @click="closeConfirmation"
+          >
+            Tidak
+          </BaseButton>
+          <BaseButton
+            class="bg-green-700 hover:bg-green-600 text-sm text-white"
+            @click="handleSaveForm"
+          >
+            Ya, simpan layanan
+          </BaseButton>
+        </div>
+      </template>
+    </BaseModal>
+
+    <!-- Success/Error Message -->
+    <BaseModal :open="submitStatus === 'SUCCESS' || submitStatus === 'ERROR'">
+      <div class="w-full h-full px-2 pb-4">
+        <h1 class="font-roboto font-medium text-green-700 text-[21px] leading-[34px] mb-6">
+          {{ submitMessage.title }}
+        </h1>
+        <div class="flex items-center gap-4">
+          <JdsIcon
+            :name="submitMessage.iconName"
+            :class="submitMessage.iconClass"
+          />
+          <p class="text-sm leading-6 to-blue-gray-800">
+            {{ submitMessage.message }}
+          </p>
+        </div>
+      </div>
+      <template #footer>
+        <div class="flex w-full h-full items-center justify-center gap-4 p-2">
+          <BaseButton
+            class="bg-green-700 hover:bg-green-600 text-sm text-white"
+            @click="handleCloseConfirmation"
+          >
+            Saya Mengerti
+          </BaseButton>
+        </div>
+      </template>
+    </BaseModal>
   </main>
 </template>
 
@@ -124,6 +215,8 @@ export default {
       'isDraft',
       'masterDataId',
       'isMasterDataSelected',
+      'submitStatus',
+      'submitMessage',
     ]),
     isCreateMode() {
       return this.$route.meta?.mode === 'create';
@@ -154,6 +247,7 @@ export default {
     },
   },
   created() {
+    this.$store.dispatch('publicationForm/resetFormData');
     this.$store.dispatch('publicationForm/getMasterDataOptions');
   },
   methods: {
@@ -161,9 +255,25 @@ export default {
       'nextStep',
       'previousStep',
       'resetFormData',
+      'saveAsArchive',
+      'openSaveConfirmation',
+      'closeConfirmation',
+      'cancelConfirmation',
     ]),
+    handleSaveForm() {
+      this.saveAsArchive();
+    },
+    handleCloseConfirmation() {
+      if (this.submitStatus === 'SUCCESS') {
+        this.$router.push('/layanan');
+      } else {
+        this.closeConfirmation();
+      }
+    },
+    handleCancelation() {
+      this.$router.back();
+    },
   },
-
 };
 </script>
 

@@ -4,6 +4,7 @@ import { RepositoryFactory } from '@/repositories/RepositoryFactory';
 
 const mediaRepository = RepositoryFactory.get('media');
 const masterDataServiceRepository = RepositoryFactory.get('masterDataService');
+const masterDataPublicationRepository = RepositoryFactory.get('masterDataPublication');
 
 const IMAGE_UPLOAD_STATUS = Object.freeze({
   NONE: 'NONE',
@@ -11,6 +12,17 @@ const IMAGE_UPLOAD_STATUS = Object.freeze({
   SUCCESS: 'SUCCESS',
   ERROR: 'ERROR',
   HASDEFAULT: 'HASDEFAULT',
+});
+
+const FORM_SUBMIT_STATUS = Object.freeze({
+  NONE: 'NONE',
+  SAVE_AS_ARCHIVE_CONFIRMATION: 'SAVE_AS_ARCHIVE_CONFIRMATION',
+  SUBMIT_CONFIRMATION: 'SUBMIT_CONFIRMATION',
+  UPDATE_CONFIRMATION: 'UPDATE_CONFIRMATION',
+  CANCEL_CONFIRMATION: 'CANCEL_CONFIRMATION',
+  LOADING: 'LOADING',
+  SUCCESS: 'SUCCESS',
+  ERROR: 'ERROR',
 });
 
 // define the default state for reset purposes
@@ -247,6 +259,7 @@ const getDefaultState = () => ({
     },
   },
   masterDataList: [],
+  submitStatus: FORM_SUBMIT_STATUS.NONE,
 });
 
 export default {
@@ -264,6 +277,38 @@ export default {
     },
     isDraft(state) {
       return state.status === 'DRAFT';
+    },
+    submitStatus(state) {
+      return state.submitStatus;
+    },
+    submitProgress(state) {
+      return state.submitProgress;
+    },
+    submitMessage(state) {
+      if (state.submitStatus === FORM_SUBMIT_STATUS.SUCCESS) {
+        return {
+          title: 'Berhasil!',
+          message: 'Layanan yang Anda buat berhasil ditambahkan.',
+          iconName: 'check-mark-circle',
+          iconClass: 'text-green-600',
+        };
+      }
+
+      if (state.submitStatus === FORM_SUBMIT_STATUS.ERROR) {
+        return {
+          title: 'Tambah Layanan Gagal!',
+          message: 'Layanan yang Anda buat gagal ditambahkan.',
+          iconName: 'warning',
+          iconClass: 'text-red-600',
+        };
+      }
+
+      return {
+        title: '',
+        message: '',
+        iconName: '',
+        iconClass: '',
+      };
     },
     applicationStatus(state) {
       switch (state.stepTwo.service_description.application.status) {
@@ -296,6 +341,12 @@ export default {
     },
     RESET_FORM_DATA(state) {
       Object.assign(state, getDefaultState());
+    },
+    SET_SUBMIT_STATUS(state, payload) {
+      state.submitStatus = payload;
+    },
+    SET_SUBMIT_PROGRESS(state, payload) {
+      state.submitProgress = payload;
     },
     SET_INITIAL_FORM_DATA(state, payload) {
       // STEP ONE STATE
@@ -817,6 +868,57 @@ export default {
         }
       } catch (error) {
         console.log(error);
+      }
+    },
+    generateFormData({ state }, status) {
+      const { technical } = state.stepOne.default_information;
+      const isTechnicalOffline = technical === 'OFFLINE';
+
+      const formData = {
+        default_information: {
+          mds_id: state.masterDataId,
+          portal_category: state.stepOne.default_information.portal_category,
+          benefits: { ...state.stepOne.default_information.benefits },
+          facilities: {
+            ...state.stepOne.default_information.facilities,
+            // determine section is active or not based on technical values
+            is_active: isTechnicalOffline ? state.stepOne.default_information.facilities.is_active : 0,
+          },
+          slug: state.stepOne.default_information.slug,
+        },
+        service_description: {
+          cover: { ...state.stepTwo.service_description.cover },
+          images: [...state.stepTwo.service_description.images],
+          infographics: { ...state.stepTwo.service_description.infographics },
+          terms_and_conditions: { ...state.stepTwo.service_description.terms_and_conditions },
+          service_procedures: { ...state.stepTwo.service_description.service_procedures },
+          application: { ...state.stepTwo.service_description.application },
+        },
+        additional_information: {
+          keywords: [...state.stepThree.additional_information.keywords],
+          faq: { ...state.stepThree.additional_information.faq },
+        },
+        status,
+      };
+
+      return formData;
+    },
+    cancelConfirmation({ commit }) {
+      commit('SET_SUBMIT_STATUS', FORM_SUBMIT_STATUS.CANCEL_CONFIRMATION);
+    },
+    closeConfirmation({ commit }) {
+      commit('SET_SUBMIT_STATUS', FORM_SUBMIT_STATUS.NONE);
+    },
+    openSaveConfirmation({ commit }) {
+      commit('SET_SUBMIT_STATUS', FORM_SUBMIT_STATUS.SAVE_AS_ARCHIVE_CONFIRMATION);
+    },
+    async saveAsArchive({ dispatch, commit }) {
+      try {
+        const formData = await dispatch('generateFormData', 'ARCHIVE');
+        await masterDataPublicationRepository.createPublication(formData);
+        commit('SET_SUBMIT_STATUS', FORM_SUBMIT_STATUS.SUCCESS);
+      } catch (error) {
+        commit('SET_SUBMIT_STATUS', FORM_SUBMIT_STATUS.ERROR);
       }
     },
 
