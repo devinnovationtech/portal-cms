@@ -265,7 +265,7 @@ export default {
       } catch (error) {
         this.$toast({
           type: 'error',
-          message: 'Gagal mendapatkan data Pop-up Banner, silakan coba beberapa saat lagi',
+          message: 'Gagal mendapatkan data Info Graphics Banner, silakan coba beberapa saat lagi',
         });
       } finally {
         this.loading = false;
