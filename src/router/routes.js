@@ -74,6 +74,14 @@ export default [
     },
   },
   {
+    path: '/infographics-banner/detail/:id',
+    name: 'Info Graphics Banner Detail',
+    component: () => import('@/pages/LandingPage/InfoGraphicsDetailPage'),
+    meta: {
+      layout: 'AppLayoutPrivate',
+    },
+  },
+  {
     path: '/layanan',
     name: 'Layanan Pemerintah Daerah Provinsi Jawa Barat',
     component: () => import('@/pages/Services'),

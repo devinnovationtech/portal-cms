@@ -21,7 +21,7 @@
             class="h-4 w-1/4 rounded-lg animate-pulse bg-gray-200"
           />
           <div v-else>
-            Akses Sapawarga
+            {{ title }}
           </div>
         </td>
       </tr>
@@ -35,7 +35,7 @@
             class="h-4 w-1/4 rounded-lg animate-pulse bg-gray-200"
           />
           <div v-else>
-            1
+            {{ sequence }}
           </div>
         </td>
       </tr>
@@ -55,10 +55,10 @@
               'underline text-blue-gray-500 font-bold' : true,
               'pointer-events-none' : false
             }"
-            href="https://google.com"
+            :href="link"
             target="_blank"
           >
-            https://google.com
+            {{ link }}
           </a>
         </td>
       </tr>
@@ -79,7 +79,7 @@
               'bg-gray-200 text-gray-600 px-[10px] rounded-[5px] font-bold ' : status === 'Tidak Aktif'
             }"
           >
-            Aktif
+            {{ status }}
           </div>
         </td>
       </tr>
@@ -93,7 +93,7 @@
             class="h-4 w-1/4 rounded-lg animate-pulse bg-gray-200"
           />
           <div v-else>
-            Terakhir disimpan pada: 12/01/2022 - 15:00
+            {{ lastUpdate }}
           </div>
         </td>
       </tr>
@@ -102,6 +102,7 @@
 </template>
 
 <script>
+import { formatDate } from '@/common/helpers/date';
 
 export default {
   name: 'InfoGraphicsDetailTable',
@@ -115,10 +116,29 @@ export default {
       default: false,
     },
   },
-  data() {
-    return {
-      status: 'Aktif',
-    };
+  computed: {
+    title() {
+      return this.banner?.title || '-';
+    },
+    sequence() {
+      return this.banner?.sequence || '-';
+    },
+    link() {
+      return this.banner?.link || '-';
+    },
+    status() {
+      if (this.banner.is_active) {
+        return 'Aktif';
+      }
+      return 'Tidak Aktif';
+    },
+    lastUpdate() {
+      const updateDate = formatDate(this.banner?.updated_at, 'dd/MM/yyyy - hh:mm');
+      if (this.banner?.updated_at) {
+        return `Terakhir disimpan pada: ${updateDate}`;
+      }
+      return '-';
+    },
   },
 };
 </script>

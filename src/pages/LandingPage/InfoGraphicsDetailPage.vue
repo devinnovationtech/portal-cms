@@ -71,16 +71,20 @@
       <div class="bg-gray-50 w-full h-full overflow-hidden rounded-[8px]">
         <component
           :is="imagePreviewComponent"
-          :image-desktop="defaultImageDesktop"
-          :image-mobile="defaultImageMobile"
+          :image-desktop="banner?.image.desktop || defaultImageDesktop"
+          :image-mobile="banner?.image.mobile || defaultImageMobile"
           :is-selected="selectedPreview"
+          @showContentMobile="showContentMobile"
         />
       </div>
 
       <!-- Data Preview -->
 
       <div class="rounded-lg overflow-hidden border border-gray-200">
-        <InfoGraphicsDetailTable />
+        <InfoGraphicsDetailTable
+          :banner="banner"
+          :loading="loading"
+        />
       </div>
 
       <!-- Delete Action Modal -->
@@ -179,6 +183,9 @@ import ProgressModal from '@/common/components/ProgressModal';
 import { STATUS_MODAL } from '@/common/constants/index';
 import InfoGraphicsImagePreview from '@/components/LandingPage/InfoGraphics/InfoGraphicsImagePreview';
 import InfoGraphicsDetailTable from '@/components/LandingPage/InfoGraphics/InfoGraphicsDetailTable';
+import { RepositoryFactory } from '@/repositories/RepositoryFactory';
+
+const infographicsBannerRepository = RepositoryFactory.get('infographicsBanner');
 
 export default {
   name: 'InfoGraphicsDetailPage',
@@ -209,9 +216,11 @@ export default {
           height: '18',
         },
       ],
-      defaultImageDesktop: require('@/assets/images/banner-aljabar.webp'),
-      defaultImageMobile: require('@/assets/images/banner-aljabar.webp'),
+      defaultImageDesktop: 'https://picsum.photos/1000/400',
+      defaultImageMobile: 'https://picsum.photos/200/300',
       selectedPreview: 'Desktop',
+      banner: {},
+      loading: false,
       modalStatus: STATUS_MODAL.NONE,
       isModalDelete: false,
       deleteLoading: false,
@@ -243,9 +252,31 @@ export default {
       return this.modalStatus === 'SUCCESS' ? 'text-green-600' : 'text-red-600';
     },
   },
+  async mounted() {
+    await this.fetchBannerById();
+  },
   methods: {
+    async fetchBannerById() {
+      try {
+        this.loading = true;
+        const response = await infographicsBannerRepository.getBannerById(this.$route.params.id);
+        const { data } = response.data;
+        this.banner = data;
+      } catch (error) {
+        this.$toast({
+          type: 'error',
+          message: 'Gagal mendapatkan data Pop-up Banner, silakan coba beberapa saat lagi',
+        });
+      } finally {
+        this.loading = false;
+      }
+    },
     showPreviewImage(item) {
       this.selectedPreview = item.name;
+      if (item.name === 'Mobile') this.isContentMobile = true;
+    },
+    showContentMobile() {
+      this.isContentMobile = !this.isContentMobile;
     },
     onCancel() {
       this.modalStatus = STATUS_MODAL.NONE;
