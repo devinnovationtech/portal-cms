@@ -37,7 +37,7 @@
         <p
           :title="item.sequence"
         >
-          {{ item.sequence }}
+          {{ item.sequence !== 0 ? item.sequence : '-' }}
         </p>
       </template>
 
