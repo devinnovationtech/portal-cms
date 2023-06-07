@@ -879,6 +879,7 @@ export default {
       const formData = {
         default_information: {
           mds_id: state.masterDataId,
+          logo: { ...state.stepOne.default_information.logo },
           portal_category: state.stepOne.default_information.portal_category,
           benefits: { ...state.stepOne.default_information.benefits },
           facilities: {
