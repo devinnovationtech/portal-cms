@@ -59,7 +59,7 @@
       <template #item.status="{item}">
         <JdsToggle
           :label="getStatusLabel(item.is_active)"
-          :checked="getStatusBool(item.is_active)"
+          :checked="item.is_active"
           @change="$emit('change:status', item)"
         />
       </template>
@@ -126,9 +126,6 @@ export default {
   methods: {
     getStatusLabel(isActive) {
       return isActive ? 'Aktif' : 'Tidak Aktif';
-    },
-    getStatusBool(isLive) {
-      return isLive === 1;
     },
     onPaginationChange(action, value) {
       const paginationObj = { ...this.pagination };

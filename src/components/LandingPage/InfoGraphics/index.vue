@@ -165,6 +165,7 @@
 import BaseButton from '@/common/components/BaseButton';
 import BaseModal from '@/common/components/BaseModal';
 import LinkButton from '@/common/components/LinkButton';
+import ProgressModal from '@/common/components/ProgressModal';
 import SortIcon from '@/assets/icons/fluent-arrow.svg?inline';
 import SaveIcon from '@/assets/icons/uil-save.svg?inline';
 import InfoGraphicsBannerTable from '@/components/LandingPage/InfoGraphics/InfoGraphicsBannerTable';
@@ -188,6 +189,7 @@ export default {
     BaseButton,
     BaseModal,
     LinkButton,
+    ProgressModal,
     SortIcon,
     SaveIcon,
     InfoGraphicsBannerTable,
@@ -257,23 +259,21 @@ export default {
       const filterBanner = this.banners.filter((banner) => banner.id === item.id)[0];
       this.bannerDetail = { ...filterBanner };
 
-      if (item.is_active) {
+      if (!item.is_active) {
         this.modalState = MODAL_STATE.STATUS_ACTIVATE;
 
         this.setModalMessage({
           title: 'Konfirmasi Pengaktifan',
           message: 'Apakah Anda yakin ingin mengaktifkan banner ini?',
-          action: () => this.updateBannerStatusById(this.bannerDetail.id, 'ACTIVE'),
+          action: () => this.updateBannerStatusById(this.bannerDetail.id, 1),
         });
-      }
-
-      if (!item.is_active) {
+      } else if (item.is_active) {
         this.modalState = MODAL_STATE.STATUS_DEACTIVATE;
 
         this.setModalMessage({
           title: 'Konfirmasi Pengaktifan',
           message: 'Apakah Anda yakin ingin menonaktifkan banner ini?',
-          action: () => this.updateBannerStatusById(this.bannerDetail.id, 'NON-ACTIVE'),
+          action: () => this.updateBannerStatusById(this.bannerDetail.id, 0),
         });
       }
     },
@@ -282,7 +282,7 @@ export default {
         this.modalState = MODAL_STATE.LOADING;
 
         const response = await infographicsBannerRepository.updateBannerStatusById(id, {
-          status,
+          is_active: status,
         });
 
         if (response.status === 200) {
@@ -292,7 +292,7 @@ export default {
             setTimeout(() => {
               this.setModalMessage({
                 title: 'Berhasil!',
-                message: `Banner berhasil ${status === 'ACTIVE' ? 'diaktifkan' : 'dinonaktifkan'}`,
+                message: `Banner berhasil ${status === 1 ? 'diaktifkan' : 'dinonaktifkan'}`,
               });
               this.modalState = MODAL_STATE.SUCCESS;
             }, 150);

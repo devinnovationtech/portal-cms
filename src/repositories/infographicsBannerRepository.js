@@ -72,7 +72,7 @@ export default {
    * @param {number} id
    * @param {Object} body
    *
-   * @property {Object} status
+   * @property {Object} is_active
    *
    * @returns {Promise}
    */
