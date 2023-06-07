@@ -42,6 +42,7 @@
         <li>
           <button
             class="font-lato text-sm leading-4 text-gray-800"
+            @click="$emit('delete', item.id)"
           >
             Hapus
           </button>

@@ -92,7 +92,7 @@
             :class="{
               'text-sm text-white': true,
               'bg-green-600 hover:bg-green-700': modalState === 'STATUS_ACTIVATE',
-              'bg-red-500 hover:bg-red-400': modalState === 'STATUS_DEACTIVATE',
+              'bg-red-500 hover:bg-red-400': modalState === 'STATUS_DEACTIVATE' || modalState === 'DELETE_CONFIRMATION',
             }"
             :disabled="modalState === 'LOADING'"
             @click="modalMessage.action(bannerDetail.id)"
@@ -314,9 +314,34 @@ export default {
 
       this.setModalMessage({
         title: 'Hapus Banner!',
-        message: 'Apakah Anda yakin ingin menghapus banner ini?',
+        message: 'Apakah Anda yakin ingin menghapus banner infografis ini?',
         action: () => this.deleteBannerById(id),
       });
+    },
+    async deleteBannerById(id) {
+      try {
+        this.modalState = MODAL_STATE.LOADING;
+        const response = await infographicsBannerRepository.deleteBannerById(id);
+        if (response.status === 200) {
+          this.progressValue = 25;
+          setTimeout(() => {
+            this.progressValue = 75;
+            setTimeout(() => {
+              this.setModalMessage({
+                title: 'Berhasil dihapus!',
+                message: `Banner ${this.bannerDetail.title} berhasil hapus.`,
+              });
+              this.modalState = MODAL_STATE.SUCCESS;
+            }, 150);
+          }, 150);
+        }
+      } catch {
+        this.setModalMessage({
+          title: 'Hapus Banner Gagal',
+          message: 'Banner yang Anda buat gagal dihapus.',
+        });
+        this.modalState = MODAL_STATE.ERROR;
+      }
     },
     setModalMessage(messageObj) {
       this.modalMessage = { ...messageObj };
