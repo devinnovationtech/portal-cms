@@ -72,10 +72,11 @@
               </span>
             </BaseButton>
             <BaseButton
-              v-if="isEditMode && !isDraft && isLastStep"
+              v-if="(isEditMode && !isDraft) && isLastStep"
               type="button"
               class="bg-green-700 hover:bg-green-600 font-lato text-sm text-white"
               :disabled="invalid"
+              @click="updateConfirmation"
             >
               <span>
                 Simpan Perubahan
@@ -186,6 +187,42 @@
       </template>
     </BaseModal>
 
+    <!-- Publish Confirmation Popup -->
+    <BaseModal :open="submitStatus === 'UPDATE_CONFIRMATION'">
+      <div class="w-full h-full px-2 pb-4">
+        <h1 class="font-roboto font-medium text-green-700 text-[21px] leading-[34px] mb-6">
+          Ubah Layanan
+        </h1>
+        <div class="flex items-center gap-4">
+          <p class="text-sm leading-6 to-blue-gray-800">
+            Apakah Anda ingin mengubah data layanan ini?
+          </p>
+        </div>
+      </div>
+      <template #footer>
+        <div class="flex w-full h-full items-center justify-end gap-4 p-2">
+          <BaseButton
+            class="border border-green-700 hover:bg-green-50 text-sm text-green-700"
+            @click="closeConfirmation"
+          >
+            Tidak
+          </BaseButton>
+          <BaseButton
+            class="bg-green-700 hover:bg-green-600 text-sm text-white"
+            @click="updateForm('PUBLISH')"
+          >
+            Ya, simpan layanan
+          </BaseButton>
+        </div>
+      </template>
+    </BaseModal>
+
+    <!-- Submit Progress -->
+    <ProgressModal
+      :open="submitStatus === 'LOADING'"
+      :value="submitProgress"
+    />
+
     <!-- Success/Error Message -->
     <BaseModal :open="submitStatus === 'SUCCESS' || submitStatus === 'ERROR'">
       <div class="w-full h-full px-2 pb-4">
@@ -248,6 +285,7 @@ export default {
       'isMasterDataSelected',
       'submitStatus',
       'submitMessage',
+      'submitProgress',
     ]),
     isCreateMode() {
       return this.$route.meta?.mode === 'create';
@@ -271,15 +309,20 @@ export default {
   watch: {
     masterDataId: {
       handler(newValue, oldValue) {
-        if (this.isMasterDataSelected && newValue !== oldValue) {
+        if (this.isCreateMode && this.isMasterDataSelected && newValue !== oldValue) {
           this.$store.dispatch('publicationForm/setInitialFormData', this.masterDataId);
         }
       },
     },
   },
-  created() {
+  async created() {
     this.$store.dispatch('publicationForm/resetFormData');
-    this.$store.dispatch('publicationForm/getMasterDataOptions');
+    await this.$store.dispatch('publicationForm/getMasterDataOptions');
+
+    if (this.isEditMode) {
+      const { id } = this.$route.params;
+      this.$store.dispatch('publicationForm/setEditInitialFormData', id);
+    }
   },
   methods: {
     ...mapActions('publicationForm', [
@@ -291,13 +334,27 @@ export default {
       'closeConfirmation',
       'cancelConfirmation',
       'publishConfirmation',
+      'updateConfirmation',
       'publishForm',
     ]),
     handleSaveForm() {
-      this.saveAsArchive();
+      if (this.isEditMode && this.isDraft) {
+        this.updateForm('ARCHIVE');
+      } else {
+        this.saveAsArchive();
+      }
     },
     handlePublishForm() {
-      this.publishForm();
+      if (this.isEditMode && this.isDraft) {
+        this.updateForm('PUBLISH');
+      } else {
+        this.publishForm();
+      }
+    },
+    updateForm(status) {
+      const { id } = this.$route.params;
+
+      this.$store.dispatch('publicationForm/updateForm', { id, status });
     },
     handleCloseConfirmation() {
       if (this.submitStatus === 'SUCCESS') {

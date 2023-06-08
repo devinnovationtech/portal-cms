@@ -24,7 +24,7 @@
       <ValidationProvider
         v-slot="{ errors, valid }"
         ref="serviceLogo"
-        rules="required|image|size:1000|maxdimensions:200,200"
+        :rules="hasInitialImage ? 'image|size:1000|maxdimensions:200,200': 'required|image|size:1000|maxdimensions:200,200'"
         class="flex flex-col col-span-2"
       >
         <div class="flex items-center mb-4">
@@ -33,7 +33,7 @@
             :class="{
               'w-fit min-h-[38px] flex px-4 py-[10px] rounded-lg bg-green-700 hover:bg-green-600': true,
               'text-white font-bold items-center text-sm cursor-pointer': true,
-              'bg-gray-500 hover:bg-gray-500': !isMasterDataSelected || (hasLogo && valid)
+              'bg-gray-500 hover:bg-gray-500': !isMasterDataSelected || (hasLogo && valid) || hasInitialImage
             }"
           >
             <span>Pilih File</span>
@@ -59,7 +59,7 @@
           name="service-logo"
           hidden
           accept="image/png, image/jpeg"
-          :disabled="!isMasterDataSelected || (hasLogo && valid)"
+          :disabled="!isMasterDataSelected || (hasLogo && valid) || hasInitialImage"
           @change="handlePickLogo"
         >
 
@@ -67,7 +67,7 @@
 
         <transition name="fade">
           <div
-            v-if="hasLogo && valid"
+            v-if="(hasLogo && valid) || hasInitialImage"
             class="w-fit flex border border-green-700 rounded-lg min-h-[38px] items-center px-4"
           >
             <p class="text-sm font-lato leading-none">
@@ -115,6 +115,31 @@ export default {
     ValidationProvider,
     ImagePreview,
   },
+  props: {
+    /**
+     * define the status of logo LogoPicker
+     * NONE - create mode; able to pick a new image
+     * HASDEFAULT - edit mode; able to edit existing image
+     */
+    status: {
+      type: String,
+      default: 'NONE',
+    },
+    /**
+     * define the initial image URI for edit purposes
+     */
+    initialImageUri: {
+      type: String,
+      default: '',
+    },
+    /**
+     * define the initial image name for edit purposes
+     */
+    initialImageName: {
+      type: String,
+      default: '',
+    },
+  },
   data() {
     return {
       logo: null,
@@ -126,11 +151,26 @@ export default {
     isMasterDataSelected() {
       return this.$store.getters['publicationForm/isMasterDataSelected'];
     },
+    hasInitialImage() {
+      return this.status === 'HASDEFAULT';
+    },
     hasLogo() {
+      if (this.hasInitialImage) {
+        return true;
+      }
+
       return this.logo !== null;
     },
     imagePreviewSource() {
       return this.logoPreview;
+    },
+  },
+  watch: {
+    status() {
+      if (this.hasInitialImage) {
+        this.logoPreview = this.initialImageUri;
+        this.logo = new File([''], this.initialImageName);
+      }
     },
   },
   methods: {

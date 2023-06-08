@@ -50,4 +50,15 @@ export default {
   createPublication(body) {
     return Repository.post(`${resource}`, body);
   },
+
+  /**
+   * update Publication
+   * @param {object} body - form request body
+   * @param {number} id - ID of the publication data
+
+   * @returns {Promise}
+   */
+  updatePublication(body, id = null) {
+    return Repository.put(`${resource}/${id}`, body);
+  },
 };

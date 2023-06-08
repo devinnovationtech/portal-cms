@@ -19,6 +19,7 @@
             placeholder="Pilih layanan dari master data"
             :filterable="true"
             filter-type="contain"
+            :disabled="isEditMode"
           />
           <span class="font-lato text-[13px] text-red-600 mt-1">{{ errors[0] }}</span>
         </ValidationProvider>
@@ -26,6 +27,9 @@
         <div class="col-span-2 border-b border-gray-300" />
 
         <LogoPicker
+          :status="logo.status"
+          :initial-image-uri="isEditMode ? logo.file_download_uri : null"
+          :initial-image-name="isEditMode ? logo.file_name : null"
           @upload="handleUploadServiceLogo"
           @delete="handleDeleteServiceLogo"
         />
@@ -214,7 +218,7 @@
               <ValidationProvider
                 v-slot="{ errors }"
                 ref="benefitImageUploader"
-                rules="required|image|size:1000|maxdimensions:392,200"
+                :rules="isCreateMode ? 'required|image|size:1000|maxdimensions:392,200' : 'image|size:1000|maxdimensions:392,200'"
                 class="col-span-2"
               >
                 <Dropzone
@@ -442,6 +446,15 @@ export default {
     },
     isMasterDataSelected() {
       return this.$store.getters['publicationForm/isMasterDataSelected'];
+    },
+    isCreateMode() {
+      return this.$route.meta?.mode === 'create';
+    },
+    isEditMode() {
+      return this.$route.meta?.mode === 'edit';
+    },
+    logo() {
+      return this.$store.state.publicationForm.stepOne.default_information.logo;
     },
     OPDName() {
       return this.$store.state.publicationForm.stepOne.default_information.opd_name;

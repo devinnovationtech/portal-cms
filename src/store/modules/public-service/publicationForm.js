@@ -80,6 +80,7 @@ const getDefaultState = () => ({
         file_name: '',
         file_download_uri: '',
         size: 0,
+        status: IMAGE_UPLOAD_STATUS.NONE,
       },
     },
   },
@@ -260,6 +261,8 @@ const getDefaultState = () => ({
   },
   masterDataList: [],
   submitStatus: FORM_SUBMIT_STATUS.NONE,
+  submitProgress: 0,
+  status: '',
 });
 
 export default {
@@ -428,6 +431,132 @@ export default {
       state.stepTwo.service_description.social_media = payload.additional_information.social_media.map((item) => ({
         ...item,
       }));
+    },
+    SET_EDIT_INITIAL_FORM_DATA(state, payload) {
+      // STEP ONE STATE
+      state.masterDataId = payload.default_information.mds_id;
+      state.stepOne.default_information.logo = {
+        ...payload.default_information.logo,
+        status: payload.default_information.logo?.file_download_uri ? IMAGE_UPLOAD_STATUS.HASDEFAULT : IMAGE_UPLOAD_STATUS.NONE,
+      };
+      state.stepOne.default_information.opd_name = payload.default_information.opd_name;
+      state.stepOne.default_information.form = payload.default_information.service_form;
+      state.stepOne.default_information.name = payload.default_information.service_name;
+      state.stepOne.default_information.description = payload.default_information.description;
+      state.stepOne.default_information.user = payload.default_information.service_user;
+      state.stepOne.default_information.program_name = payload.default_information.program_name;
+      state.stepOne.default_information.portal_category = payload.default_information.portal_category;
+      state.stepOne.default_information.operational_status = payload.default_information.operator_status;
+      state.stepOne.default_information.technical = payload.default_information.technical;
+
+      state.stepOne.default_information.benefits.title = payload.default_information.benefits.title;
+      state.stepOne.default_information.benefits.is_active = payload.default_information.benefits.is_active;
+      state.stepOne.default_information.benefits.items = payload.default_information.benefits.items.map((item) => ({
+        ...item,
+        image: {
+          ...item.image,
+          file: item.image.file_download_uri ? new File([''], item.image?.file_name) : null,
+          upload_progress: 0,
+          upload_status: item.image.file_download_uri ? IMAGE_UPLOAD_STATUS.HASDEFAULT : IMAGE_UPLOAD_STATUS.NONE,
+        },
+      }));
+
+      state.stepOne.default_information.facilities.title = payload.default_information.facilities.title;
+      state.stepOne.default_information.facilities.is_active = payload.default_information.facilities.is_active;
+      state.stepOne.default_information.facilities.items = payload.default_information.facilities.items.map((item) => ({
+        ...item,
+        image: {
+          ...item.image,
+          file: item.image.file_download_uri ? new File([''], item.image?.file_name) : null,
+          upload_progress: 0,
+          upload_status: item.image.file_download_uri ? IMAGE_UPLOAD_STATUS.HASDEFAULT : IMAGE_UPLOAD_STATUS.NONE,
+        },
+      }));
+      // @todo: API didn't prove website data
+      state.stepOne.default_information.website = payload.default_information.website;
+      state.stepOne.default_information.slug = payload.default_information.slug;
+
+      // STEP TWO STATE
+
+      state.stepTwo.service_description.cover.video = payload.service_description.cover.video;
+      state.stepTwo.service_description.cover.image = {
+        ...payload.service_description.cover.image,
+        image_file: payload.service_description.cover.image.file_download_uri ? new File([''], payload.service_description.cover.image?.file_name) : null,
+        image_upload_progress: 0,
+        image_upload_status: payload.service_description.cover.image.file_download_uri ? IMAGE_UPLOAD_STATUS.HASDEFAULT : IMAGE_UPLOAD_STATUS.NONE,
+      };
+
+      state.stepTwo.service_description.images = payload.service_description.images.map((item) => ({
+        ...item,
+        image_file: item.file_download_uri ? new File([''], item.file_name) : null,
+        image_upload_progress: 0,
+        image_upload_status: item.file_download_uri ? IMAGE_UPLOAD_STATUS.HASDEFAULT : IMAGE_UPLOAD_STATUS.NONE,
+      }));
+
+      state.stepTwo.service_description.terms_and_conditions.title = payload.service_description.terms_and_conditions.title;
+      state.stepTwo.service_description.terms_and_conditions.is_active = payload.service_description.terms_and_conditions.is_active;
+      state.stepTwo.service_description.terms_and_conditions.items = [...payload.service_description.terms_and_conditions.items];
+      state.stepTwo.service_description.terms_and_conditions.cover = {
+        ...payload.service_description.terms_and_conditions.cover,
+        image_file: payload.service_description.terms_and_conditions.cover.file_download_uri ? new File([''], payload.service_description.terms_and_conditions.cover.file_name) : null,
+        image_upload_progress: 0,
+        image_upload_status: payload.service_description.terms_and_conditions.cover.file_download_uri ? IMAGE_UPLOAD_STATUS.HASDEFAULT : IMAGE_UPLOAD_STATUS.NONE,
+      };
+
+      state.stepTwo.service_description.service_procedures.title = payload.service_description.service_procedures.title;
+      state.stepTwo.service_description.service_procedures.is_active = payload.service_description.service_procedures.is_active;
+      state.stepTwo.service_description.service_procedures.items = [...payload.service_description.service_procedures.items];
+      state.stepTwo.service_description.service_procedures.cover = {
+        ...payload.service_description.service_procedures.cover,
+        image_file: payload.service_description.service_procedures.cover.file_download_uri ? new File([''], payload.service_description.service_procedures.cover.file_name) : null,
+        image_upload_progress: 0,
+        image_upload_status: payload.service_description.service_procedures.cover.file_download_uri ? IMAGE_UPLOAD_STATUS.HASDEFAULT : IMAGE_UPLOAD_STATUS.NONE,
+      };
+
+      state.stepTwo.service_description.service_fee.minimum_fee = payload.service_description.service_fee.minimum_fee ? payload.service_description.service_fee.minimum_fee.toString() : '';
+      state.stepTwo.service_description.service_fee.maximum_fee = payload.service_description.service_fee.maximum_fee ? payload.service_description.service_fee.maximum_fee.toString() : '';
+      state.stepTwo.service_description.service_fee.has_description = payload.service_description.service_fee.has_description;
+      state.stepTwo.service_description.service_fee.description = payload.service_description.service_fee.description;
+
+      // Set Active Operational Time
+      const defaultOperationalTime = state.stepTwo.service_description.operational_times;
+      const payloadOperationalTime = payload.service_description.operational_times;
+
+      payloadOperationalTime.forEach((item) => {
+        const index = defaultOperationalTime.map((obj) => obj.day).indexOf(item.day);
+
+        state.stepTwo.service_description.operational_times[index].selected = true;
+        state.stepTwo.service_description.operational_times[index].start = item.start;
+        state.stepTwo.service_description.operational_times[index].end = item.end;
+      });
+
+      state.stepTwo.service_description.hotline_number = payload.service_description.hotline_number;
+      state.stepTwo.service_description.hotline_mail = payload.service_description.hotline_mail;
+      state.stepTwo.service_description.locations = [...payload.service_description.locations];
+
+      state.stepTwo.service_description.infographics.is_active = payload.service_description.infographics.is_active;
+      state.stepTwo.service_description.infographics.images = payload.service_description.infographics.images.map((item) => ({
+        ...item,
+        image_file: item.file_download_uri ? new File([''], item.file_name) : null,
+        image_upload_progress: 0,
+        image_upload_status: item.file_download_uri ? IMAGE_UPLOAD_STATUS.HASDEFAULT : IMAGE_UPLOAD_STATUS.NONE,
+      }));
+
+      state.stepTwo.service_description.application.title = payload.service_description.application.title;
+      state.stepTwo.service_description.application.name = payload.service_description.application.name;
+      state.stepTwo.service_description.application.status = payload.service_description.application.status;
+      state.stepTwo.service_description.application.features = [...payload.service_description.application.features];
+
+      state.stepTwo.service_description.links = [...payload.service_description.links];
+      state.stepTwo.service_description.social_media = [...payload.service_description.social_media];
+
+      // STEP THREE STATE
+
+      state.stepThree.additional_information.keywords = Array.isArray(payload.additional_information.keywords) ? [...payload.additional_information.keywords] : [];
+      state.stepThree.additional_information.faq.is_active = payload.additional_information.faq.is_active;
+      state.stepThree.additional_information.faq.items = [...payload.additional_information.faq.Items];
+
+      state.status = payload.status;
     },
 
     // STEP ONE FORM MUTATIONS
@@ -872,6 +1001,19 @@ export default {
         console.log(error);
       }
     },
+    async setEditInitialFormData({ commit }, id) {
+      try {
+        const response = await masterDataPublicationRepository.getPublicationById(id);
+        const { data } = response.data;
+        const { status } = response.status;
+
+        if (response.status === 200) {
+          commit('SET_EDIT_INITIAL_FORM_DATA', data, status);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
     generateFormData({ state }, status) {
       const { technical } = state.stepOne.default_information;
       const isTechnicalOffline = technical === 'OFFLINE';
@@ -918,6 +1060,9 @@ export default {
     publishConfirmation({ commit }) {
       commit('SET_SUBMIT_STATUS', FORM_SUBMIT_STATUS.PUBLISH_CONFIRMATION);
     },
+    updateConfirmation({ commit }) {
+      commit('SET_SUBMIT_STATUS', FORM_SUBMIT_STATUS.UPDATE_CONFIRMATION);
+    },
     async saveAsArchive({ dispatch, commit }) {
       try {
         const formData = await dispatch('generateFormData', 'ARCHIVE');
@@ -932,6 +1077,28 @@ export default {
         const formData = await dispatch('generateFormData', 'PUBLISH');
         await masterDataPublicationRepository.createPublication(formData);
         commit('SET_SUBMIT_STATUS', FORM_SUBMIT_STATUS.SUCCESS);
+      } catch (error) {
+        commit('SET_SUBMIT_STATUS', FORM_SUBMIT_STATUS.ERROR);
+      }
+    },
+    async updateForm({ dispatch, commit }, { id, status }) {
+      try {
+        commit('SET_SUBMIT_STATUS', FORM_SUBMIT_STATUS.LOADING);
+        commit('SET_SUBMIT_PROGRESS', 25);
+
+        const formData = await dispatch('generateFormData', status);
+        const response = await masterDataPublicationRepository.updatePublication(formData, id);
+
+        if (response.status === 200) {
+          // Add timeout to prevent progress bar too fast
+          setTimeout(() => {
+            commit('SET_SUBMIT_PROGRESS', 75);
+
+            setTimeout(() => {
+              commit('SET_SUBMIT_STATUS', FORM_SUBMIT_STATUS.SUCCESS);
+            }, 150);
+          }, 150);
+        }
       } catch (error) {
         commit('SET_SUBMIT_STATUS', FORM_SUBMIT_STATUS.ERROR);
       }

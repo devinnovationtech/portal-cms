@@ -23,7 +23,7 @@
           <ValidationProvider
             ref="coverImageUploader"
             v-slot="{ errors }"
-            :rules="!isYoutubeLinkChosen ? 'required|image|size:5000|maxdimensions:816,460' : ''"
+            :rules="coverImageValidationRules"
             class="col-span-2"
             tag="div"
           >
@@ -603,7 +603,7 @@
               <ValidationProvider
                 ref="infographicImage"
                 v-slot="{ errors }"
-                rules="required|image|size:2000|maxdimensions:525,525"
+                :rules="'image|size:2000|maxdimensions:525,525'"
                 class="col-span-2"
                 tag="div"
               >
@@ -1114,6 +1114,12 @@ export default {
     masterDataId() {
       return this.$store.state.publicationForm.masterDataId;
     },
+    isCreateMode() {
+      return this.$route.meta?.mode === 'create';
+    },
+    isEditMode() {
+      return this.$route.meta?.mode === 'edit';
+    },
     applicationFeatures() {
       return this.$store.state.publicationForm.stepTwo.service_description.application.features;
     },
@@ -1142,6 +1148,19 @@ export default {
     contentImages() {
       return this.$store.state.publicationForm.stepTwo.service_description.images;
     },
+    coverImageValidationRules() {
+      if (this.isCreateMode) {
+        if (this.isYoutubeLinkChosen) {
+          return 'image|size:5000|maxdimensions:816,460';
+        }
+      }
+
+      if (this.isEditMode) {
+        return 'image|size:5000|maxdimensions:816,460';
+      }
+
+      return 'required|image|size:5000|maxdimensions:816,460';
+    },
     coverImageFile() {
       return this.$store.state.publicationForm.stepTwo.service_description.cover.image.image_file;
     },
@@ -1155,7 +1174,7 @@ export default {
       return this.$store.state.publicationForm.stepTwo.service_description.cover.image.size;
     },
     coverImageUrl() {
-      return this.$store.state.publicationForm.stepTwo.service_description.cover.image.file_download_urifile_download_uri;
+      return this.$store.state.publicationForm.stepTwo.service_description.cover.image.file_download_uri;
     },
     hotlineMail: {
       get() {

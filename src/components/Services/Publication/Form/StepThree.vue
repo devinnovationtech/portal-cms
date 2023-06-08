@@ -227,6 +227,7 @@ export default {
   deactivated() {
     // Trigger validation message when component deactivated
     this.$refs.formStepThree.validate();
+    this.validateKeywordNews();
   },
   methods: {
     addFaq() {
