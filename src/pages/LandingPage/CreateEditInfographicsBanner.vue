@@ -2,7 +2,7 @@
   <main class="pb-14">
     <ValidationObserver
       ref="form"
-      v-slot="{ invalid }"
+      v-slot="{ invalid, dirty }"
     >
       <form
         class="infographics-banner__form"
@@ -14,7 +14,7 @@
             <BaseButton
               type="submit"
               class="bg-green-700 hover:bg-green-600 font-lato text-sm text-white"
-              :disabled="invalid"
+              :disabled="invalid || !dirty"
             >
               <p>
                 Simpan Data
@@ -617,6 +617,9 @@ export default {
 
       this.form.title = data.title;
       this.form.link = data.link;
+      if (this.form.link) {
+        this.isActiveLink = true;
+      }
 
       this.imageDesktopFile = new File([''], data.image_metadata?.desktop?.file_name);
       this.imageMobileFile = new File([''], data.image_metadata?.mobile?.file_name);
