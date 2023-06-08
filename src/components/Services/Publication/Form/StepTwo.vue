@@ -23,7 +23,7 @@
           <ValidationProvider
             ref="coverImageUploader"
             v-slot="{ errors }"
-            rules="required|image|size:5000|maxdimensions:816,460"
+            :rules="!isYoutubeLinkChosen ? 'required|image|size:5000|maxdimensions:816,460' : ''"
             class="col-span-2"
             tag="div"
           >
@@ -61,7 +61,7 @@
             v-if="isYoutubeLinkChosen"
             v-slot="{ errors }"
             class="flex flex-col col-span-2"
-            rules="url"
+            rules="required|url"
           >
             <JdsInputText
               v-model="youtubeLink"
@@ -102,7 +102,7 @@
         <section class="grid grid-cols-1 gap-4 mb-4">
           <div class="flex flex-row gap-x-4">
             <h3 class="self-center font-roboto font-bold text-green-800 text-[14px] leading-[23px] min-w-fit">
-              Gambar Konten
+              Gambar Konten <span class="font-lato font-normal text-gray-500">(Opsional)</span>
             </h3>
             <hr class="self-center w-full h-[2px] bg-gray-300 my-[32px]">
           </div>
@@ -114,7 +114,7 @@
             <ValidationProvider
               ref="contentImageUploader"
               v-slot="{ errors }"
-              rules="required|image|size:5000|maxdimensions:816,460"
+              rules="image|size:5000|maxdimensions:816,460"
               class="col-span-2"
               tag="div"
             >
@@ -193,7 +193,10 @@
 
         <section class="border border-gray-300 rounded-xl h-full w-full px-[10px] py-3 mb-5">
           <div class="flex flex-row gap-x-4">
-            <JdsToggle v-model="isTermAndCondition" />
+            <JdsToggle
+              v-model="isTermAndCondition"
+              @change="resetTermAndConditionError"
+            />
             <h3 class="font-roboto font-medium text-blue-gray-800 text-[16px] leading-[28px] pb-7">
               Syarat dan Ketentuan Layanan
             </h3>
@@ -210,6 +213,7 @@
 
           <section class="border border-gray-300 rounded-xl h-full w-full px-[10px] py-3 flex flex-col gap-4">
             <ValidationProvider
+              ref="termAndConditionServiceTitle"
               v-slot="{ errors }"
               rules="required"
               class="flex flex-col"
@@ -270,7 +274,7 @@
             <ValidationProvider
               ref="desktopImageUploader"
               v-slot="{ errors }"
-              rules="required|image|size:2000|maxdimensions:525,525"
+              rules="image|size:2000|maxdimensions:525,525"
               class="col-span-2"
               tag="div"
             >
@@ -307,7 +311,10 @@
 
         <section class="border border-gray-300 rounded-xl h-full w-full px-[10px] py-3 mb-5">
           <div class="flex flex-row gap-x-4">
-            <JdsToggle v-model="isProcedure" />
+            <JdsToggle
+              v-model="isProcedure"
+              @change="resetProcedureError"
+            />
             <h3 class="font-roboto font-medium text-blue-gray-800 text-[16px] leading-[28px] pb-7">
               Alur atau Prosedur Penggunaan Layanan
             </h3>
@@ -324,6 +331,7 @@
 
           <section class="border border-gray-300 rounded-xl h-full w-full px-[10px] py-3 flex flex-col gap-4">
             <ValidationProvider
+              ref="procedureServiceTitle"
               v-slot="{ errors }"
               rules="required"
               class="flex flex-col"
@@ -384,7 +392,7 @@
             <ValidationProvider
               ref="procedureImageUploader"
               v-slot="{ errors }"
-              rules="required|image|size:2000|maxdimensions:520,650"
+              rules="image|size:2000|maxdimensions:520,650"
               class="col-span-2"
               tag="div"
             >
@@ -570,7 +578,10 @@
           class="border border-gray-300 rounded-xl h-full w-full px-[10px] py-3"
         >
           <div class="flex flex-row gap-x-4">
-            <JdsToggle v-model="isInfographic" />
+            <JdsToggle
+              v-model="isInfographic"
+              @change="resetInfographicError"
+            />
             <h3 class="font-roboto font-medium text-blue-gray-800 text-[16px] leading-[28px] pb-7">
               Infografis Terkait Layanan
             </h3>
@@ -1480,6 +1491,28 @@ export default {
     },
     removeInfographic(index) {
       this.$store.commit('publicationForm/REMOVE_STEP_TWO_SERVICE_DESCRIPTION_INFOGRAPHICS_IMAGES', index);
+    },
+    resetTermAndConditionError() {
+      // reset Term and condition error message when toggle is false
+      this.resetValidation('termAndConditionServiceTitle');
+      this.resetValidation('desktopImageUploader');
+    },
+    resetProcedureError() {
+      // reset Procedure error message when toggle is false
+      this.resetValidation('procedureServiceTitle');
+      this.resetValidation('procedureImageUploader');
+    },
+    resetInfographicError() {
+      // reset Infographic error message when toggle is false
+      this.infographics.forEach((item, index) => {
+        this.$refs.infographicImage[index].reset();
+      });
+    },
+    resetValidation(ref) {
+      const element = this.$refs[ref];
+      if (element) {
+        this.$refs[ref].reset();
+      }
     },
   },
 };
