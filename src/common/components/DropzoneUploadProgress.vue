@@ -2,11 +2,18 @@
   <section>
     <div
       :class="{
-        'min-h-[110px] w-full rounded-md px-5 py-4 border border-blue-600': true,
+        'min-h-[110px] w-full rounded-md px-5 py-4 border': true,
+        'border-blue-600' : !disabled,
+        'border-gray-300' : disabled,
         'border-red-600': status === 'ERROR',
       }"
     >
-      <div class="grid grid-cols-[auto,1fr,auto] gap-x-6">
+      <div
+        :class="{
+          ' grid grid-cols-[auto,1fr,auto] gap-x-6' : true,
+          'opacity-50' : disabled,
+        }"
+      >
         <div class="relative w-[86px] h-[75px] overflow-hidden rounded-md">
           <!-- Display image using url if has an url (for edit mode) -->
           <img
@@ -31,10 +38,17 @@
             <button
               v-if="status === 'SUCCESS' || status === 'HASDEFAULT'"
               type="button"
-              class="absolute inset-0 w-full h-full flex items-center justify-center hover:bg-black hover:opacity-60 transition-all ease-in group"
+              :class="{
+                'absolute inset-0 w-full h-full flex items-center justify-center transition-all ease-in group' : true,
+                'hover:bg-black hover:opacity-60' : !disabled,
+              }"
+              :disabled="disabled"
               @click="toggleImagePreview"
             >
-              <div class="flex flex-col opacity-0 group-hover:opacity-100 items-center justify-center">
+              <div
+                v-show="!disabled"
+                class="flex flex-col opacity-0 group-hover:opacity-100 items-center justify-center"
+              >
                 <EyeIcon class="mb-1" />
                 <small class="text-white text-[8px]">Klik untuk melihat <br> gambar</small>
               </div>
@@ -94,12 +108,14 @@
             v-if="status === 'SUCCESS' || status === 'HASDEFAULT'"
             type="button"
             class="w-7 h-7 flex items-center justify-center bg-red-50 rounded-full"
+            :disabled="disabled"
             @click="$emit('delete')"
           >
             <JdsIcon
               name="trash"
               size="16px"
-              class="h-4 text-red-600"
+              :fill="disabled ? '#757575' : '#F44336'"
+              class="h-4"
             />
           </button>
           <!-- Retry Button -->
@@ -107,6 +123,7 @@
             v-if="status === 'ERROR'"
             type="button"
             class="w-7 h-7 flex items-center justify-center bg-blue-gray-50 rounded-full"
+            :disabled="disabled"
             @click="$emit('retry')"
           >
             <RetryIcon />
@@ -146,6 +163,10 @@ export default {
     ImagePreview,
   },
   props: {
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
     progress: {
       type: Number,
       default: 50,

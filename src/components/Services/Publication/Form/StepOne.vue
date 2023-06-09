@@ -168,6 +168,7 @@
             <JdsToggle
               v-model="isBenefitSectionActive"
               class="mr-3"
+              @change="resetBenefitSectionError"
             />
             <h2 class="font-roboto font-medium text-base leading-7 text-blue-gray-800 mr-3">
               Manfaat Layanan untuk Masyarakat
@@ -185,14 +186,15 @@
         </template>
         <section class="border border-gray-300 rounded-xl py-4 px-10 mb-3 grid grid-cols-2 gap-x-8 gap-y-4">
           <ValidationProvider
+            ref="benefitTitle"
             v-slot="{ errors }"
-            rules="required"
+            :rules="isBenefitSectionActive ? 'required' : ''"
             class="col-span-2 mb-3"
           >
             <JdsInputText
               v-model="benefitSectionTitle"
               placeholder="Judul Section"
-              :disabled="!isMasterDataSelected"
+              :disabled="!isMasterDataSelected || !isBenefitSectionActive"
               :error-message="errors[0]"
             />
           </ValidationProvider>
@@ -210,7 +212,7 @@
                 <JdsInputText
                   v-model="benefit.name"
                   placeholder="Berisi Manfaat Layanan"
-                  :disabled="!isMasterDataSelected"
+                  :disabled="!isMasterDataSelected || !isBenefitSectionActive"
                   readonly
                 />
               </ValidationProvider>
@@ -218,12 +220,12 @@
               <ValidationProvider
                 v-slot="{ errors }"
                 ref="benefitImageUploader"
-                :rules="isCreateMode ? 'required|image|size:1000|maxdimensions:392,200' : 'image|size:1000|maxdimensions:392,200'"
+                :rules="benefitImageUploaderValidationRules"
                 class="col-span-2"
               >
                 <Dropzone
                   :id="`benefitImageDropzone${index}`"
-                  :disabled="!isMasterDataSelected || !!benefit.image.file"
+                  :disabled="!isMasterDataSelected || !!benefit.image.file || !isBenefitSectionActive"
                   :is-error="errors.length > 0"
                   @change="handleUploadBenefitImage($event, index)"
                 >
@@ -239,6 +241,7 @@
               <transition name="slide-fade">
                 <DropzoneUploadProgress
                   v-if="!!benefit.image.file"
+                  :disabled="!isBenefitSectionActive"
                   :file="benefit.image.file"
                   :progress="benefit.image.upload_progress"
                   :status="benefit.image.upload_status"
@@ -263,6 +266,7 @@
             <JdsToggle
               v-model="isFacilitySectionActive"
               class="mr-3"
+              @change="resetFacilitySectionError"
             />
             <h2 class="font-roboto font-medium text-base leading-7 text-blue-gray-800 mr-3">
               Fasilitas yang Tersedia
@@ -280,14 +284,15 @@
         </template>
         <section class="border border-gray-300 rounded-xl py-4 px-10 mb-3 grid grid-cols-2 gap-x-8 gap-y-4">
           <ValidationProvider
+            ref="facilityTitle"
             v-slot="{ errors }"
-            :rules="isShowFacilitySection ? 'required' : ''"
+            :rules="isShowFacilitySection && isFacilitySectionActive ? 'required' : ''"
             class="col-span-2 mb-3"
           >
             <JdsInputText
               v-model="facilitySectionTitle"
               placeholder="Judul Section"
-              :disabled="!isMasterDataSelected"
+              :disabled="!isMasterDataSelected || !isFacilitySectionActive"
               :error-message="errors[0]"
             />
           </ValidationProvider>
@@ -305,7 +310,7 @@
                 <JdsInputText
                   v-model="facility.name"
                   placeholder="Berisi Fasilitas Tersedia"
-                  :disabled="!isMasterDataSelected"
+                  :disabled="!isMasterDataSelected || !isFacilitySectionActive"
                   readonly
                 />
               </ValidationProvider>
@@ -313,12 +318,12 @@
               <ValidationProvider
                 ref="facilityImageUploader"
                 v-slot="{ errors }"
-                rules="required|image|size:1000|maxdimensions:392,200"
+                :rules="isShowFacilitySection || isFacilitySectionActive ? 'image|size:1000|maxdimensions:392,200' : ''"
                 class="col-span-2"
               >
                 <Dropzone
                   :id="`facilityImageDropzone${index}`"
-                  :disabled="!isMasterDataSelected || !!facility.image.file"
+                  :disabled="!isMasterDataSelected || !!facility.image.file || !isFacilitySectionActive"
                   :is-error="errors.length > 0"
                   @change="handleUploadFacilityImage($event, index)"
                 >
@@ -334,6 +339,7 @@
               <transition name="slide-fade">
                 <DropzoneUploadProgress
                   v-if="!!facility.image.file"
+                  :disabled="!isFacilitySectionActive"
                   :file="facility.image.file"
                   :progress="facility.image.upload_progress"
                   :status="facility.image.upload_status"
@@ -366,7 +372,6 @@
 
         <ValidationProvider
           v-slot="{ errors }"
-          rules="required"
           class="flex flex-col col-span-2"
         >
           <label
@@ -432,6 +437,19 @@ export default {
     };
   },
   computed: {
+    benefitImageUploaderValidationRules() {
+      if (this.isCreateMode) {
+        if (this.isBenefitSectionActive) {
+          return 'image|size:1000|maxdimensions:392,200';
+        }
+        return '';
+      }
+
+      if (this.isEditMode) {
+        return 'image|size:1000|maxdimensions:392,200';
+      }
+      return 'image|size:1000|maxdimensions:392,200';
+    },
     masterDataOptions() {
       return this.$store.getters['publicationForm/masterDataOptions'];
     },
@@ -618,6 +636,24 @@ export default {
     },
     handleRetryFacilityImage(file, index) {
       this.$store.dispatch('publicationForm/handleUploadFacilityImage', { file, index });
+    },
+    resetBenefitSectionError() {
+      this.resetValidation('benefitTitle');
+      this.benefits.forEach((item, index) => {
+        this.$refs.benefitImageUploader[index].reset();
+      });
+    },
+    resetFacilitySectionError() {
+      this.resetValidation('facilityTitle');
+      this.facilities.forEach((item, index) => {
+        this.$refs.facilityImageUploader[index].reset();
+      });
+    },
+    resetValidation(ref) {
+      const element = this.$refs[ref];
+      if (element) {
+        this.$refs[ref].reset();
+      }
     },
   },
 };

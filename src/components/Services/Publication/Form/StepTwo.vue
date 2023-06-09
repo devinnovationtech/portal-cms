@@ -215,7 +215,7 @@
             <ValidationProvider
               ref="termAndConditionServiceTitle"
               v-slot="{ errors }"
-              rules="required"
+              :rules="isTermAndCondition ? 'required' : ''"
               class="flex flex-col"
               tag="div"
             >
@@ -274,7 +274,7 @@
             <ValidationProvider
               ref="desktopImageUploader"
               v-slot="{ errors }"
-              rules="image|size:2000|maxdimensions:525,525"
+              :rules="isTermAndCondition ? 'image|size:2000|maxdimensions:525,525' : ''"
               class="col-span-2"
               tag="div"
             >
@@ -296,6 +296,7 @@
             <transition name="slide-fade">
               <DropzoneUploadProgress
                 v-if="!!termAndConditionImageFile"
+                :disabled="!isTermAndCondition"
                 :file="termAndConditionImageFile"
                 :progress="termAndConditionImageProgress"
                 :status="termAndConditionImageStatus"
@@ -333,7 +334,7 @@
             <ValidationProvider
               ref="procedureServiceTitle"
               v-slot="{ errors }"
-              rules="required"
+              :rules="isProcedure ? 'required' : ''"
               class="flex flex-col"
               tag="div"
             >
@@ -392,7 +393,7 @@
             <ValidationProvider
               ref="procedureImageUploader"
               v-slot="{ errors }"
-              rules="image|size:2000|maxdimensions:520,650"
+              :rules="isProcedure ? 'image|size:2000|maxdimensions:520,650' : ''"
               class="col-span-2"
               tag="div"
             >
@@ -414,6 +415,7 @@
             <transition name="slide-fade">
               <DropzoneUploadProgress
                 v-if="!!procedureImageFile"
+                :disabled="!isProcedure"
                 :file="procedureImageFile"
                 :progress="procedureImageProgress"
                 :status="procedureImageStatus"
@@ -603,7 +605,7 @@
               <ValidationProvider
                 ref="infographicImage"
                 v-slot="{ errors }"
-                :rules="'image|size:2000|maxdimensions:525,525'"
+                :rules="isInfographic ? 'image|size:2000|maxdimensions:525,525' : ''"
                 class="col-span-2"
                 tag="div"
               >
@@ -624,6 +626,7 @@
                 <transition name="slide-fade">
                   <DropzoneUploadProgress
                     v-if="!!infographics[index].image_file"
+                    :disabled="!isInfographic"
                     :file="infographics[index].image_file"
                     :progress="infographics[index].image_upload_progress"
                     :status="infographics[index].image_upload_status"

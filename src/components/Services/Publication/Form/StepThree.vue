@@ -10,7 +10,6 @@
           ref="keywordNewsValidator"
           tag="div"
           class="flex flex-col gap-y-4 col-span-2"
-          rules="required"
         >
           <label
             for="keywordNews"
@@ -87,7 +86,6 @@
               <ValidationProvider
                 v-slot="{ errors }"
                 class="w-full"
-                rules="required"
                 tag="div"
               >
                 <label class="font-lato font-normal text-blue-gray-800 mb-3 text-[15px]">
@@ -114,7 +112,6 @@
               <ValidationProvider
                 v-slot="{ errors }"
                 class="w-full"
-                rules="required"
                 tag="div"
               >
                 <label class="font-lato font-normal text-blue-gray-800 mb-3 text-[15px] pb-2">
