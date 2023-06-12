@@ -1348,6 +1348,12 @@ export default {
       return false;
     },
   },
+  mounted() {
+    if (this.isEditMode && this.youtubeLink) {
+      this.isYoutubeLinkChosen = true;
+      this.isDisable = true;
+    }
+  },
   deactivated() {
     // Trigger validation message when component deactivated
     this.$refs.formStepTwo.validate();

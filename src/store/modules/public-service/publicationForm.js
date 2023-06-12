@@ -1,6 +1,7 @@
 /* eslint-disable camelcase */
 
 import { RepositoryFactory } from '@/repositories/RepositoryFactory';
+import { EventBus } from '@/common/helpers/event-bus';
 
 const mediaRepository = RepositoryFactory.get('media');
 const masterDataServiceRepository = RepositoryFactory.get('masterDataService');
@@ -1011,6 +1012,9 @@ export default {
           commit('SET_EDIT_INITIAL_FORM_DATA', data, status);
         }
       } catch (error) {
+        if (error.response?.status === 403) {
+          EventBus.$emit('error:forbidden');
+        }
         console.log(error);
       }
     },
