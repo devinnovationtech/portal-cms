@@ -25,7 +25,7 @@
       :class="{
         'w-full transition-all ease-in-out duration-500 overflow-hidden': true,
         'max-h-0': !isOpen,
-        'max-h-[9999px]': isOpen
+        'max-h-[99999999px]': isOpen
       }"
     >
       <div class="pt-6">
