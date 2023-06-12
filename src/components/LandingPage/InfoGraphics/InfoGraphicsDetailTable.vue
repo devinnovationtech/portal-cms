@@ -1,5 +1,8 @@
 <template>
-  <JdsSimpleTable class="!table-auto">
+  <JdsSimpleTable
+    class="!table-auto"
+    data-cy="infographics-banner-detail__container"
+  >
     <thead>
       <tr>
         <th
@@ -19,6 +22,7 @@
           <div
             v-if="loading"
             class="h-4 w-1/4 rounded-lg animate-pulse bg-gray-200"
+            data-cy="infographics-banner-detail__title"
           />
           <div v-else>
             {{ title }}
@@ -33,6 +37,7 @@
           <div
             v-if="loading"
             class="h-4 w-1/4 rounded-lg animate-pulse bg-gray-200"
+            data-cy="infographics-banner-detail__sequence"
           />
           <div v-else>
             {{ sequence }}
@@ -57,6 +62,7 @@
             }"
             :href="link"
             target="_blank"
+            data-cy="infographics-banner-detail__link"
           >
             {{ link }}
           </a>
@@ -78,6 +84,7 @@
               'bg-green-50 text-green-700 px-[10px] rounded-[5px] font-bold ' : status === 'Aktif',
               'bg-gray-200 text-gray-600 px-[10px] rounded-[5px] font-bold ' : status === 'Tidak Aktif'
             }"
+            data-cy="infographics-banner-detail__status"
           >
             {{ status }}
           </div>
@@ -92,7 +99,10 @@
             v-if="loading"
             class="h-4 w-1/4 rounded-lg animate-pulse bg-gray-200"
           />
-          <div v-else>
+          <div
+            v-else
+            data-cy="infographics-banner-detail__last-update"
+          >
             {{ lastUpdate }}
           </div>
         </td>

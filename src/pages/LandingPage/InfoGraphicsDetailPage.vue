@@ -1,5 +1,8 @@
 <template>
-  <main class="pb-20">
+  <main
+    class="pb-20"
+    data-cy="infographics-banner-detail__container"
+  >
     <HeaderMenu>
       <div class="flex gap-3">
         <!-- Delete Button -->
@@ -7,6 +10,7 @@
         <BaseButton
           class="border-red-500 hover:bg-red-50 font-lato text-sm text-red-500"
           @click="showDeleteConfirmationModal"
+          data-cy="infographics-banner-detail__button-delete"
         >
           <template #icon-left>
             <JdsIcon
@@ -24,6 +28,7 @@
           href="/"
           variant="secondary"
           class="hover:bg-green-50 font-lato text-sm font-bold text-green-700"
+          data-cy="infographics-banner-detail__button-edit"
         >
           <template #icon-left>
             <JdsIcon
@@ -52,6 +57,7 @@
               'bg-gray-300 text-gray-800 transition duration-150 ease-linear': selectedPreview === item.name
             }"
             @click="showPreviewImage(item)"
+            data-cy="infographics-banner__button-preview"
           >
             <template #icon-left>
               <img
@@ -75,6 +81,7 @@
           :image-mobile="banner?.image.mobile || defaultImageMobile"
           :is-selected="selectedPreview"
           @showContentMobile="showContentMobile"
+          data-cy="infographics-banner-detail__image-preview"
         />
       </div>
 
@@ -107,6 +114,7 @@
             <BaseButton
               class="border-green-700 hover:bg-green-50 text-sm text-green-700"
               @click="onCancel"
+              data-cy="infographics-banner-detail__button-action-cancel"
             >
               Batal
             </BaseButton>
@@ -114,6 +122,7 @@
               class="bg-red-500 hover:bg-red-400 text-sm text-white"
               :disabled="deleteLoading"
               @click="deleteBanner"
+              data-cy="infographics-banner-detail__button-action-delete"
             >
               <p v-if="!deleteLoading">
                 Ya, saya yakin
@@ -164,6 +173,7 @@
             <BaseButton
               class="bg-green-700 hover:bg-green-600 text-sm text-white"
               @click="messageAction"
+              data-cy="infographics-banner-detail__button-action-confirmation"
             >
               Saya Mengerti
             </BaseButton>
