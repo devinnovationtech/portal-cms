@@ -18,23 +18,31 @@
               Keyword Berita
             </td>
             <td class="w-full font-lato text-blue-gray-500 text-sm">
-              <div class="flex flex-row flex-wrap gap-4 w-full h-full">
-                <div
-                  v-for="(keyword, index) in additionalInformation.keywords"
-                  :key="index"
-                >
-                  <div class="flex flex-row gap-x-1.5 w-fit h-fit pl-[10px] py-[6.5px] pr-[6.5px] rounded-full bg-gray-200">
-                    <span class="text-gray-700 text-[14px] leading-[17px] font-lato font-normal">{{ keyword }}</span>
+              <template v-if="additionalInformation.keywords.length > 0">
+                <div class="flex flex-row flex-wrap gap-4 w-full h-full">
+                  <div
+                    v-for="(keyword, index) in additionalInformation.keywords"
+                    :key="index"
+                  >
+                    <div class="flex flex-row gap-x-1.5 w-fit h-fit pl-[10px] py-[6.5px] pr-[6.5px] rounded-full bg-gray-200">
+                      <span class="text-gray-700 text-[14px] leading-[17px] font-lato font-normal">{{ keyword }}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </template>
+              <template v-else>
+                <span>-</span>
+              </template>
             </td>
           </tr>
         </tbody>
       </JdsSimpleTable>
     </div>
 
-    <div class="overflow-hidden rounded-lg border border-gray-200">
+    <div
+      v-if="isFaqActive"
+      class="overflow-hidden rounded-lg border border-gray-200"
+    >
       <JdsSimpleTable>
         <thead>
           <tr>
@@ -111,6 +119,9 @@ export default {
     },
     hasFaq() {
       return Array.isArray(this.additionalInformation.faq.Items) && this.additionalInformation.faq.Items.length > 0;
+    },
+    isFaqActive() {
+      return this.tableData.additional_information.faq.is_active === 1;
     },
   },
 };

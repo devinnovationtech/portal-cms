@@ -50,116 +50,122 @@
                   :key="`images-${index}`"
                 >
                   <img
+                    v-if="!!item.file_download_uri"
                     :src="item.file_download_uri"
                     :alt="item.file_name"
                     width="55"
                     height="40"
                   >
+                  <span v-else>-</span>
                 </div>
               </template>
               <span v-else>-</span>
             </td>
           </tr>
-          <tr>
-            <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
-              Judul Syarat Dan Ketentuan Layanan
-            </td>
-            <td class="w-full font-lato text-blue-gray-500 text-sm">
-              {{ serviceDescription.terms_and_conditions.title || '-' }}
-            </td>
-          </tr>
-          <tr>
-            <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-[12px] leading-[23px]">
-              Syarat dan Ketentuan Layanan
-            </td>
-            <td class="w-full font-lato text-blue-gray-500 text-sm">
-              <template v-if="!!serviceDescription.terms_and_conditions.items">
-                <div
-                  v-for="(item, index) in serviceDescription.terms_and_conditions.items"
-                  :key="`images-${index}`"
-                >
-                  <p class="inline">
-                    {{ index + 1 + '. ' + item.name + '.' || '-' }}
-                  </p>
-                  <a
-                    v-if="!!item.link"
-                    :href="item.link"
-                    target="_blank"
-                    class="text-[#1E88E5]"
+          <template v-if="istermAndConditionActive">
+            <tr>
+              <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
+                Judul Syarat Dan Ketentuan Layanan
+              </td>
+              <td class="w-full font-lato text-blue-gray-500 text-sm">
+                {{ serviceDescription.terms_and_conditions.title || '-' }}
+              </td>
+            </tr>
+            <tr>
+              <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-[12px] leading-[23px]">
+                Syarat dan Ketentuan Layanan
+              </td>
+              <td class="w-full font-lato text-blue-gray-500 text-sm">
+                <template v-if="!!serviceDescription.terms_and_conditions.items">
+                  <div
+                    v-for="(item, index) in serviceDescription.terms_and_conditions.items"
+                    :key="`images-${index}`"
                   >
-                    Link
-                    <LinkIcon class="w-4 h-4 fill-[#1E88E5] inline" />
-                  </a>
-                </div>
-              </template>
-              <span v-else>-</span>
-            </td>
-          </tr>
-          <tr>
-            <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
-              Cover Gambar Syarat dan Ketentuan Layanan
-            </td>
-            <td class="w-full font-lato text-blue-gray-500 text-sm">
-              <img
-                v-if="!!serviceDescription.terms_and_conditions.cover.file_download_uri"
-                :src="serviceDescription.terms_and_conditions.cover.file_download_uri"
-                :alt="serviceDescription.terms_and_conditions.cover.file_name"
-                width="55"
-                height="40"
-              >
-              <span v-else>-</span>
-            </td>
-          </tr>
-          <tr>
-            <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
-              Judul Alur atau Prosedur Penggunaan Layanan
-            </td>
-            <td class="w-full font-lato text-blue-gray-500 text-sm">
-              {{ serviceDescription.service_procedures.title || '-' }}
-            </td>
-          </tr>
-          <tr>
-            <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
-              Alur atau Prosedur Penggunaan Layanan
-            </td>
-            <td class="w-full font-lato text-blue-gray-500 text-sm">
-              <template v-if="!!serviceDescription.service_procedures.items">
-                <div
-                  v-for="(item, index) in serviceDescription.service_procedures.items"
-                  :key="`images-${index}`"
+                    <p class="inline">
+                      {{ `${index+1}. ${item.name}.` || '-' }}
+                    </p>
+                    <a
+                      v-if="!!item.link"
+                      :href="item.link"
+                      target="_blank"
+                      class="text-[#1E88E5]"
+                    >
+                      Link
+                      <LinkIcon class="w-4 h-4 fill-[#1E88E5] inline" />
+                    </a>
+                  </div>
+                </template>
+                <span v-else>-</span>
+              </td>
+            </tr>
+            <tr>
+              <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
+                Cover Gambar Syarat dan Ketentuan Layanan
+              </td>
+              <td class="w-full font-lato text-blue-gray-500 text-sm">
+                <img
+                  v-if="!!serviceDescription.terms_and_conditions.cover.file_download_uri"
+                  :src="serviceDescription.terms_and_conditions.cover.file_download_uri"
+                  :alt="serviceDescription.terms_and_conditions.cover.file_name"
+                  width="55"
+                  height="40"
                 >
-                  <p class="inline">
-                    {{ index + 1 + '. ' + item.name + '.' || '-' }}
-                  </p>
-                  <a
-                    v-if="!!item.link"
-                    :href="item.link"
-                    target="_blank"
-                    class="text-[#1E88E5]"
+                <span v-else>-</span>
+              </td>
+            </tr>
+            <tr>
+              <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
+                Judul Alur atau Prosedur Penggunaan Layanan
+              </td>
+              <td class="w-full font-lato text-blue-gray-500 text-sm">
+                {{ serviceDescription.service_procedures.title || '-' }}
+              </td>
+            </tr>
+          </template>
+          <template v-if="isProcedureActive">
+            <tr>
+              <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
+                Alur atau Prosedur Penggunaan Layanan
+              </td>
+              <td class="w-full font-lato text-blue-gray-500 text-sm">
+                <template v-if="!!serviceDescription.service_procedures.items">
+                  <div
+                    v-for="(item, index) in serviceDescription.service_procedures.items"
+                    :key="`images-${index}`"
                   >
-                    Link
-                    <LinkIcon class="w-4 h-4 fill-[#1E88E5] inline" />
-                  </a>
-                </div>
-              </template>
-              <span v-else>-</span>
-            </td>
-          </tr>
-          <tr>
-            <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
-              Cover Gambar Alur atau Prosedur Penggunaan Layanan
-            </td>
-            <td class="font-lato text-blue-gray-500 text-sm">
-              <img
-                v-if="!!serviceDescription.service_procedures.cover.file_download_uri"
-                :src="serviceDescription.service_procedures.cover.file_download_uri"
-                :alt="serviceDescription.service_procedures.cover.file_name"
-                width="55"
-                height="40"
-              >
-              <span v-else>-</span>
-            </td>
-          </tr>
+                    <p class="inline">
+                      {{ index + 1 + '. ' + item.name + '.' || '-' }}
+                    </p>
+                    <a
+                      v-if="!!item.link"
+                      :href="item.link"
+                      target="_blank"
+                      class="text-[#1E88E5]"
+                    >
+                      Link
+                      <LinkIcon class="w-4 h-4 fill-[#1E88E5] inline" />
+                    </a>
+                  </div>
+                </template>
+                <span v-else>-</span>
+              </td>
+            </tr>
+            <tr>
+              <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
+                Cover Gambar Alur atau Prosedur Penggunaan Layanan
+              </td>
+              <td class="font-lato text-blue-gray-500 text-sm">
+                <img
+                  v-if="!!serviceDescription.service_procedures.cover.file_download_uri"
+                  :src="serviceDescription.service_procedures.cover.file_download_uri"
+                  :alt="serviceDescription.service_procedures.cover.file_name"
+                  width="55"
+                  height="40"
+                >
+                <span v-else>-</span>
+              </td>
+            </tr>
+          </template>
           <tr>
             <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
               Waktu Operasional
@@ -193,27 +199,31 @@
               {{ serviceDescription.hotline_mail || '-' }}
             </td>
           </tr>
-          <tr>
-            <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
-              Infografis Terkait Layanan
-            </td>
-            <td class="w-full font-lato text-blue-gray-500 text-sm flex flex-row gap-2">
-              <template v-if=" serviceDescription.infographics.images.length > 0">
-                <div
-                  v-for="(item, index) in serviceDescription.infographics.images"
-                  :key="`infographics-${index}`"
-                >
-                  <img
-                    :src="item.file_download_uri"
-                    :alt="item.file_name"
-                    width="55"
-                    height="40"
+          <template v-if="isInfographicActive">
+            <tr>
+              <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
+                Infografis Terkait Layanan
+              </td>
+              <td class="w-full font-lato text-blue-gray-500 text-sm flex flex-row gap-2">
+                <template v-if="serviceDescription.infographics.images.length > 0">
+                  <div
+                    v-for="(item, index) in serviceDescription.infographics.images"
+                    :key="`infographics-${index}`"
                   >
-                </div>
-              </template>
-              <span v-else>-</span>
-            </td>
-          </tr>
+                    <img
+                      v-if="!!item.file_download_uri"
+                      :src="item.file_download_uri"
+                      :alt="item.file_name"
+                      width="55"
+                      height="40"
+                    >
+                    <span v-else>-</span>
+                  </div>
+                </template>
+                <span v-else>-</span>
+              </td>
+            </tr>
+          </template>
         </tbody>
       </JdsSimpleTable>
     </div>
@@ -251,7 +261,7 @@
                 Jenis Lokasi
               </td>
               <td class="w-full font-lato text-blue-gray-500 text-sm">
-                {{ item.type }}
+                {{ item.type || '-' }}
               </td>
             </tr>
             <tr>
@@ -259,7 +269,7 @@
                 Penanggung Jawab Lokasi
               </td>
               <td class="w-full font-lato text-blue-gray-500 text-sm">
-                {{ item.organization }}
+                {{ item.organization || '-' }}
               </td>
             </tr>
             <tr>
@@ -267,7 +277,7 @@
                 Nama Lokasi
               </td>
               <td class="w-full font-lato text-blue-gray-500 text-sm">
-                {{ item.name }}
+                {{ item.name || '-' }}
               </td>
             </tr>
             <tr>
@@ -275,7 +285,7 @@
                 Alamat Lokasi
               </td>
               <td class="w-full font-lato text-blue-gray-500 text-sm">
-                {{ item.address }}
+                {{ item.address || '-' }}
               </td>
             </tr>
             <tr>
@@ -283,7 +293,7 @@
                 Kontak Lokasi (Nomor HP/Telp)
               </td>
               <td class="w-full font-lato text-blue-gray-500 text-sm">
-                {{ item.phone_number }}
+                {{ item.phone_number || '-' }}
               </td>
             </tr>
           </div>
@@ -522,6 +532,15 @@ export default {
     },
     hasFeature() {
       return Array.isArray(this.serviceDescription.application.features) && this.serviceDescription.application.features.length > 0;
+    },
+    istermAndConditionActive() {
+      return this.serviceDescription.terms_and_conditions.is_active === 1;
+    },
+    isProcedureActive() {
+      return this.serviceDescription.service_procedures.is_active === 1;
+    },
+    isInfographicActive() {
+      return this.serviceDescription.infographics.is_active === 1;
     },
   },
   methods: {

@@ -195,11 +195,9 @@ export default {
     generalInformationTableData() {
       return {
         default_information: {
-          benefits: this.tableData.default_information?.benefits?.items ?? [],
-          benefit_title: this.tableData.default_information?.benefits?.title ?? null,
+          benefits: this.tableData.default_information?.benefits ?? {},
           description: this.tableData.default_information?.description ?? null,
-          facilities: this.tableData.default_information?.facilities?.items ?? [],
-          facility_title: this.tableData.default_information?.facilities?.title ?? [],
+          facilities: this.tableData.default_information?.facilities ?? {},
           logo: this.tableData.default_information?.logo ?? {},
           opd_name: this.tableData.default_information?.opd_name ?? null,
           operator_status: this.tableData.default_information?.operator_status ?? null,
@@ -225,7 +223,7 @@ export default {
           links: this.tableData.service_description?.links ?? [],
           locations: this.tableData.service_description?.locations ?? [],
           operational_times: this.tableData.service_description?.operational_times ?? [],
-          service_fee: this.tableData.service_description?.service_fee ?? null,
+          service_fee: this.tableData.service_description?.service_fee ?? {},
           service_procedures: this.tableData.service_description?.service_procedures ?? {},
           social_media: this.tableData.service_description?.social_media ?? [],
           terms_and_conditions: this.tableData.service_description?.terms_and_conditions ?? {},

@@ -124,74 +124,81 @@
               </div>
             </td>
           </tr>
-          <tr>
-            <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
-              Judul Manfaat Layanan
-            </td>
-            <td class="font-lato text-blue-gray-500 text-sm">
-              {{ defaultInformation.benefit_title || '-' }}
-            </td>
-          </tr>
-          <tr>
-            <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
-              Manfaat Layanan
-            </td>
-            <td class="font-lato text-blue-gray-500 text-sm">
-              <template v-if="hasBenefits">
-                <div
-                  v-for="(benefit, index) in defaultInformation.benefits"
-                  :key="`benefit-${index}`"
-                  class="mb-1 flex flex-row gap-2"
-                >
-                  <span class="leading-[23px]">{{ index + 1 }}.</span>
-                  <img
-                    :src="benefit.image.file_download_uri"
-                    :alt="benefit.name"
-                    width="60"
-                    height="40"
+          <template v-if="isBenefitActive">
+            <tr>
+              <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
+                Judul Manfaat Layanan
+              </td>
+              <td class="font-lato text-blue-gray-500 text-sm">
+                <p>{{ defaultInformation.benefits?.title || '-' }}</p>
+              </td>
+            </tr>
+            <tr>
+              <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
+                Manfaat Layanan
+              </td>
+              <td class="font-lato text-blue-gray-500 text-sm">
+                <template v-if="hasBenefits">
+                  <div
+                    v-for="(benefit, index) in defaultInformation.benefits.items"
+                    :key="`benefit-${index}`"
+                    class="mb-1 flex flex-row gap-2"
                   >
-                  <span class="leading-[23px]">{{ benefit.name }}</span>
-                </div>
-              </template>
-              <template v-else>
-                <span>-</span>
-              </template>
-            </td>
-          </tr>
-          <tr>
-            <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
-              Judul Fasilitas Layanan
-            </td>
-            <td class="font-lato text-blue-gray-500 text-sm">
-              {{ defaultInformation.facility_title }}
-            </td>
-          </tr>
-          <tr>
-            <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
-              Fasilitas Layanan
-            </td>
-            <td class="font-lato text-blue-gray-500 text-sm">
-              <template v-if="hasFacilities">
-                <div
-                  v-for="(facility, index) in defaultInformation.facilities"
-                  :key="`benefit-${index}`"
-                  class="mb-1 flex flex-row gap-2"
-                >
-                  <span class="leading-[23px]">{{ index + 1 }}.</span>
-                  <img
-                    :src="facility.image.file_download_uri"
-                    :alt="facility.name"
-                    width="60"
-                    height="40"
+                    <span class="leading-[23px]">{{ index + 1 }}.</span>
+                    <img
+                      v-show="!!benefit.image.file_download_uri"
+                      :src="benefit.image.file_download_uri"
+                      :alt="benefit.name"
+                      width="60"
+                      height="40"
+                    >
+                    <span class="leading-[23px]">{{ benefit.name }}</span>
+                  </div>
+                </template>
+                <template v-else>
+                  <span>-</span>
+                </template>
+              </td>
+            </tr>
+          </template>
+
+          <template v-if="isfacilityActive">
+            <tr>
+              <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
+                Judul Fasilitas Layanan
+              </td>
+              <td class="font-lato text-blue-gray-500 text-sm">
+                <p>{{ defaultInformation.facilities?.title || '-' }}</p>
+              </td>
+            </tr>
+            <tr>
+              <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
+                Fasilitas Layanan
+              </td>
+              <td class="font-lato text-blue-gray-500 text-sm">
+                <template v-if="hasFacilities">
+                  <div
+                    v-for="(facility, index) in defaultInformation.facilities.items"
+                    :key="`benefit-${index}`"
+                    class="mb-1 flex flex-row gap-2"
                   >
-                  <span class="leading-[23px]">{{ facility.name }}</span>
-                </div>
-              </template>
-              <template v-else>
-                <span>-</span>
-              </template>
-            </td>
-          </tr>
+                    <span class="leading-[23px]">{{ index + 1 }}.</span>
+                    <img
+                      v-show="!!facility.image.file_download_uri"
+                      :src="facility.image.file_download_uri"
+                      :alt="facility.name"
+                      width="60"
+                      height="40"
+                    >
+                    <span class="leading-[23px]">{{ facility.name }}</span>
+                  </div>
+                </template>
+                <template v-else>
+                  <span>-</span>
+                </template>
+              </td>
+            </tr>
+          </template>
           <tr>
             <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
               Kustomisasi URL Informasi Layanan Portal Jabar
@@ -230,12 +237,18 @@ export default {
       return { value: 'NOT-ACTIVE', label: 'Tidak Aktif' };
     },
     hasBenefits() {
-      return this.tableData.default_information.benefits.length > 0
-      && this.tableData.default_information.benefits.every((item) => item.name !== undefined);
+      return this.tableData.default_information.benefits.items.length > 0
+      && this.tableData.default_information.benefits.items.every((item) => item.name !== undefined);
+    },
+    isBenefitActive() {
+      return this.tableData.default_information.benefits.is_active === 1;
     },
     hasFacilities() {
-      return this.tableData.default_information.facilities.length > 0
-      && this.tableData.default_information.facilities.every((item) => item.name !== undefined);
+      return this.tableData.default_information.facilities.items.length > 0
+      && this.tableData.default_information.facilities.items.every((item) => item.name !== undefined);
+    },
+    isfacilityActive() {
+      return this.tableData.default_information.facilities.is_active === 1;
     },
   },
 };
