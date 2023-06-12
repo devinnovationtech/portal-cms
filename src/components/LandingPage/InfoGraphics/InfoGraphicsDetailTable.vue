@@ -22,9 +22,11 @@
           <div
             v-if="loading"
             class="h-4 w-1/4 rounded-lg animate-pulse bg-gray-200"
-            data-cy="infographics-banner-detail__title"
           />
-          <div v-else>
+          <div
+            v-else
+            data-cy="infographics-banner-detail__title"
+          >
             {{ title }}
           </div>
         </td>
@@ -37,9 +39,11 @@
           <div
             v-if="loading"
             class="h-4 w-1/4 rounded-lg animate-pulse bg-gray-200"
-            data-cy="infographics-banner-detail__sequence"
           />
-          <div v-else>
+          <div
+            v-else
+            data-cy="infographics-banner-detail__sequence"
+          >
             {{ sequence }}
           </div>
         </td>
