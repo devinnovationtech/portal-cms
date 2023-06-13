@@ -201,6 +201,26 @@
           </template>
           <tr>
             <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
+              Alamat Website Informasi Resmi
+            </td>
+            <td class="font-lato text-blue-gray-500 font-bold text-sm">
+              <template v-if="!!defaultInformation.website">
+                <a
+                  :href="defaultInformation.website"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="hover:underline"
+                >
+                  {{ defaultInformation.website }}
+                </a>
+              </template>
+              <template v-else>
+                <span>-</span>
+              </template>
+            </td>
+          </tr>
+          <tr>
+            <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
               Kustomisasi URL Informasi Layanan Portal Jabar
             </td>
             <td class="font-lato text-blue-gray-500 text-sm">

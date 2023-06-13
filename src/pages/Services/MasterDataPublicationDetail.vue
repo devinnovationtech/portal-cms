@@ -208,6 +208,7 @@ export default {
           service_user: this.tableData.default_information?.service_user ?? null,
           slug: this.tableData.default_information?.slug ?? null,
           technical: this.tableData.default_information?.technical ?? null,
+          website: this.tableData.default_information?.website ?? null,
         },
       };
     },
