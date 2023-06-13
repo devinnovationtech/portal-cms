@@ -90,6 +90,32 @@ export default [
     },
   },
   {
+    path: '/layanan/daftar-publikasi/tambah',
+    name: 'Layanan Publik',
+    component: () => import('@/pages/Services/CreateEditPublication.vue'),
+    meta: {
+      mode: 'create',
+      layout: 'AppLayoutPrivate',
+    },
+  },
+  {
+    path: '/layanan/daftar-publikasi/:id/ubah',
+    name: 'Ubah Data Layanan Publik',
+    component: () => import('@/pages/Services/CreateEditPublication.vue'),
+    meta: {
+      mode: 'edit',
+      layout: 'AppLayoutPrivate',
+    },
+  },
+  {
+    path: '/layanan/daftar-publikasi/detail/:id',
+    name: 'Layanan Publik Detail',
+    component: () => import('@/pages/Services/MasterDataPublicationDetail.vue'),
+    meta: {
+      layout: 'AppLayoutPrivate',
+    },
+  },
+  {
     path: '/agenda',
     name: 'Agenda Jawa Barat',
     component: () => import('@/pages/Agenda'),

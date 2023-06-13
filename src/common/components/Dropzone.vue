@@ -10,30 +10,51 @@
     <span class="font-lato font-medium text-sm text-center leading-6 text-blue-gray-800 mb-3">
       drag and drop gambar di sini atau
     </span>
-    <SearchFolderIcon :class="{'mb-3': true, 'opacity-50': disabled}" />
-    <label class="cursor-pointer">
-      <span
-        :class="{
-          'text-sm text-blue-500': true,
-          'opacity-50': disabled
-        }"
+    <div class="flex flex-row gap-x-4">
+      <div class="flex flex-col gap-3 items-center">
+        <SearchFolderIcon :class="{'opacity-50': disabled}" />
+        <label class="cursor-pointer">
+          <span
+            :class="{
+              'text-sm text-blue-500': true,
+              'opacity-50': disabled
+            }"
+          >
+            Pilih file
+          </span>
+          <input
+            type="file"
+            hidden
+            :accept="accept"
+            :disabled="disabled"
+            @change="onChooseFile"
+          >
+        </label>
+      </div>
+      <div
+        v-if="isYoutubeField"
+        class="flex flex-col gap-3 items-center"
       >
-        Pilih file
-      </span>
-      <input
-        type="file"
-        hidden
-        :accept="accept"
-        :disabled="disabled"
-        @change="onChooseFile"
-      >
-    </label>
+        <YoutubeIcon :class="{'opacity-50': disabled}" />
+        <button
+          :class="{
+            'text-red-500': true,
+            'opacity-50': disabled
+          }"
+          :disabled="disabled"
+          @click="onClick"
+        >
+          <span class="text-sm">Link Youtube</span>
+        </button>
+      </div>
+    </div>
     <slot name="description" />
   </div>
 </template>
 
 <script>
 import SearchFolderIcon from '@/assets/icons/search-folder.svg?inline';
+import YoutubeIcon from '@/assets/icons/youtube.svg?inline';
 
 const events = ['dragenter', 'dragover', 'dragleave', 'drop'];
 
@@ -41,6 +62,7 @@ export default {
   name: 'Dropzone',
   components: {
     SearchFolderIcon,
+    YoutubeIcon,
   },
   props: {
     disabled: {
@@ -56,6 +78,10 @@ export default {
       default: 'image/*',
     },
     isError: {
+      type: Boolean,
+      default: false,
+    },
+    isYoutubeField: {
       type: Boolean,
       default: false,
     },
@@ -84,6 +110,9 @@ export default {
 
       this.selectedFile = file;
       this.$emit('change', this.selectedFile);
+    },
+    onClick() {
+      this.$emit('click');
     },
     preventDefaults(e) {
       e.preventDefault();

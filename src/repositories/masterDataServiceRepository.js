@@ -25,6 +25,13 @@ export default {
     return Repository.get('/uptd_cabdins');
   },
   /**
+   * Get Master data list with status `ARCHIVE`
+   * @returns {Promise}
+   */
+  getArchivedMasterData() {
+    return Repository.get(`${resource}/archives`);
+  },
+  /**
    * Get Master Data List
    * @param {object} params
    *
