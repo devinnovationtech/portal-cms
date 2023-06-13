@@ -23,7 +23,7 @@
           <ValidationProvider
             ref="coverImageUploader"
             v-slot="{ errors }"
-            :rules="coverImageValidationRules"
+            :rules="`${isYoutubeLinkChosen ? '' : 'required|'}image|size:5000|maxdimensions:816,460`"
             class="col-span-2"
             tag="div"
           >
@@ -1151,19 +1151,6 @@ export default {
     contentImages() {
       return this.$store.state.publicationForm.stepTwo.service_description.images;
     },
-    coverImageValidationRules() {
-      if (this.isCreateMode) {
-        if (this.isYoutubeLinkChosen) {
-          return 'image|size:5000|maxdimensions:816,460';
-        }
-      }
-
-      if (this.isEditMode) {
-        return 'image|size:5000|maxdimensions:816,460';
-      }
-
-      return 'required|image|size:5000|maxdimensions:816,460';
-    },
     coverImageFile() {
       return this.$store.state.publicationForm.stepTwo.service_description.cover.image.image_file;
     },
@@ -1382,6 +1369,7 @@ export default {
       this.$store.dispatch('publicationForm/handleDeleteCoverImage', fileName);
       // Note: reset input type file value
       document.querySelector('#coverImage input').value = '';
+      this.$refs.coverImageUploader.syncValue();
     },
     handleDeleteTermAndConditionImage(fileName) {
       this.$store.dispatch('publicationForm/handleDeleteTermAndConditionImage', fileName);

@@ -199,6 +199,7 @@ export default {
       this.logo = null;
       this.logoPreview = null;
       document.getElementById('service-logo').value = '';
+      this.$refs.serviceLogo.syncValue();
 
       this.$emit('delete');
     },
