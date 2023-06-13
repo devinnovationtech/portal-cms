@@ -338,6 +338,14 @@
               {{ serviceDescription.application.name || '-' }}
             </td>
           </tr>
+          <tr>
+            <td class="min-w-[228px] font-lato text-blue-gray-500 font-bold text-sm">
+              Judul Fitur Aplikasi
+            </td>
+            <td class="w-full font-lato">
+              {{ serviceDescription.application?.title || '-' }}
+            </td>
+          </tr>
           <template v-if="hasFeature">
             <template v-for="(feature, index) in serviceDescription.application.features">
               <tr
