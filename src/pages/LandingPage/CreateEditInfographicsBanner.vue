@@ -6,6 +6,7 @@
     >
       <form
         class="infographics-banner__form"
+        data-cy="infographics-banner-form__container"
         @submit.prevent="onConfirmation"
       >
         <!-- Submit -->
@@ -14,6 +15,7 @@
             <BaseButton
               type="submit"
               class="bg-green-700 hover:bg-green-600 font-lato text-sm text-white"
+              data-cy="infographics-banner-form__save-button"
               :disabled="invalid || !dirty"
             >
               <p>
@@ -46,6 +48,7 @@
                 <Dropzone
                   :is-error="errors.length > 0"
                   :disabled="!!imageDesktopFile"
+                  data-cy="infographics-banner-form__desktop-dropzone"
                   @change="handleUploadByType($event, 'DESKTOP')"
                 >
                   <template #description>
@@ -86,6 +89,7 @@
                 <Dropzone
                   :is-error="errors.length > 0"
                   :disabled="!!imageMobileFile"
+                  data-cy="infographics-banner-form__mobile-dropzone"
                   @change="handleUploadByType($event, 'MOBILE')"
                 >
                   <template #description>
@@ -119,6 +123,7 @@
             >
               <input
                 v-model="form.image.desktop.url"
+                data-cy="infographics-banner-form__image-desktop-url"
                 type="text"
                 hidden
               >
@@ -128,6 +133,7 @@
             >
               <input
                 v-model="form.image.mobile.url"
+                data-cy="infographics-banner-form__image-mobile-url"
                 type="text"
                 hidden
               >
@@ -149,6 +155,7 @@
                 <JdsInputText
                   v-model.trim="form.title"
                   placeholder="Masukkan judul banner"
+                  data-cy="infographics-banner-form__title"
                   :error-message="errors[0]"
                 />
               </div>
@@ -157,7 +164,10 @@
               <label>
                 Link Redirect
               </label>
-              <JdsToggle v-model="isActiveLink" />
+              <JdsToggle
+                v-model="isActiveLink"
+                data-cy="infographics-banner-form__redirect-link-toggle"
+              />
             </div>
             <ValidationProvider
               v-slot="{ errors }"
@@ -169,6 +179,7 @@
                   :disabled="!isActiveLink"
                   placeholder="contoh: https://"
                   :error-message="errors[0]"
+                  data-cy="infographics-banner-form__link"
                 />
               </div>
             </ValidationProvider>
@@ -178,7 +189,10 @@
     </ValidationObserver>
 
     <!-- Confirmation Popup -->
-    <BaseModal :open="submitStatus === 'CONFIRMATION'">
+    <BaseModal
+      :open="submitStatus === 'CONFIRMATION'"
+      data-cy="infographics-banner-form__confirmation-modal"
+    >
       <div class="w-full h-full px-2 pb-4">
         <h1 class="font-roboto font-medium text-green-700 text-[21px] leading-[34px] mb-6">
           Simpan Banner
@@ -193,12 +207,14 @@
         <div class="flex w-full h-full items-center justify-end gap-4 p-2">
           <BaseButton
             class="border border-green-700 hover:bg-green-50 text-sm text-green-700"
+            data-cy="infographics-banner-form__confirmation-cancel"
             @click="onCancel"
           >
             Tidak
           </BaseButton>
           <BaseButton
             class="bg-green-700 hover:bg-green-600 text-sm text-white"
+            data-cy="infographics-banner-form__confirmation-save"
             @click="handleSubmit"
           >
             Ya, simpan banner
@@ -211,10 +227,14 @@
     <ProgressModal
       :open="submitStatus === 'LOADING'"
       :value="submitProgress"
+      data-cy="infographics-banner-form__progress-modal"
     />
 
     <!-- Success/Error Message -->
-    <BaseModal :open="submitStatus === 'SUCCESS' || submitStatus === 'ERROR'">
+    <BaseModal
+      :open="submitStatus === 'SUCCESS' || submitStatus === 'ERROR'"
+      data-cy="infographics-banner-form__message-modal"
+    >
       <div class="w-full h-full px-2 pb-4">
         <h1 class="font-roboto font-medium text-green-700 text-[21px] leading-[34px] mb-6">
           {{ messageTitle }}
@@ -233,6 +253,7 @@
         <div class="flex w-full h-full items-center justify-center gap-4 p-2">
           <BaseButton
             class="bg-green-700 hover:bg-green-600 text-sm text-white"
+            data-cy="infographics-banner-form__message-button"
             @click="messageAction"
           >
             Saya Mengerti

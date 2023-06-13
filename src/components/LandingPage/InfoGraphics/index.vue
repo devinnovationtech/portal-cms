@@ -1,13 +1,17 @@
 <template>
   <main class="w-full pb-20">
     <section class="px-3 py-6 rounded-lg bg-white border-2 border-green-600">
-      <div class="w-full">
+      <div
+        class="w-full"
+        data-cy="infographics-banner__container"
+      >
         <!-- Table Menu -->
         <div class="sm:flex-wrap flex mb-4 items-start justify-end">
           <div class="flex gap-4">
             <BaseButton
               v-show="!toggleSorting"
               class="bg-white text-sm text-green-700 border-green-700"
+              data-cy="infographics-banner__edit-order-button"
               @click="onEditSorting"
             >
               <template #icon-left>
@@ -20,6 +24,7 @@
             <BaseButton
               v-show="toggleSorting"
               class="bg-white text-sm text-green-700 border-green-700"
+              data-cy="infographics-banner__save-order-button"
               @click="onSaveSorting"
             >
               <template #icon-left>
@@ -33,6 +38,7 @@
               href="/infographics-banner/tambah"
               title="Tambah Infographics Banner"
               class="ml-auto"
+              data-cy="infographics-banner__add-button"
             >
               <template #icon-left>
                 <JdsIcon
@@ -66,8 +72,9 @@
     <BaseModal
       :open="
         modalState === 'DELETE_CONFIRMATION' ||
-          modalState === 'STATUS_ACTIVATE' ||
-          modalState === 'STATUS_DEACTIVATE'"
+        modalState === 'STATUS_ACTIVATE' ||
+        modalState === 'STATUS_DEACTIVATE'"
+      data-cy="infographics-banner__confirmation-modal"
     >
       <div class="w-full h-full">
         <h1 class="font-roboto text-xl leading-8 font-medium text-green-700 mb-6">
@@ -84,6 +91,7 @@
         <div class="flex gap-4 justify-end">
           <BaseButton
             class="border-green-700 hover:bg-green-50 text-sm text-green-700"
+            data-cy="infographics-banner__confirmation-modal__cancel-button"
             @click="handleCloseModal"
           >
             Batal
@@ -95,6 +103,7 @@
               'bg-red-500 hover:bg-red-400': modalState === 'STATUS_DEACTIVATE' || modalState === 'DELETE_CONFIRMATION',
             }"
             :disabled="modalState === 'LOADING'"
+            data-cy="infographics-banner__confirmation-modal__save-button"
             @click="modalMessage.action(bannerDetail.id)"
           >
             <p
@@ -120,12 +129,14 @@
       v-if="modalState === 'LOADING'"
       :open="modalState === 'LOADING'"
       :value="progressValue"
+      data-cy="infographics-banner__progress-modal"
     />
 
     <!-- Success or Erros Message Modal -->
     <BaseModal
       v-if="modalState === 'ERROR' || modalState === 'SUCCESS'"
       :open="modalState === 'ERROR' || modalState === 'SUCCESS'"
+      data-cy="infographics-banner__message-modal"
     >
       <div class="w-full h-full px-2 pb-4">
         <h1 class="font-roboto font-medium text-green-700 text-[21px] leading-[34px] mb-6">
@@ -151,6 +162,7 @@
         <div class="flex w-full h-full items-center justify-center gap-4 p-2">
           <BaseButton
             class="bg-green-700 hover:bg-green-600 text-sm text-white"
+            data-cy="infographics-banner__message-modal__button"
             @click="handleCloseModal"
           >
             Saya Mengerti

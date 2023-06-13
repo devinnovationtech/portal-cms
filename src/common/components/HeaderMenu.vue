@@ -5,6 +5,7 @@
         <BaseButton
           type="button"
           class="bg-green-700 hover:bg-green-600 font-lato text-sm text-white"
+          data-cy="header-menu__back-button"
           @click="$router.back()"
         >
           <template #icon-left>

@@ -1,11 +1,15 @@
 <template>
-  <div class="infographics-banner rounded-lg overflow-hidden border border-gray-100">
+  <div
+    class="infographics-banner rounded-lg overflow-hidden border border-gray-100"
+    data-cy="infographics-banner-table__container"
+  >
     <JdsDataTable
       :headers="tableHeader"
       :items="items"
       :loading="loading"
       :pagination="pagination"
       empty-text="Data tidak tersedia"
+      data-cy="infographics-banner-table"
       @next-page="onPaginationChange('next-page', $event)"
       @previous-page="onPaginationChange('previous-page', $event)"
       @per-page-change="onPaginationChange('per-page-change', $event)"
@@ -15,6 +19,7 @@
       <template #item.title="{item}">
         <p
           class="line-clamp-2"
+          data-cy="infographics-banner-table__title"
           :title="item.title"
         >
           {{ item.title }}
@@ -28,6 +33,7 @@
             :src="item.image.desktop"
             :alt="item.title"
             class="w-full h-full object-cover"
+            data-cy="infographics-banner-table__image"
           >
         </div>
       </template>
@@ -36,6 +42,7 @@
       <template #item.sequence="{item}">
         <p
           :title="item.sequence"
+          data-cy="infographics-banner-table__sequence"
         >
           {{ item.sequence !== 0 ? item.sequence : '-' }}
         </p>
@@ -49,6 +56,7 @@
           class="font-lato text-sm text-blue-700 underline hover:text-blue-800 break-all"
           rel="noopener noreferrer"
           target="_blank"
+          data-cy="infographics-banner-table__link"
         >
           {{ item.link }}
         </a>
@@ -60,6 +68,7 @@
         <JdsToggle
           :label="getStatusLabel(item.is_active)"
           :checked="item.is_active"
+          data-cy="infographics-banner-table__toggle"
           @change="$emit('change:status', item)"
         />
       </template>
@@ -68,6 +77,7 @@
       <template #item.action="{item}">
         <InfoGraphicsBannerTableAction
           :item="item"
+          data-cy="infographics-banner-table__action-button"
           @delete="$emit('delete', $event)"
         />
       </template>
