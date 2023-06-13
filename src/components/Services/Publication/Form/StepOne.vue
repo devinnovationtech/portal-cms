@@ -3,6 +3,7 @@
     <fieldset>
       <section class="grid grid-cols-2 gap-x-8 gap-y-4 mb-4">
         <ValidationProvider
+          v-if="isCreateMode"
           v-slot="{ errors }"
           rules="required"
           class="flex flex-col col-span-2 mb-3"
@@ -19,9 +20,25 @@
             placeholder="Pilih layanan dari master data"
             :filterable="true"
             filter-type="contain"
-            :disabled="isEditMode"
           />
           <span class="font-lato text-[13px] text-red-600 mt-1">{{ errors[0] }}</span>
+        </ValidationProvider>
+
+        <!-- Show mock select input for edit purposes based on UI Design -->
+        <ValidationProvider
+          v-if="isEditMode"
+          class="flex flex-col col-span-2 mb-3"
+        >
+          <label
+            for="opd-name"
+            class="font-lato text-blue-gray-800 mb-3 text-[15px]"
+          >
+            Pilih Layanan
+          </label>
+          <JdsSelect
+            :placeholder="serviceName"
+            :disabled="true"
+          />
         </ValidationProvider>
 
         <div class="col-span-2 border-b border-gray-300" />
