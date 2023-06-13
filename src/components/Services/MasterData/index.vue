@@ -219,11 +219,19 @@ export default {
           });
           this.modalState = MODAL_STATE.SUCCESS;
         }
-      } catch {
-        this.setModalMessage({
-          title: 'Hapus Program Gagal',
-          message: 'Layanan Anda gagal dihapus.',
-        });
+      } catch (error) {
+        if (error.status === 403) {
+          this.setModalMessage({
+            title: 'Hapus Layanan Gagal',
+            message: 'Layanan Anda tidak dapat dihapus karena digunakan dalam data publikasi',
+          });
+        } else {
+          this.setModalMessage({
+            title: 'Hapus Layanan Gagal',
+            message: 'Layanan Anda gagal dihapus.',
+          });
+        }
+
         this.modalState = MODAL_STATE.ERROR;
       } finally {
         // @TODO: update status counter with dispatch the status counter publication action
