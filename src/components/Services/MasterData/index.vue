@@ -220,7 +220,7 @@ export default {
           this.modalState = MODAL_STATE.SUCCESS;
         }
       } catch (error) {
-        if (error.status === 403) {
+        if (error.response.status === 403) {
           this.setModalMessage({
             title: 'Hapus Layanan Gagal',
             message: 'Layanan Anda tidak dapat dihapus karena digunakan dalam data publikasi',
