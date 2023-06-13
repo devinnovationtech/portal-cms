@@ -23,7 +23,9 @@
           <ValidationProvider
             ref="coverImageUploader"
             v-slot="{ errors }"
-            :rules="`${isYoutubeLinkChosen ? '' : 'required|'}image|size:5000|maxdimensions:816,460`"
+            :rules="`${
+              isYoutubeLinkChosen || !!coverImageFile ? '' : 'required|'
+            }image|size:5000|maxdimensions:816,460`"
             class="col-span-2"
             tag="div"
           >
