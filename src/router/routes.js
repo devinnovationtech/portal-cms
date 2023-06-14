@@ -62,6 +62,36 @@ export default [
     meta: {
       layout: 'AppLayoutPrivate',
     },
+    children: [
+      {
+        path: '',
+        redirect: 'daftar-layanan', // Default children to navigate
+      },
+      {
+        path: 'daftar-layanan',
+        name: 'Layanan Pemerintah Daerah Provinsi Jawa Barat',
+        component: () => import('@/components/Services/MasterData'),
+        meta: {
+          layout: 'AppLayoutPrivate',
+        },
+      },
+      {
+        path: 'daftar-publikasi-layanan',
+        name: 'Layanan Pemerintah Daerah Provinsi Jawa Barat',
+        component: () => import('@/components/Services/Publication'),
+        meta: {
+          layout: 'AppLayoutPrivate',
+        },
+      },
+      {
+        path: 'program-unggulan',
+        name: 'Program Unggulan Pemerintah Daerah Provinsi Jawa Barat',
+        component: () => import('@/common/components/Maintenance'),
+        meta: {
+          layout: 'AppLayoutPrivate',
+        },
+      },
+    ],
   },
   {
     path: '/layanan/master-data/tambah',
