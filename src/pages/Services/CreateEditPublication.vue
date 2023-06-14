@@ -358,7 +358,7 @@ export default {
     },
     handleCloseConfirmation() {
       if (this.submitStatus === 'SUCCESS') {
-        this.$router.push('/layanan');
+        this.$router.push('/layanan/daftar-publikasi-layanan');
       } else {
         this.closeConfirmation();
       }

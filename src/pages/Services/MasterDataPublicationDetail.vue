@@ -278,7 +278,7 @@ export default {
     },
     handleCloseModal() {
       if (this.modalState === MODAL_STATE.SUCCESS) {
-        this.$router.push('/layanan');
+        this.$router.push('/layanan/daftar-publikasi-layanan');
       } else {
         this.resetModalState();
       }
