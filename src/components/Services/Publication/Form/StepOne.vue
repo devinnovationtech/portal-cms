@@ -443,12 +443,28 @@ export default {
           label: 'Kesehatan',
         },
         {
-          value: 'Pajak',
-          label: 'Pajak',
-        },
-        {
           value: 'Sosial dan Keluarga',
           label: 'Sosial dan Keluarga',
+        },
+        {
+          value: 'Lingkungan',
+          label: 'Lingkungan',
+        },
+        {
+          value: 'Ekonomi, Bisnis dan Profesi',
+          label: 'Ekonomi, Bisnis dan Profesi',
+        },
+        {
+          value: 'Teknologi dan Komunikasi',
+          label: 'Teknologi dan Komunikasi',
+        },
+        {
+          value: 'Sarana dan Prasarana',
+          label: 'Sarana dan Prasarana',
+        },
+        {
+          value: 'Khusus',
+          label: 'Khusus',
         },
       ],
     };
