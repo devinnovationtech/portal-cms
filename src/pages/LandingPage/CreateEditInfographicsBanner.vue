@@ -2,7 +2,7 @@
   <main class="pb-14">
     <ValidationObserver
       ref="form"
-      v-slot="{ invalid, dirty }"
+      v-slot="{ invalid }"
     >
       <form
         class="infographics-banner__form"
@@ -16,7 +16,7 @@
               type="submit"
               class="bg-green-700 hover:bg-green-600 font-lato text-sm text-white"
               data-cy="infographics-banner-form__save-button"
-              :disabled="invalid || !dirty"
+              :disabled="invalid"
             >
               <p>
                 Simpan Data
@@ -171,7 +171,7 @@
             </div>
             <ValidationProvider
               v-slot="{ errors }"
-              rules="url"
+              :rules="isActiveLink ? 'required|url' : 'url'"
             >
               <div class="flex flex-col">
                 <JdsInputText
@@ -354,7 +354,7 @@ export default {
         title: '',
         body: '',
       },
-      isActiveLink: false,
+      isActiveLink: true,
     };
   },
   computed: {
@@ -375,16 +375,6 @@ export default {
     },
     messageIconClassName() {
       return this.submitStatus === 'SUCCESS' ? 'text-green-600' : 'text-red-600';
-    },
-  },
-  watch: {
-    isActiveLink: {
-      handler() {
-        if (!this.isActiveLink) {
-          this.form.link = '';
-        }
-      },
-      immediate: true,
     },
   },
   async mounted() {
@@ -562,6 +552,9 @@ export default {
       this.submitStatus = FORM_SUBMIT_STATUS.CONFIRMATION;
     },
     async submitForm() {
+      if (this.isActiveLink) {
+        this.form.link = '';
+      }
       try {
         this.submitStatus = FORM_SUBMIT_STATUS.LOADING;
         this.submitProgress = 25;
