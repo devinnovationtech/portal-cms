@@ -552,7 +552,7 @@ export default {
       this.submitStatus = FORM_SUBMIT_STATUS.CONFIRMATION;
     },
     async submitForm() {
-      if (this.isActiveLink) {
+      if (!this.isActiveLink) {
         this.form.link = '';
       }
       try {
