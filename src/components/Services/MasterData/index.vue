@@ -234,7 +234,6 @@ export default {
 
         this.modalState = MODAL_STATE.ERROR;
       } finally {
-        // @TODO: update status counter with dispatch the status counter publication action
         this.fetchStatusCounter();
       }
     },
@@ -289,9 +288,17 @@ export default {
     },
     filterMasterDataByStatus(status) {
       if (status === 'ALL') {
-        this.setParams({ status: null });
+        this.setParams({
+          status: null,
+          per_page: 10,
+          page: 1,
+        });
       } else {
-        this.setParams({ status });
+        this.setParams({
+          status,
+          per_page: 10,
+          page: 1,
+        });
       }
       this.fetchMasterData();
     },
