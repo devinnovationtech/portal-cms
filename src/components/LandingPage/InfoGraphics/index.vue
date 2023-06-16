@@ -1,6 +1,12 @@
 <template>
-  <main class="w-full pb-20">
-    <section class="px-3 py-6 rounded-lg bg-white border-2 border-green-600">
+  <main
+    :class="{
+      'w-full': true,
+      'h-[85%]': !toggleSorting,
+      'h-[92%]': toggleSorting,
+    }"
+  >
+    <section class="px-3 py-4 rounded-lg bg-white border-2 border-green-600 h-full">
       <div
         class="w-full"
         data-cy="infographics-banner__container"
@@ -54,15 +60,31 @@
             </LinkButton>
           </div>
         </div>
-        <div class="w-full overflow-auto">
+        <div
+          v-show="toggleSorting"
+          class="w-full bg-blue-50 border border-blue-800 rounded-lg gap-4 px-4 py-2 mb-4 flex items-center"
+        >
+          <JdsIcon
+            name="info-circle"
+            size="14px"
+            class="text-blue-800"
+          />
+          <p class="flex items-center text-sm font-normal text-gray-900">
+            <span>Urutan banner dapat diatur dengan men drag icon</span>
+            <DragIcon />
+            <span>di kolom judul banner</span>
+          </p>
+        </div>
+        <div class="w-full h-full overflow-auto">
           <InfoGraphicsBannerTable
             :items="banners"
-            :loading="loading"
-            :meta="meta"
+            :sorting="toggleSorting"
             class="min-w-[1000px]"
             @update:pagination="onUpdatePagination($event)"
             @delete="handleDeleteBanner($event)"
             @change:status="handleUpdateStatus($event)"
+            @change:sequence="handleChangeSequence($event)"
+            @scrollFetch="fetchBanners(true)"
           />
         </div>
       </div>
@@ -72,8 +94,8 @@
     <BaseModal
       :open="
         modalState === 'DELETE_CONFIRMATION' ||
-        modalState === 'STATUS_ACTIVATE' ||
-        modalState === 'STATUS_DEACTIVATE'"
+          modalState === 'STATUS_ACTIVATE' ||
+          modalState === 'STATUS_DEACTIVATE'"
       data-cy="infographics-banner__confirmation-modal"
     >
       <div class="w-full h-full">
@@ -174,6 +196,7 @@
 </template>
 
 <script>
+import { RepositoryFactory } from '@/repositories/RepositoryFactory';
 import BaseButton from '@/common/components/BaseButton';
 import BaseModal from '@/common/components/BaseModal';
 import LinkButton from '@/common/components/LinkButton';
@@ -181,7 +204,7 @@ import ProgressModal from '@/common/components/ProgressModal';
 import SortIcon from '@/assets/icons/fluent-arrow.svg?inline';
 import SaveIcon from '@/assets/icons/uil-save.svg?inline';
 import InfoGraphicsBannerTable from '@/components/LandingPage/InfoGraphics/InfoGraphicsBannerTable';
-import { RepositoryFactory } from '@/repositories/RepositoryFactory';
+import DragIcon from '@/assets/icons/drag.svg?inline';
 
 const infographicsBannerRepository = RepositoryFactory.get('infographicsBanner');
 
@@ -198,6 +221,7 @@ const MODAL_STATE = Object.freeze({
 export default {
   name: 'InfographicsBannerList',
   components: {
+    DragIcon,
     BaseButton,
     BaseModal,
     LinkButton,
@@ -209,18 +233,15 @@ export default {
   data() {
     return {
       banners: [],
+      sequenceBanner: [],
+      totalBanners: 10, // set default value same as params.per_page defualt value
       loading: false,
       toggleSorting: false,
-      meta: {
-        total_count: 0,
-        total_page: 0,
-        current_page: 1,
-        per_page: 5,
-      },
       params: {
-        per_page: 5,
+        per_page: 10,
         page: 1,
         q: '',
+        is_active: null,
       },
       progressValue: 0,
       modalState: MODAL_STATE.NONE,
@@ -232,18 +253,44 @@ export default {
       bannerDetail: {},
     };
   },
+  watch: {
+    toggleSorting: {
+      handler() {
+        if (this.toggleSorting) {
+          this.setParams({
+            is_active: 1,
+          });
+          this.totalBanners = 0;
+          this.fetchBanners();
+        }
+      },
+      immediate: true,
+    },
+  },
   async mounted() {
     await this.fetchBanners();
   },
   methods: {
-    async fetchBanners() {
+    async fetchBanners(isScrollFetch = false) {
+      if (this.params.per_page > this.totalBanners && isScrollFetch) {
+        return;
+      }
+
+      if (isScrollFetch) {
+        this.setParams({
+          per_page: this.params.per_page + 5,
+        });
+      } else {
+        this.banners = [];
+      }
+
       try {
         this.loading = true;
         const response = await infographicsBannerRepository.getBanners(this.params);
         const { data, meta } = response.data;
 
         this.banners = data;
-        this.meta = meta;
+        this.totalBanners = meta.total_count;
       } catch (error) {
         this.$toast({
           type: 'error',
@@ -253,11 +300,48 @@ export default {
         this.loading = false;
       }
     },
+    async handleChangeSequence(data) {
+      this.sequenceBanner = data;
+    },
     onEditSorting() {
       this.toggleSorting = !this.toggleSorting;
     },
     onSaveSorting() {
-      this.toggleSorting = !this.toggleSorting;
+      this.modalState = MODAL_STATE.STATUS_ACTIVATE;
+      this.setModalMessage({
+        title: 'Simpan Urutan',
+        message: 'Apakah Anda ingin menyimpan urutan banner?',
+        action: () => this.updateSequenceBanner(),
+      });
+    },
+    async updateSequenceBanner() {
+      try {
+        this.modalState = MODAL_STATE.LOADING;
+        const response = await infographicsBannerRepository.updateBannerSequence({ ids: this.sequenceBanner });
+        if (response.status === 200) {
+          this.progressValue = 25;
+          setTimeout(() => {
+            this.progressValue = 75;
+            setTimeout(() => {
+              this.setModalMessage({
+                title: 'Berhasil diubah!',
+                message: 'Urutan Banner berhasil diubah.',
+              });
+              this.modalState = MODAL_STATE.SUCCESS;
+              this.toggleSorting = !this.toggleSorting;
+              this.setParams({
+                is_active: null,
+              });
+              this.fetchBanners();
+            }, 150);
+          }, 150);
+        }
+      } catch (error) {
+        this.$toast({
+          type: 'error',
+          message: 'Gagal mengubah urutan data Infographics Banner, silakan coba beberapa saat lagi',
+        });
+      }
     },
     onUpdatePagination(data) {
       this.setParams(data);
@@ -307,6 +391,7 @@ export default {
                 message: `Banner berhasil ${status === 1 ? 'diaktifkan' : 'dinonaktifkan'}`,
               });
               this.modalState = MODAL_STATE.SUCCESS;
+              this.fetchBanners();
             }, 150);
           }, 150);
         }
@@ -344,6 +429,7 @@ export default {
                 message: `Banner ${this.bannerDetail.title} berhasil hapus.`,
               });
               this.modalState = MODAL_STATE.SUCCESS;
+              this.fetchBanners();
             }, 150);
           }, 150);
         }

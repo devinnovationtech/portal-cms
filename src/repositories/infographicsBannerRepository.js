@@ -79,4 +79,16 @@ export default {
   updateBannerStatusById(id, body) {
     return Repository.patch(`${resource}/${id}/status`, body);
   },
+
+  /** Update Banner Sequence
+   * @param {number} id
+   * @param {Object} body
+   *
+   * @property {Object} ids
+   *
+   * @returns {Promise}
+   */
+  updateBannerSequence(body) {
+    return Repository.patch(`${resource}/sequences`, body);
+  },
 };
