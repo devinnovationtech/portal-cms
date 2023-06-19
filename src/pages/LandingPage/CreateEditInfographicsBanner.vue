@@ -171,7 +171,7 @@
             </div>
             <ValidationProvider
               v-slot="{ errors }"
-              :rules="isActiveLink ? 'required|url' : 'url'"
+              :rules="isActiveLink ? 'required|url' : ''"
             >
               <div class="flex flex-col">
                 <JdsInputText

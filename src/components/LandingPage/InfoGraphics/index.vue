@@ -79,6 +79,7 @@
           <InfoGraphicsBannerTable
             :items="banners"
             :sorting="toggleSorting"
+            :loading="loading"
             class="min-w-[1000px]"
             @update:pagination="onUpdatePagination($event)"
             @delete="handleDeleteBanner($event)"
@@ -281,11 +282,10 @@ export default {
           per_page: this.params.per_page + 5,
         });
       } else {
-        this.banners = [];
+        this.loading = true;
       }
 
       try {
-        this.loading = true;
         const response = await infographicsBannerRepository.getBanners(this.params);
         const { data, meta } = response.data;
 

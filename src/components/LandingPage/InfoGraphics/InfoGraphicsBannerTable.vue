@@ -15,7 +15,17 @@
           </th>
         </tr>
       </thead>
-      <tbody v-if="items.length === 0">
+      <tbody v-if="loading">
+        <tr>
+          <td colspan="6" class="text-center">
+            <JdsSpinner
+              size="56px"
+              class="py-14"
+            />
+          </td>
+        </tr>
+      </tbody>
+      <tbody v-else-if="items.length === 0">
         <tr>
           <td>Data tidak tersedia</td>
         </tr>
@@ -127,6 +137,10 @@ export default {
       default: () => [],
     },
     sorting: {
+      type: Boolean,
+      default: false,
+    },
+    loading: {
       type: Boolean,
       default: false,
     },
