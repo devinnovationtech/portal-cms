@@ -25,7 +25,7 @@
         <!-- Update Button -->
 
         <LinkButton
-          href="/"
+          :href="`/infographics-banner/detail/${this.banner.id}/ubah`"
           variant="secondary"
           class="hover:bg-green-50 font-lato text-sm font-bold text-green-700"
           data-cy="infographics-banner-detail__button-edit"
@@ -106,7 +106,7 @@
             Apakah Anda yakin ingin menghapus banner ini?
           </p>
           <h2 class="font-lato text-md font-bold text-gray-800">
-            Akses Sapawarga
+            {{ banner.title }}
           </h2>
         </div>
         <template #footer>
@@ -121,7 +121,7 @@
             <BaseButton
               class="bg-red-500 hover:bg-red-400 text-sm text-white"
               :disabled="deleteLoading"
-              @click="deleteBanner"
+              @click="deleteBanner(banner.id)"
               data-cy="infographics-banner-detail__button-action-delete"
             >
               <p v-if="!deleteLoading">
@@ -302,19 +302,33 @@ export default {
       this.errorMessage.title = '';
       this.errorMessage.body = '';
     },
-    deleteBanner() {
-      // @TODO: Hit delete action API by ID
-      setTimeout(() => {
-        this.modalStatus = STATUS_MODAL.LOADING;
-        this.progressValue = 25;
-        setTimeout(() => {
-          this.successMessage = {
-            title: 'Berhasil dihapus!',
-            body: 'Banner Akses Sapawarga berhasil hapus.',
-          };
-          this.modalStatus = STATUS_MODAL.SUCCESS;
-        }, 150);
-      }, 150);
+    async deleteBanner(id) {
+      try {
+        this.deleteLoading = true;
+        const response = await infographicsBannerRepository.deleteBannerById(id);
+        if (response.status === 200) {
+          this.modalStatus = STATUS_MODAL.LOADING;
+          this.progressValue = 25;
+          setTimeout(() => {
+            this.progressValue = 75;
+            setTimeout(() => {
+              this.successMessage = {
+                title: 'Berhasil dihapus!',
+                body: `Banner ${this.banner.title} berhasil hapus.`,
+              };
+              this.modalStatus = STATUS_MODAL.SUCCESS;
+            }, 150);
+          }, 150);
+        }
+      } catch {
+        this.errorMessage = {
+          title: 'Hapus Banner Gagal',
+          body: `Banner ${this.banner.title} gagal dihapus.`,
+        };
+        this.modalStatus = STATUS_MODAL.ERROR;
+      } finally {
+        this.deleteLoading = false;
+      }
     },
     messageAction() {
       if (this.modalStatus === STATUS_MODAL.SUCCESS) {
