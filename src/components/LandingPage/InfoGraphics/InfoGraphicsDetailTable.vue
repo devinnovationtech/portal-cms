@@ -150,7 +150,7 @@ export default {
       return 'Tidak Aktif';
     },
     lastUpdate() {
-      const updateDate = formatDate(this.banner?.updated_at, 'dd/MM/yyyy - hh:mm');
+      const updateDate = formatDate(this.banner?.updated_at, 'dd/MM/yyyy - HH:mm');
       if (this.banner?.updated_at) {
         return `Terakhir disimpan pada: ${updateDate}`;
       }
