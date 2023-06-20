@@ -41,7 +41,7 @@
               </p>
             </BaseButton>
             <LinkButton
-              href="/infographics-banner/tambah"
+              href="/landing-page/infographics-banner/tambah"
               title="Tambah Infographics Banner"
               class="ml-auto"
               data-cy="infographics-banner__add-button"
