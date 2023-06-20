@@ -58,7 +58,7 @@
             class="h-4 w-1/4 rounded-lg animate-pulse bg-gray-200"
           />
           <a
-            v-else
+            v-else-if="link"
             class="font-lato text-[12px] leading-[23px]"
             :class="{
               'underline text-blue-gray-500 font-bold' : true,
@@ -70,6 +70,9 @@
           >
             {{ link }}
           </a>
+          <span v-else>
+            -
+          </span>
         </td>
       </tr>
       <tr>
@@ -138,7 +141,7 @@ export default {
       return this.banner?.sequence || '-';
     },
     link() {
-      return this.banner?.link || '-';
+      return this.banner?.link;
     },
     status() {
       if (this.banner.is_active) {
