@@ -99,7 +99,7 @@
           modalState === 'STATUS_DEACTIVATE'"
       data-cy="infographics-banner__confirmation-modal"
     >
-      <div class="w-full h-full">
+      <div class="w-full">
         <h1 class="font-roboto text-xl leading-8 font-medium text-green-700 mb-6">
           {{ modalMessage.title }}
         </h1>
