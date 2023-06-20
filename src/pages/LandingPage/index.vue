@@ -1,49 +1,29 @@
 <template>
   <div class="h-full">
-    <TabBar
-      :tabs="tabs"
-      :current-tab.sync="currentTab"
-    />
+    <LinkTabBar :tabs="tabs" />
     <keep-alive>
-      <component :is="tab" />
+      <router-view />
     </keep-alive>
   </div>
 </template>
 
 <script>
-import TabBar from '@/common/components/TabBar';
+import LinkTabBar from '@/common/components/LinkTabBar';
 
 export default {
   name: 'LandingPage',
   components: {
-    TabBar,
-    PopupBanner: () => import('@/components/LandingPage/PopupBanner'),
-    InfoGraphicsBanner: () => import('@/components/LandingPage/InfoGraphics'),
-    Maintenance: () => import('@/common/components/Maintenance'),
-
+    LinkTabBar,
   },
   data() {
     return {
       tabs: [
-        { key: 'popup-banner', label: 'Popup Banner' },
-        { key: 'infographics-banner', label: 'Infografis Banner' },
-        { key: 'layanan-terpopuler', label: 'Layanan Terpopuler' },
-        { key: 'akses-cepat', label: 'Akses Cepat' },
+        { label: 'Popup Banner', link: '/landing-page/popup-banner' },
+        { label: 'Infografis Banner', link: '/landing-page/infographics-banner' },
+        { label: 'Layanan Terpopuler', link: '/landing-page/layanan-terpopuler' },
+        { label: 'Akses Cepat', link: '/landing-page/akses-cepat' },
       ],
-      currentTab: 'popup-banner',
     };
-  },
-  computed: {
-    tab() {
-      switch (this.currentTab) {
-        case 'popup-banner':
-          return 'PopupBanner';
-        case 'infographics-banner':
-          return 'InfoGraphicsBanner';
-        default:
-          return 'Maintenance';
-      }
-    },
   },
 };
 </script>

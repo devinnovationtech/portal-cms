@@ -5,7 +5,7 @@
         <!-- Table Menu -->
         <div class="sm:flex-wrap flex mb-4 items-start">
           <LinkButton
-            href="/popup-banner/tambah"
+            href="/landing-page/popup-banner/tambah"
             title="Tambah Pop-up Banner"
             class="ml-auto"
           >

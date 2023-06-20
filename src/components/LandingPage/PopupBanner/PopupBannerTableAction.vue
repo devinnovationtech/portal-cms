@@ -26,7 +26,7 @@
       <ul class="flex flex-col gap-4">
         <li>
           <router-link
-            :to="`/popup-banner/detail/${item.id}`"
+            :to="`/landing-page/popup-banner/detail/${item.id}`"
             class="font-lato text-sm leading-4 text-gray-800"
           >
             Detail
@@ -37,7 +37,7 @@
         <li v-if="item.is_live === 0">
           <router-link
             class="font-lato text-sm leading-4 text-gray-800"
-            :to="`/popup-banner/detail/${item.id}/ubah`"
+            :to="`/landing-page/popup-banner/detail/${item.id}/ubah`"
           >
             Ubah
           </router-link>

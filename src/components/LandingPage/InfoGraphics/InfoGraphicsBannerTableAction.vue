@@ -26,7 +26,7 @@
       <ul class="flex flex-col gap-4">
         <li class="font-lato text-sm leading-4 text-gray-800">
           <router-link
-            :to="`/infographics-banner/detail/${item.id}`"
+            :to="`/landing-page/infographics-banner/detail/${item.id}`"
             class="font-lato text-sm leading-4 text-gray-800"
           >
             Detail
@@ -34,7 +34,7 @@
         </li>
         <li class="font-lato text-sm leading-4 text-gray-800">
           <router-link
-            :to="`/infographics-banner/detail/${item.id}/ubah`"
+            :to="`/landing-page/infographics-banner/detail/${item.id}/ubah`"
           >
             Ubah
           </router-link>
