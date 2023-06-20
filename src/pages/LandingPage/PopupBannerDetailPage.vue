@@ -279,7 +279,7 @@ export default {
         return '#';
       }
 
-      return `/popup-banner/detail/${this.banner.id}/ubah`;
+      return `/landing-page/popup-banner/detail/${this.banner.id}/ubah`;
     },
     isLive() {
       return this.banner.is_live === 1;

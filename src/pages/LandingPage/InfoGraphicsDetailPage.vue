@@ -25,7 +25,7 @@
         <!-- Update Button -->
 
         <LinkButton
-          :href="`/infographics-banner/detail/${this.banner.id}/ubah`"
+          :href="`/landing-page/infographics-banner/detail/${this.banner.id}/ubah`"
           variant="secondary"
           class="hover:bg-green-50 font-lato text-sm font-bold text-green-700"
           data-cy="infographics-banner-detail__button-edit"
