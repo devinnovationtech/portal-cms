@@ -337,6 +337,51 @@ export const MASTER_DATA_STATUS_MAP = {
   ARCHIVE: 'Tersimpan',
 };
 
+export const PUBLICATION_TABLE_HEADER = [
+  {
+    key: 'title',
+    text: 'Nama Layanan',
+    sortable: false,
+  },
+  {
+    key: 'author',
+    text: 'Author',
+    sortable: false,
+  },
+  {
+    key: 'user',
+    text: 'Pengguna Layanan',
+    sortable: false,
+  },
+  {
+    key: 'technical',
+    text: 'Teknis Layanan',
+    sortable: false,
+  },
+  {
+    key: 'updated',
+    text: 'Diperbarui',
+    sortable: false,
+  },
+  {
+    key: 'status',
+    text: 'Status',
+    sortable: false,
+  },
+  {
+    key: 'action',
+    text: 'Aksi',
+    sortable: false,
+  },
+];
+
+export const PUBLICATION_STATUS_MAP = {
+  ALLSERVICES: 'Semua Layanan',
+  //  @NOTE: In publication status Archive property have an value or label in User as Draf
+  ARCHIVE: 'Draf',
+  PUBLISH: 'Terbit',
+};
+
 export const DAY_MAP = {
   MONDAY: 'Senin',
   TUESDAY: 'Selasa',

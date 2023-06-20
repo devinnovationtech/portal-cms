@@ -5,6 +5,7 @@ import auth from './modules/auth';
 import alert from './modules/alert';
 import news from './modules/news';
 import masterDataForm from './modules/public-service/masterDataForm';
+import publicationForm from './modules/public-service/publicationForm';
 
 Vue.use(Vuex);
 
@@ -24,6 +25,7 @@ export default new Vuex.Store({
     alert,
     news,
     masterDataForm,
+    publicationForm,
   },
   plugins: [vuexLocalStorage.plugin],
 });

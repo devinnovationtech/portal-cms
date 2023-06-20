@@ -18,7 +18,7 @@
         </BaseButton>
         <!-- Edit Button -->
         <LinkButton
-          :href="`/layanan/master-data/${tableData.id}/ubah`"
+          :href="`/layanan/daftar-publikasi/${tableData.id}/ubah`"
           variant="secondary"
           class="hover:bg-green-50"
         >
@@ -36,7 +36,7 @@
       </div>
     </HeaderMenu>
     <section class="px-6 py-4 rounded-lg bg-white mb-4">
-      <h1 class="font-roboto font-medium text-[21px] leading-[34px] text-green-700 mb-3">
+      <h1 class="font-roboto font-medium text-[21px] leading-[34px] text-blue-gray-600 mb-3">
         Detail Layanan
       </h1>
       <TabBar
@@ -45,16 +45,17 @@
         class="-mx-4"
       />
 
-      <InformationTable
-        v-if="currentTab === 'pelayanan'"
-        :table-data="informationTableData"
+      <GeneralInformation
+        v-if="currentTab === 'pengaturan-dasar'"
+        :table-data="generalInformationTableData"
       />
-      <ApplicationTable
-        v-else-if="currentTab === 'aplikasi'"
-        :table-data="applicationTableData"
+      <ServiceDescription
+        v-if="currentTab === 'deskripsi-layanan'"
+        :table-data="serviceDescriptionTableData"
       />
-      <AdditionalInformationTable
-        v-else
+
+      <AdditionalInformation
+        v-if="currentTab === 'informasi-tambahan'"
         :table-data="additionalInformationTableData"
       />
     </section>
@@ -65,13 +66,13 @@
     >
       <div class="w-full h-full">
         <h1 class="font-roboto text-xl leading-8 font-medium text-green-700 mb-6">
-          Hapus Program
+          Hapus Layanan
         </h1>
         <p class="font-lato text-sm text-gray-800 mb-2">
           Apakah Anda yakin ingin menghapus Layanan ini?
         </p>
         <h2 class="font-lato text-md font-bold text-gray-800">
-          {{ tableData.services.name }}
+          {{ tableData.default_information.service_name }}
         </h2>
       </div>
       <template #footer>
@@ -152,7 +153,7 @@ import LinkButton from '@/common/components/LinkButton';
 import TabBar from '@/common/components/TabBar';
 import { RepositoryFactory } from '@/repositories/RepositoryFactory';
 
-const masterDataRepository = RepositoryFactory.get('masterDataService');
+const masterDataPublicationRepository = RepositoryFactory.get('masterDataPublication');
 
 const MODAL_STATE = Object.freeze({
   NONE: 'NONE',
@@ -169,18 +170,18 @@ export default {
     LinkButton,
     HeaderMenu,
     TabBar,
-    InformationTable: () => import('@/components/Services/MasterData/Detail/InformationTable'),
-    ApplicationTable: () => import('@/components/Services/MasterData/Detail/ApplicationTable'),
-    AdditionalInformationTable: () => import('@/components/Services/MasterData/Detail/AdditionalInformationTable'),
+    GeneralInformation: () => import('@/components/Services/Publication/Detail/GeneralInformation'),
+    ServiceDescription: () => import('@/components/Services/Publication/Detail/ServiceDescriptionTable'),
+    AdditionalInformation: () => import('@/components/Services/Publication/Detail/AdditionalInformationTable'),
   },
   data() {
     return {
       tabs: [
-        { key: 'pelayanan', label: 'Pelayanan' },
-        { key: 'aplikasi', label: 'Aplikasi' },
+        { key: 'pengaturan-dasar', label: 'Pengaturan Dasar' },
+        { key: 'deskripsi-layanan', label: 'Deskripsi Layanan' },
         { key: 'informasi-tambahan', label: 'Informasi Tambahan' },
       ],
-      currentTab: 'pelayanan',
+      currentTab: 'pengaturan-dasar',
       tableData: {},
       modalMessage: {
         title: '',
@@ -191,101 +192,93 @@ export default {
     };
   },
   computed: {
-    informationTableData() {
+    generalInformationTableData() {
       return {
-        services: {
-          opd_name: this.tableData.services?.opd_name ?? null,
-          government_affair: this.tableData.services?.government_affair ?? null,
-          sub_government_affair: this.tableData.services?.sub_government_affair ?? null,
-          form: this.tableData.services?.form ?? null,
-          type: this.tableData.services?.type ?? null,
-          name: this.tableData.services?.name ?? null,
-          program_name: this.tableData.services?.program_name ?? null,
-          description: this.tableData.services?.description ?? null,
-          user: this.tableData.services?.user ?? null,
-          sub_service_spbe: this.tableData.services?.sub_service_spbe ?? null,
-          operational_status: this.tableData.services?.operational_status ?? null,
-          technical: this.tableData.services?.technical ?? null,
-          benefits: this.tableData.services?.benefits?.items ?? [],
-          facilities: this.tableData.services?.facilities?.items ?? [],
-          website: this.tableData.services?.website ?? null,
-          links: this.tableData.services?.links ?? [],
-          terms_and_conditions: this.tableData.services?.terms_and_conditions?.items ?? [],
-          service_procedures: this.tableData.services?.service_procedures?.items ?? [],
-          service_fee: this.tableData.services?.service_fee ?? {},
-          operational_times: this.tableData.services?.operational_times ?? [],
-          hotline_number: this.tableData.services?.hotline_number ?? null,
-          hotline_mail: this.tableData.services?.hotline_mail ?? null,
-          locations: this.tableData.services?.locations ?? [],
+        default_information: {
+          benefits: this.tableData.default_information?.benefits ?? {},
+          description: this.tableData.default_information?.description ?? null,
+          facilities: this.tableData.default_information?.facilities ?? {},
+          logo: this.tableData.default_information?.logo ?? {},
+          opd_name: this.tableData.default_information?.opd_name ?? null,
+          operator_status: this.tableData.default_information?.operator_status ?? null,
+          portal_category: this.tableData.default_information?.portal_category ?? null,
+          program_name: this.tableData.default_information?.program_name ?? null,
+          service_form: this.tableData.default_information?.service_form ?? null,
+          service_name: this.tableData.default_information?.service_name ?? null,
+          service_user: this.tableData.default_information?.service_user ?? null,
+          slug: this.tableData.default_information?.slug ?? null,
+          technical: this.tableData.default_information?.technical ?? null,
+          website: this.tableData.default_information?.website ?? null,
         },
       };
     },
-    applicationTableData() {
+    serviceDescriptionTableData() {
       return {
-        application: {
-          status: this.tableData.application?.status ?? '-',
-          name: this.tableData.application?.name ?? '-',
-          features: this.tableData.application?.features ?? [],
+        service_description: {
+          application: this.tableData.service_description?.application ?? {},
+          cover: this.tableData.service_description?.cover ?? {},
+          hotline_mail: this.tableData.service_description?.hotline_mail ?? null,
+          hotline_number: this.tableData.service_description?.hotline_number ?? null,
+          images: this.tableData.service_description?.images ?? [],
+          infographics: this.tableData.service_description?.infographics ?? {},
+          links: this.tableData.service_description?.links ?? [],
+          locations: this.tableData.service_description?.locations ?? [],
+          operational_times: this.tableData.service_description?.operational_times ?? [],
+          service_fee: this.tableData.service_description?.service_fee ?? {},
+          service_procedures: this.tableData.service_description?.service_procedures ?? {},
+          social_media: this.tableData.service_description?.social_media ?? [],
+          terms_and_conditions: this.tableData.service_description?.terms_and_conditions ?? {},
         },
       };
     },
     additionalInformationTableData() {
       return {
         additional_information: {
-          responsible_name: this.tableData.additional_information?.responsible_name ?? '-',
-          phone_number: this.tableData.additional_information?.phone_number ?? '-',
-          email: this.tableData.additional_information?.email ?? '-',
-          social_media: this.tableData.additional_information?.social_media ?? [],
+          faq: this.tableData.additional_information?.faq ?? {},
+          keywords: this.tableData.additional_information?.keywords ?? [],
         },
       };
     },
   },
   mounted() {
-    this.fetchMasterDataById();
+    this.fetchPublicationById();
   },
   methods: {
-    async deleteMasterData(id) {
+    async deletePublication(id) {
       try {
         this.modalState = MODAL_STATE.LOADING;
-        const response = await masterDataRepository.deleteMasterDataById(id);
+        const response = await masterDataPublicationRepository.deletePublicationById(id);
         if (response.status === 204) {
           this.setModalMessage({
             title: 'Berhasil dihapus!',
-            message: `Program ${this.tableData.services.name} berhasil dihapus.`,
+            message: `Layanan ${this.tableData.default_information.service_name} berhasil dihapus.`,
           });
           this.modalState = MODAL_STATE.SUCCESS;
         }
       } catch (error) {
-        if (error.response.status === 403) {
-          this.setModalMessage({
-            title: 'Hapus Layanan Gagal',
-            message: 'Layanan Anda tidak dapat dihapus karena digunakan dalam data publikasi',
-          });
-        } else {
-          this.setModalMessage({
-            title: 'Hapus Layanan Gagal',
-            message: 'Layanan Anda gagal dihapus.',
-          });
-        }
+        this.setModalMessage({
+          title: 'Hapus Layanan Gagal',
+          message: 'Layanan Anda gagal dihapus.',
+        });
         this.modalState = MODAL_STATE.ERROR;
       }
     },
-    async fetchMasterDataById() {
+    async fetchPublicationById() {
       try {
-        const response = await masterDataRepository.getMasterDataById(this.$route.params.id);
+        const response = await masterDataPublicationRepository.getPublicationById(this.$route.params.id);
         const { data } = response.data;
 
         this.tableData = data;
       } catch {
         this.$toast({
           type: 'error',
-          message: 'Gagal mendapatkan data Master Data Layanan, silakan coba beberapa saat lagi',
+          message: 'Gagal mendapatkan data Layanan Publikasi, silakan coba beberapa saat lagi',
         });
       }
     },
     handleCloseModal() {
       if (this.modalState === MODAL_STATE.SUCCESS) {
-        this.$router.push('/layanan/daftar-layanan');
+        this.$router.push('/layanan/daftar-publikasi-layanan');
       } else {
         this.resetModalState();
       }
@@ -307,7 +300,7 @@ export default {
       this.setModalMessage({
         title: 'Hapus Layanan',
         message: 'Apakah Anda yakin ingin menghapus Layanan ini?',
-        action: () => this.deleteMasterData(id),
+        action: () => this.deletePublication(id),
       });
     },
   },

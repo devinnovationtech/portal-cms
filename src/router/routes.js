@@ -88,6 +88,36 @@ export default [
     meta: {
       layout: 'AppLayoutPrivate',
     },
+    children: [
+      {
+        path: '',
+        redirect: 'daftar-layanan', // Default children to navigate
+      },
+      {
+        path: 'daftar-layanan',
+        name: 'Layanan Pemerintah Daerah Provinsi Jawa Barat',
+        component: () => import('@/components/Services/MasterData'),
+        meta: {
+          layout: 'AppLayoutPrivate',
+        },
+      },
+      {
+        path: 'daftar-publikasi-layanan',
+        name: 'Layanan Pemerintah Daerah Provinsi Jawa Barat',
+        component: () => import('@/components/Services/Publication'),
+        meta: {
+          layout: 'AppLayoutPrivate',
+        },
+      },
+      {
+        path: 'program-unggulan',
+        name: 'Program Unggulan Pemerintah Daerah Provinsi Jawa Barat',
+        component: () => import('@/common/components/Maintenance'),
+        meta: {
+          layout: 'AppLayoutPrivate',
+        },
+      },
+    ],
   },
   {
     path: '/layanan/master-data/tambah',
@@ -111,6 +141,32 @@ export default [
     path: '/layanan/master-data/detail/:id',
     name: 'Master Data Detail',
     component: () => import('@/pages/Services/MasterDataServiceDetail.vue'),
+    meta: {
+      layout: 'AppLayoutPrivate',
+    },
+  },
+  {
+    path: '/layanan/daftar-publikasi/tambah',
+    name: 'Layanan Publik',
+    component: () => import('@/pages/Services/CreateEditPublication.vue'),
+    meta: {
+      mode: 'create',
+      layout: 'AppLayoutPrivate',
+    },
+  },
+  {
+    path: '/layanan/daftar-publikasi/:id/ubah',
+    name: 'Ubah Data Layanan Publik',
+    component: () => import('@/pages/Services/CreateEditPublication.vue'),
+    meta: {
+      mode: 'edit',
+      layout: 'AppLayoutPrivate',
+    },
+  },
+  {
+    path: '/layanan/daftar-publikasi/detail/:id',
+    name: 'Layanan Publik Detail',
+    component: () => import('@/pages/Services/MasterDataPublicationDetail.vue'),
     meta: {
       layout: 'AppLayoutPrivate',
     },

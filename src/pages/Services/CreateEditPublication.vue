@@ -5,7 +5,8 @@
       v-slot="{ invalid }"
     >
       <form
-        class="master-data__form"
+        class="publication__form"
+        @submit.prevent=""
       >
         <HeaderMenu>
           <template #left-button>
@@ -52,6 +53,7 @@
               v-if="(isCreateMode || isDraft) && isLastStep"
               type="button"
               class="border-green-700 hover:bg-green-50 font-lato text-sm text-green-700"
+              :disabled="!isMasterDataSelected"
               @click="openSaveConfirmation"
             >
               <span>
@@ -63,14 +65,14 @@
               type="button"
               class="bg-green-700 hover:bg-green-600 font-lato text-sm text-white"
               :disabled="invalid"
-              @click="submitConfirmation"
+              @click="publishConfirmation"
             >
               <span>
                 Tambahkan Layanan
               </span>
             </BaseButton>
             <BaseButton
-              v-if="isEditMode && !isDraft && isLastStep"
+              v-if="(isEditMode && !isDraft) && isLastStep"
               type="button"
               class="bg-green-700 hover:bg-green-600 font-lato text-sm text-white"
               :disabled="invalid"
@@ -84,7 +86,7 @@
         </HeaderMenu>
 
         <section class="w-full h-full bg-white rounded-lg p-6">
-          <MasterDataFormStepper />
+          <PublicationFormStepper />
           <keep-alive>
             <component
               :is="renderedForm"
@@ -125,8 +127,38 @@
       </template>
     </BaseModal>
 
-    <!-- Confirmation Popup -->
-    <BaseModal :open="submitStatus === 'SAVE_AS_DRAFT_CONFIRMATION'">
+    <!-- Save as Archive Confirmation Popup -->
+    <BaseModal :open="submitStatus === 'SAVE_AS_ARCHIVE_CONFIRMATION'">
+      <div class="w-full h-full px-2 pb-4">
+        <h1 class="font-roboto font-medium text-green-700 text-[21px] leading-[34px] mb-6">
+          Simpan Layanan
+        </h1>
+        <div class="flex items-center gap-4">
+          <p class="text-sm leading-6 to-blue-gray-800">
+            Apakah Anda ingin menyimpan perubahan pada layanan ini?
+          </p>
+        </div>
+      </div>
+      <template #footer>
+        <div class="flex w-full h-full items-center justify-end gap-4 p-2">
+          <BaseButton
+            class="border border-green-700 hover:bg-green-50 text-sm text-green-700"
+            @click="closeConfirmation"
+          >
+            Tidak
+          </BaseButton>
+          <BaseButton
+            class="bg-green-700 hover:bg-green-600 text-sm text-white"
+            @click="handleSaveForm"
+          >
+            Ya, simpan layanan
+          </BaseButton>
+        </div>
+      </template>
+    </BaseModal>
+
+    <!-- Publish Confirmation Popup -->
+    <BaseModal :open="submitStatus === 'PUBLISH_CONFIRMATION'">
       <div class="w-full h-full px-2 pb-4">
         <h1 class="font-roboto font-medium text-green-700 text-[21px] leading-[34px] mb-6">
           Tambahkan Layanan
@@ -147,31 +179,43 @@
           </BaseButton>
           <BaseButton
             class="bg-green-700 hover:bg-green-600 text-sm text-white"
-            @click="handleSaveForm"
+            @click="handlePublishForm"
           >
-            Ya, tambahkan layanan
+            Ya, simpan layanan
           </BaseButton>
         </div>
       </template>
     </BaseModal>
 
-    <!-- Submit Confirmation -->
-    <SubmitConfirmation
-      :open="submitStatus === 'SUBMIT_CONFIRMATION'"
-      title="Tambah Layanan"
-      submit-button-label="Tambah  Layanan"
-      @close="closeConfirmation"
-      @submit="handleSubmition"
-    />
-
-    <!-- Update Confirmation -->
-    <SubmitConfirmation
-      :open="submitStatus === 'UPDATE_CONFIRMATION'"
-      title="Update Layanan"
-      submit-button-label="Update Layanan"
-      @close="closeConfirmation"
-      @submit="updateForm('ARCHIVE')"
-    />
+    <!-- Publish Confirmation Popup -->
+    <BaseModal :open="submitStatus === 'UPDATE_CONFIRMATION'">
+      <div class="w-full h-full px-2 pb-4">
+        <h1 class="font-roboto font-medium text-green-700 text-[21px] leading-[34px] mb-6">
+          Ubah Layanan
+        </h1>
+        <div class="flex items-center gap-4">
+          <p class="text-sm leading-6 to-blue-gray-800">
+            Apakah Anda ingin mengubah data layanan ini?
+          </p>
+        </div>
+      </div>
+      <template #footer>
+        <div class="flex w-full h-full items-center justify-end gap-4 p-2">
+          <BaseButton
+            class="border border-green-700 hover:bg-green-50 text-sm text-green-700"
+            @click="closeConfirmation"
+          >
+            Tidak
+          </BaseButton>
+          <BaseButton
+            class="bg-green-700 hover:bg-green-600 text-sm text-white"
+            @click="updateForm('PUBLISH')"
+          >
+            Ya, simpan layanan
+          </BaseButton>
+        </div>
+      </template>
+    </BaseModal>
 
     <!-- Submit Progress -->
     <ProgressModal
@@ -214,8 +258,7 @@ import HeaderMenu from '@/common/components/HeaderMenu.vue';
 import BaseButton from '@/common/components/BaseButton.vue';
 import BaseModal from '@/common/components/BaseModal';
 import ProgressModal from '@/common/components/ProgressModal';
-import MasterDataFormStepper from '@/components/Services/MasterData/Form/Stepper.vue';
-import SubmitConfirmation from '@/components/Services/MasterData/Form/SubmitConfirmation.vue';
+import PublicationFormStepper from '@/components/Services/Publication/Form/Stepper.vue';
 
 import { mapActions, mapGetters } from 'vuex';
 import { ValidationObserver } from 'vee-validate';
@@ -227,18 +270,19 @@ export default {
     BaseButton,
     BaseModal,
     ProgressModal,
-    MasterDataFormStepper,
-    SubmitConfirmation,
-    StepOne: () => import('@/components/Services/MasterData/Form/StepOne'),
-    StepTwo: () => import('@/components/Services/MasterData/Form/StepTwo'),
-    StepThree: () => import('@/components/Services/MasterData/Form/StepThree'),
+    PublicationFormStepper,
+    StepOne: () => import('@/components/Services/Publication/Form/StepOne'),
+    StepTwo: () => import('@/components/Services/Publication/Form/StepTwo'),
+    StepThree: () => import('@/components/Services/Publication/Form/StepThree'),
   },
   computed: {
-    ...mapGetters('masterDataForm', [
+    ...mapGetters('publicationForm', [
       'currentFormStep',
       'isFirstStep',
       'isLastStep',
       'isDraft',
+      'masterDataId',
+      'isMasterDataSelected',
       'submitStatus',
       'submitMessage',
       'submitProgress',
@@ -262,59 +306,65 @@ export default {
       }
     },
   },
-  created() {
-    this.$store.dispatch('masterDataForm/resetFormData');
-    this.$store.dispatch('masterDataForm/getGovernmentAffairOptions');
-    this.$store.dispatch('masterDataForm/getRALOptions');
-    this.$store.dispatch('masterDataForm/getOrganizationOptions');
-    this.$store.dispatch('masterDataForm/setInitialOPDName');
+  watch: {
+    masterDataId: {
+      handler(newValue, oldValue) {
+        if (this.isCreateMode && this.isMasterDataSelected && newValue !== oldValue) {
+          this.$store.dispatch('publicationForm/setInitialFormData', this.masterDataId);
+        }
+      },
+    },
+  },
+  async created() {
+    this.$store.dispatch('publicationForm/resetFormData');
+    await this.$store.dispatch('publicationForm/getMasterDataOptions');
 
     if (this.isEditMode) {
       const { id } = this.$route.params;
-      this.$store.dispatch('masterDataForm/setInitialFormData', id);
+      this.$store.dispatch('publicationForm/setEditInitialFormData', id);
     }
   },
   methods: {
-    ...mapActions('masterDataForm', [
+    ...mapActions('publicationForm', [
       'nextStep',
       'previousStep',
-      'saveAsDraft',
-      'openSaveConfirmation',
-      'cancelConfirmation',
-      'closeConfirmation',
-      'submitConfirmation',
-      'updateConfirmation',
-      'submitForm',
       'resetFormData',
+      'saveAsArchive',
+      'openSaveConfirmation',
+      'closeConfirmation',
+      'cancelConfirmation',
+      'publishConfirmation',
+      'updateConfirmation',
+      'publishForm',
     ]),
-    handleCancelation() {
-      this.$router.back();
-    },
     handleSaveForm() {
-      if (this.isEditMode && this.isDraft) {
-        this.updateForm('DRAFT');
-      } else {
-        this.saveAsDraft();
-      }
-    },
-    handleSubmition() {
       if (this.isEditMode && this.isDraft) {
         this.updateForm('ARCHIVE');
       } else {
-        this.submitForm();
+        this.saveAsArchive();
+      }
+    },
+    handlePublishForm() {
+      if (this.isEditMode && this.isDraft) {
+        this.updateForm('PUBLISH');
+      } else {
+        this.publishForm();
       }
     },
     updateForm(status) {
       const { id } = this.$route.params;
 
-      this.$store.dispatch('masterDataForm/updateForm', { id, status });
+      this.$store.dispatch('publicationForm/updateForm', { id, status });
     },
     handleCloseConfirmation() {
       if (this.submitStatus === 'SUCCESS') {
-        this.$router.push('/layanan/daftar-layanan');
+        this.$router.push('/layanan/daftar-publikasi-layanan');
       } else {
         this.closeConfirmation();
       }
+    },
+    handleCancelation() {
+      this.$router.back();
     },
   },
 };
@@ -324,29 +374,29 @@ export default {
 /**
  * Override default Jds-Select styling
  */
-.master-data__form .jds-popover__activator,
-.master-data__form .jds-select,
-.master-data__form .jds-input-text {
+.publication__form .jds-popover__activator,
+.publication__form .jds-select,
+.publication__form .jds-input-text {
   width: 100% !important;
 }
 
-.master-data__form .jds-popover__content {
+.publication__form .jds-popover__content {
   z-index: 10 !important;
   background-color: white !important;
 }
 
-.master-data__form .jds-options__option-list {
+.publication__form .jds-options__option-list {
   max-height: 235px !important;
 }
 
-.master-data__form .jds-text-area__input-wrapper > textarea {
+.publication__form .jds-text-area__input-wrapper > textarea {
   border: 1px solid #9E9E9E;
 }
-.master-data__form .jds-text-area--error .jds-text-area__input-wrapper > textarea {
+.publication__form .jds-text-area--error .jds-text-area__input-wrapper > textarea {
   border: 1px solid #D32F2F !important;
 }
 
-.master-data__form .jds-text-area__input-wrapper > textarea:hover {
+.publication__form .jds-text-area__input-wrapper > textarea:hover {
   border: 1px solid #16a34a;
 }
 </style>
