@@ -332,7 +332,7 @@ export default {
     },
     messageAction() {
       if (this.modalStatus === STATUS_MODAL.SUCCESS) {
-        this.$router.push('/');
+        this.$router.push('/landing-page/infographics-banner');
       } else {
         this.resetDeleteState();
       }

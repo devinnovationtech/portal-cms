@@ -395,7 +395,7 @@ export default {
   methods: {
     messageAction() {
       if (this.submitStatus === FORM_SUBMIT_STATUS.SUCCESS) {
-        this.$router.push('/landing-page');
+        this.$router.push('/landing-page/infographics-banner');
       } else {
         this.resetSubmitState();
       }
