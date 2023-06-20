@@ -585,7 +585,9 @@ export default {
       }
     },
     async updateForm() {
-      // @todo: add update form functionality
+      if (!this.isActiveLink) {
+        this.form.link = '';
+      }
       try {
         this.submitStatus = FORM_SUBMIT_STATUS.LOADING;
         this.submitProgress = 25;

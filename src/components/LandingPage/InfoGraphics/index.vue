@@ -6,7 +6,7 @@
       'h-[92%]': toggleSorting,
     }"
   >
-    <section class="px-3 py-4 rounded-lg bg-white border-2 border-green-600 h-full">
+    <section class="px-3 py-4 rounded-lg bg-white border-2 border-green-600 h-full overflow-hidden">
       <div
         class="w-full"
         data-cy="infographics-banner__container"
@@ -75,7 +75,7 @@
             <span>di kolom judul banner</span>
           </p>
         </div>
-        <div class="w-full h-full overflow-auto">
+        <div class="w-full h-full overflow-hidden overflow-y-scroll relative">
           <InfoGraphicsBannerTable
             :items="banners"
             :sorting="toggleSorting"
@@ -258,8 +258,10 @@ export default {
     toggleSorting: {
       handler() {
         if (this.toggleSorting) {
+          this.sequenceBanner = [];
           this.setParams({
             is_active: 1,
+            per_page: 10,
           });
           this.totalBanners = 0;
           this.fetchBanners();
