@@ -318,6 +318,7 @@ export default {
     },
     onSaveSorting() {
       this.modalState = MODAL_STATE.STATUS_ACTIVATE;
+      this.bannerDetail = {};
       this.setModalMessage({
         title: 'Simpan Urutan',
         message: 'Apakah Anda ingin menyimpan urutan banner?',
