@@ -2,10 +2,10 @@
   <BaseModal :open="open">
     <div class="w-full h-full px-2 pb-4">
       <h1 class="font-roboto font-medium text-green-700 text-[21px] leading-[34px] mb-6">
-        Sedang diproses
+        {{ title }}
       </h1>
       <p class="text-sm leading-6 text-blue-gray-800 text-center">
-        Mohon tunggu, sedang diproses
+        {{ message }}
       </p>
     </div>
     <template #footer>
@@ -31,6 +31,14 @@ export default {
     value: {
       type: Number,
       required: true,
+    },
+    title: {
+      type: String,
+      default: 'Sedang diproses',
+    },
+    message: {
+      type: String,
+      required: 'Mohon tunggu, sedang diproses',
     },
   },
 };

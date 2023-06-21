@@ -146,6 +146,8 @@
       v-if="modalState === 'LOADING'"
       :open="modalState === 'LOADING'"
       :value="progressValue"
+      title="Menyimpan Urutan"
+      message="Mohon tunggu, penyimpanan urutan banner sedang diproses."
       data-cy="infographics-banner__progress-modal"
     />
 
@@ -310,6 +312,7 @@ export default {
     },
     onSaveSorting() {
       this.modalState = MODAL_STATE.STATUS_ACTIVATE;
+      this.bannerDetail = {};
       this.setModalMessage({
         title: 'Simpan Urutan',
         message: 'Apakah Anda ingin menyimpan urutan banner?',
@@ -326,8 +329,8 @@ export default {
             this.progressValue = 75;
             setTimeout(() => {
               this.setModalMessage({
-                title: 'Berhasil diubah!',
-                message: 'Urutan Banner berhasil diubah.',
+                title: 'Berhasil!',
+                message: 'Banner yang Anda edit berhasil disimpan.',
               });
               this.modalState = MODAL_STATE.SUCCESS;
               this.toggleSorting = !this.toggleSorting;
