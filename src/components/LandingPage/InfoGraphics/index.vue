@@ -1,12 +1,6 @@
 <template>
-  <main
-    :class="{
-      'w-full': true,
-      'h-[85%]': !toggleSorting,
-      'h-[92%]': toggleSorting,
-    }"
-  >
-    <section class="px-3 py-4 rounded-lg bg-white border-2 border-green-600 h-full overflow-hidden">
+  <main class="w-full">
+    <section class="px-3 py-4 rounded-lg bg-white border-2 border-green-600 h-auto overflow-hidden">
       <div
         class="w-full"
         data-cy="infographics-banner__container"
