@@ -257,11 +257,14 @@ export default {
   watch: {
     toggleSorting: {
       handler() {
+        this.setParams({
+          page: 1,
+        });
         if (this.toggleSorting) {
           this.sequenceBanner = [];
           this.setParams({
             is_active: 1,
-            per_page: 10,
+            per_page: 5,
           });
           this.totalBanners = 0;
           this.fetchBanners();
@@ -284,6 +287,9 @@ export default {
           page: this.params.page + 1,
         });
       } else {
+        this.setParams({
+          page: 1,
+        });
         this.loading = true;
       }
 
@@ -333,6 +339,8 @@ export default {
               this.toggleSorting = !this.toggleSorting;
               this.setParams({
                 is_active: null,
+                per_page: 5,
+                page: 1,
               });
               this.fetchBanners();
             }, 150);
