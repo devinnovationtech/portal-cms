@@ -107,6 +107,7 @@
           <tr>
             <InfiniteScrollObserver
               v-if="listData.length"
+              class="h-[10px]"
               @intersect="$emit('scrollFetch')"
             />
           </tr>
