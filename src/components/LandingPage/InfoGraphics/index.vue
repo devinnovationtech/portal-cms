@@ -235,11 +235,11 @@ export default {
     return {
       banners: [],
       sequenceBanner: [],
-      totalBanners: 10, // set default value same as params.per_page defualt value
+      totalBanners: 5, // set default value same as params.per_page default value
       loading: false,
       toggleSorting: false,
       params: {
-        per_page: 10,
+        per_page: 5,
         page: 1,
         q: '',
         is_active: null,
@@ -281,7 +281,7 @@ export default {
 
       if (isScrollFetch) {
         this.setParams({
-          per_page: this.params.per_page + 5,
+          page: this.params.page + 1,
         });
       } else {
         this.loading = true;
@@ -291,7 +291,7 @@ export default {
         const response = await infographicsBannerRepository.getBanners(this.params);
         const { data, meta } = response.data;
 
-        this.banners = data;
+        this.banners = isScrollFetch ? this.banners.concat(data) : data;
         this.totalBanners = meta.total_count;
       } catch (error) {
         this.$toast({
