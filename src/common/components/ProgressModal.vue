@@ -38,7 +38,7 @@ export default {
     },
     message: {
       type: String,
-      required: 'Mohon tunggu, sedang diproses',
+      default: 'Mohon tunggu, sedang diproses',
     },
   },
 };

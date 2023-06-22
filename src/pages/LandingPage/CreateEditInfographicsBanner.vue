@@ -2,7 +2,7 @@
   <main class="pb-14">
     <ValidationObserver
       ref="form"
-      v-slot="{ invalid }"
+      v-slot="{ invalid, changed }"
     >
       <form
         class="infographics-banner__form"
@@ -16,7 +16,7 @@
               type="submit"
               class="bg-green-700 hover:bg-green-600 font-lato text-sm text-white"
               data-cy="infographics-banner-form__save-button"
-              :disabled="invalid"
+              :disabled="invalid || (!changed && !isToggled)"
             >
               <p>
                 Simpan Data
@@ -167,6 +167,7 @@
               <JdsToggle
                 v-model="isActiveLink"
                 data-cy="infographics-banner-form__redirect-link-toggle"
+                @change="onToggleClick"
               />
             </div>
             <ValidationProvider
@@ -355,6 +356,7 @@ export default {
         body: '',
       },
       isActiveLink: true,
+      isToggled: false,
     };
   },
   computed: {
@@ -633,9 +635,8 @@ export default {
 
       this.form.title = data.title;
       this.form.link = data.link;
-      if (this.form.link) {
-        this.isActiveLink = true;
-      }
+
+      this.isActiveLink = !!this.form.link;
 
       this.imageDesktopFile = new File([''], data.image_metadata?.desktop?.file_name);
       this.imageMobileFile = new File([''], data.image_metadata?.mobile?.file_name);
@@ -672,6 +673,11 @@ export default {
       };
 
       return formData;
+    },
+    onToggleClick() {
+      if (this.isEditMode) {
+        this.isToggled = true;
+      }
     },
   },
 };
