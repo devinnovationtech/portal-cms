@@ -137,6 +137,10 @@ export default {
       type: Array,
       default: () => [],
     },
+    additionalItems: {
+      type: Array,
+      default: () => [],
+    },
     sorting: {
       type: Boolean,
       default: false,
@@ -156,6 +160,12 @@ export default {
     items: {
       handler() {
         this.listData = this.items;
+      },
+      immediate: true,
+    },
+    additionalItems: {
+      handler() {
+        this.listData = this.listData.concat(this.additionalItems);
       },
       immediate: true,
     },

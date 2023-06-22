@@ -72,6 +72,7 @@
         <div class="w-full h-full overflow-hidden overflow-y-scroll relative">
           <InfoGraphicsBannerTable
             :items="banners"
+            :additional-items="additionalBanners"
             :sorting="toggleSorting"
             :loading="loading"
             class="min-w-[1000px]"
@@ -230,6 +231,7 @@ export default {
   data() {
     return {
       banners: [],
+      additionalBanners: [],
       sequenceBanner: [],
       totalBanners: 5, // set default value same as params.per_page default value
       loading: false,
@@ -274,7 +276,7 @@ export default {
   },
   methods: {
     async fetchBanners(isScrollFetch = false) {
-      if (this.params.per_page > this.totalBanners && isScrollFetch) {
+      if (this.params.per_page * this.params.page > this.totalBanners && isScrollFetch) {
         return;
       }
 
@@ -293,7 +295,11 @@ export default {
         const response = await infographicsBannerRepository.getBanners(this.params);
         const { data, meta } = response.data;
 
-        this.banners = isScrollFetch ? this.banners.concat(data) : data;
+        if (this.toggleSorting && isScrollFetch) {
+          this.additionalBanners = data;
+        } else {
+          this.banners = isScrollFetch ? this.banners.concat(data) : data;
+        }
         this.totalBanners = meta.total_count;
       } catch (error) {
         this.$toast({
