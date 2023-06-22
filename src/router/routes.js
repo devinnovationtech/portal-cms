@@ -21,7 +21,6 @@ export default [
   },
   {
     path: '/landing-page',
-    name: 'Landing Page',
     component: () => import('@/pages/LandingPage'),
     meta: {
       layout: 'AppLayoutPrivate',
@@ -33,7 +32,7 @@ export default [
       },
       {
         path: 'popup-banner',
-        name: 'Popup Banner',
+        name: 'Landing Page',
         component: () => import('@/components/LandingPage/PopupBanner'),
         meta: {
           layout: 'AppLayoutPrivate',
@@ -43,7 +42,7 @@ export default [
       },
       {
         path: 'infographics-banner',
-        name: 'Infographics Banner',
+        name: 'Landing Page',
         component: () => import('@/components/LandingPage/InfoGraphics'),
         meta: {
           layout: 'AppLayoutPrivate',
@@ -53,7 +52,7 @@ export default [
       },
       {
         path: 'layanan-terpopuler',
-        name: 'Layanan Terpopuler',
+        name: 'Landing Page',
         component: () => import('@/common/components/Maintenance'),
         meta: {
           layout: 'AppLayoutPrivate',
@@ -63,7 +62,7 @@ export default [
       },
       {
         path: 'akses-cepat',
-        name: 'Akses Cepat',
+        name: 'Landing Page',
         component: () => import('@/common/components/Maintenance'),
         meta: {
           layout: 'AppLayoutPrivate',
@@ -75,7 +74,7 @@ export default [
   },
   {
     path: '/landing-page/popup-banner/tambah',
-    name: 'Tambah Pop-up Banner',
+    name: 'Landing Page',
     component: () => import('@/pages/LandingPage/CreateEditPopupBanner.vue'),
     meta: {
       mode: 'create',
@@ -84,7 +83,7 @@ export default [
   },
   {
     path: '/landing-page/popup-banner/detail/:id/ubah',
-    name: 'Ubah Pop-up Banner',
+    name: 'Landing Page',
     component: () => import('@/pages/LandingPage/CreateEditPopupBanner.vue'),
     meta: {
       mode: 'edit',
@@ -93,7 +92,7 @@ export default [
   },
   {
     path: '/landing-page/popup-banner/detail/:id',
-    name: 'Pop-up Banner Detail',
+    name: 'Landing Page',
     component: () => import('@/pages/LandingPage/PopupBannerDetailPage'),
     meta: {
       layout: 'AppLayoutPrivate',
@@ -101,7 +100,7 @@ export default [
   },
   {
     path: '/landing-page/infographics-banner/detail/:id/ubah',
-    name: 'Ubah Infografis Banner',
+    name: 'Landing Page',
     component: () => import('@/pages/LandingPage/CreateEditInfographicsBanner.vue'),
     meta: {
       mode: 'edit',
@@ -110,7 +109,7 @@ export default [
   },
   {
     path: '/landing-page/infographics-banner/tambah',
-    name: 'Tambah Infografis Banner',
+    name: 'Landing Page',
     component: () => import('@/pages/LandingPage/CreateEditInfographicsBanner.vue'),
     meta: {
       mode: 'create',
@@ -119,7 +118,7 @@ export default [
   },
   {
     path: '/landing-page/infographics-banner/detail/:id',
-    name: 'Info Graphics Banner Detail',
+    name: 'Landing Page',
     component: () => import('@/pages/LandingPage/InfoGraphicsDetailPage'),
     meta: {
       layout: 'AppLayoutPrivate',
