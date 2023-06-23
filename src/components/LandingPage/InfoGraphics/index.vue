@@ -297,9 +297,8 @@ export default {
 
         if (this.toggleSorting && isScrollFetch) {
           this.additionalBanners = data;
-        } else {
-          this.banners = isScrollFetch ? this.banners.concat(data) : data;
         }
+        this.banners = isScrollFetch ? this.banners.concat(data) : data;
         this.totalBanners = meta.total_count;
       } catch (error) {
         this.$toast({
