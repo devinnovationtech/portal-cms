@@ -159,7 +159,9 @@ export default {
   watch: {
     items: {
       handler() {
-        this.listData = this.items;
+        if ((this.sorting && this.items.length <= 5) || !this.sorting) {
+          this.listData = this.items;
+        }
       },
       immediate: true,
     },
