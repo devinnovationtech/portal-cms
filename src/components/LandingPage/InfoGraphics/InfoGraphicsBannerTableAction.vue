@@ -1,6 +1,6 @@
 <template>
   <JdsPopover
-    class="popup-banner__action-button"
+    class="info-graphics-banner__action-button"
     :value="isDropdownOpen"
     :options="popoverOptions"
   >
@@ -24,26 +24,21 @@
 
     <div class="bg-white p-[18px] rounded-lg border border-gray-200 shadow-xl">
       <ul class="flex flex-col gap-4">
-        <li>
+        <li class="font-lato text-sm leading-4 text-gray-800">
           <router-link
-            :to="`/landing-page/popup-banner/detail/${item.id}`"
+            :to="`/landing-page/infographics-banner/detail/${item.id}`"
             class="font-lato text-sm leading-4 text-gray-800"
           >
             Detail
           </router-link>
         </li>
-
-        <!-- Edit Action -->
-        <li v-if="item.is_live === 0">
+        <li class="font-lato text-sm leading-4 text-gray-800">
           <router-link
-            class="font-lato text-sm leading-4 text-gray-800"
-            :to="`/landing-page/popup-banner/detail/${item.id}/ubah`"
+            :to="`/landing-page/infographics-banner/detail/${item.id}/ubah`"
           >
             Ubah
           </router-link>
         </li>
-
-        <!-- Delete Action -->
         <li>
           <button
             class="font-lato text-sm leading-4 text-gray-800"
@@ -96,7 +91,7 @@ export default {
 
 <style>
 /** Override default jds popover content styling */
-.popup-banner__action-button .jds-popover__content {
+.info-graphics-banner__action-button .jds-popover__content {
   z-index: 20 !important;
 }
 </style>

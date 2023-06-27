@@ -1,5 +1,8 @@
 <template>
-  <JdsSimpleTable class="!table-auto">
+  <JdsSimpleTable
+    class="!table-auto"
+    data-cy="infographics-banner-detail__container"
+  >
     <thead>
       <tr>
         <th
@@ -20,8 +23,11 @@
             v-if="loading"
             class="h-4 w-1/4 rounded-lg animate-pulse bg-gray-200"
           />
-          <div v-else>
-            Akses Sapawarga
+          <div
+            v-else
+            data-cy="infographics-banner-detail__title"
+          >
+            {{ title }}
           </div>
         </td>
       </tr>
@@ -34,8 +40,11 @@
             v-if="loading"
             class="h-4 w-1/4 rounded-lg animate-pulse bg-gray-200"
           />
-          <div v-else>
-            1
+          <div
+            v-else
+            data-cy="infographics-banner-detail__sequence"
+          >
+            {{ sequence }}
           </div>
         </td>
       </tr>
@@ -49,17 +58,21 @@
             class="h-4 w-1/4 rounded-lg animate-pulse bg-gray-200"
           />
           <a
-            v-else
+            v-else-if="link"
             class="font-lato text-[12px] leading-[23px]"
             :class="{
               'underline text-blue-gray-500 font-bold' : true,
               'pointer-events-none' : false
             }"
-            href="https://google.com"
+            :href="link"
             target="_blank"
+            data-cy="infographics-banner-detail__link"
           >
-            https://google.com
+            {{ link }}
           </a>
+          <span v-else>
+            -
+          </span>
         </td>
       </tr>
       <tr>
@@ -78,8 +91,9 @@
               'bg-green-50 text-green-700 px-[10px] rounded-[5px] font-bold ' : status === 'Aktif',
               'bg-gray-200 text-gray-600 px-[10px] rounded-[5px] font-bold ' : status === 'Tidak Aktif'
             }"
+            data-cy="infographics-banner-detail__status"
           >
-            Aktif
+            {{ status }}
           </div>
         </td>
       </tr>
@@ -92,8 +106,11 @@
             v-if="loading"
             class="h-4 w-1/4 rounded-lg animate-pulse bg-gray-200"
           />
-          <div v-else>
-            Terakhir disimpan pada: 12/01/2022 - 15:00
+          <div
+            v-else
+            data-cy="infographics-banner-detail__last-update"
+          >
+            {{ lastUpdate }}
           </div>
         </td>
       </tr>
@@ -102,6 +119,7 @@
 </template>
 
 <script>
+import { formatDate } from '@/common/helpers/date';
 
 export default {
   name: 'InfoGraphicsDetailTable',
@@ -115,10 +133,29 @@ export default {
       default: false,
     },
   },
-  data() {
-    return {
-      status: 'Aktif',
-    };
+  computed: {
+    title() {
+      return this.banner?.title || '-';
+    },
+    sequence() {
+      return this.banner?.sequence || '-';
+    },
+    link() {
+      return this.banner?.link;
+    },
+    status() {
+      if (this.banner.is_active) {
+        return 'Aktif';
+      }
+      return 'Tidak Aktif';
+    },
+    lastUpdate() {
+      const updateDate = formatDate(this.banner?.updated_at, 'dd/MM/yyyy - HH:mm');
+      if (this.banner?.updated_at) {
+        return `Terakhir disimpan pada: ${updateDate}`;
+      }
+      return '-';
+    },
   },
 };
 </script>

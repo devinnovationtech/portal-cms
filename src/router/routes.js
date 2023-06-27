@@ -21,17 +21,60 @@ export default [
   },
   {
     path: '/landing-page',
-    name: 'Landing Page',
     component: () => import('@/pages/LandingPage'),
     meta: {
       layout: 'AppLayoutPrivate',
-      permission: 'landing-page.manage',
     },
-    beforeEnter: userHasPermission,
+    children: [
+      {
+        path: '',
+        redirect: 'popup-banner', // Default children to navigate
+      },
+      {
+        path: 'popup-banner',
+        name: 'Landing Page',
+        component: () => import('@/components/LandingPage/PopupBanner'),
+        meta: {
+          layout: 'AppLayoutPrivate',
+          permission: 'landing-page.manage',
+        },
+        beforeEnter: userHasPermission,
+      },
+      {
+        path: 'infographics-banner',
+        name: 'Landing Page',
+        component: () => import('@/components/LandingPage/InfoGraphics'),
+        meta: {
+          layout: 'AppLayoutPrivate',
+          permission: 'landing-page.manage',
+        },
+        beforeEnter: userHasPermission,
+      },
+      {
+        path: 'layanan-terpopuler',
+        name: 'Landing Page',
+        component: () => import('@/common/components/Maintenance'),
+        meta: {
+          layout: 'AppLayoutPrivate',
+          permission: 'landing-page.manage',
+        },
+        beforeEnter: userHasPermission,
+      },
+      {
+        path: 'akses-cepat',
+        name: 'Landing Page',
+        component: () => import('@/common/components/Maintenance'),
+        meta: {
+          layout: 'AppLayoutPrivate',
+          permission: 'landing-page.manage',
+        },
+        beforeEnter: userHasPermission,
+      },
+    ],
   },
   {
-    path: '/popup-banner/tambah',
-    name: 'Tambah Pop-up Banner',
+    path: '/landing-page/popup-banner/tambah',
+    name: 'Landing Page',
     component: () => import('@/pages/LandingPage/CreateEditPopupBanner.vue'),
     meta: {
       mode: 'create',
@@ -39,8 +82,8 @@ export default [
     },
   },
   {
-    path: '/popup-banner/detail/:id/ubah',
-    name: 'Ubah Pop-up Banner',
+    path: '/landing-page/popup-banner/detail/:id/ubah',
+    name: 'Landing Page',
     component: () => import('@/pages/LandingPage/CreateEditPopupBanner.vue'),
     meta: {
       mode: 'edit',
@@ -48,9 +91,35 @@ export default [
     },
   },
   {
-    path: '/popup-banner/detail/:id',
-    name: 'Pop-up Banner Detail',
+    path: '/landing-page/popup-banner/detail/:id',
+    name: 'Landing Page',
     component: () => import('@/pages/LandingPage/PopupBannerDetailPage'),
+    meta: {
+      layout: 'AppLayoutPrivate',
+    },
+  },
+  {
+    path: '/landing-page/infographics-banner/detail/:id/ubah',
+    name: 'Landing Page',
+    component: () => import('@/pages/LandingPage/CreateEditInfographicsBanner.vue'),
+    meta: {
+      mode: 'edit',
+      layout: 'AppLayoutPrivate',
+    },
+  },
+  {
+    path: '/landing-page/infographics-banner/tambah',
+    name: 'Landing Page',
+    component: () => import('@/pages/LandingPage/CreateEditInfographicsBanner.vue'),
+    meta: {
+      mode: 'create',
+      layout: 'AppLayoutPrivate',
+    },
+  },
+  {
+    path: '/landing-page/infographics-banner/detail/:id',
+    name: 'Landing Page',
+    component: () => import('@/pages/LandingPage/InfoGraphicsDetailPage'),
     meta: {
       layout: 'AppLayoutPrivate',
     },

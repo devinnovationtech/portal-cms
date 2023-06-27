@@ -1,5 +1,8 @@
 <template>
-  <main class="pb-20">
+  <main
+    class="pb-20"
+    data-cy="infographics-banner-detail__container"
+  >
     <HeaderMenu>
       <div class="flex gap-3">
         <!-- Delete Button -->
@@ -7,6 +10,7 @@
         <BaseButton
           class="border-red-500 hover:bg-red-50 font-lato text-sm text-red-500"
           @click="showDeleteConfirmationModal"
+          data-cy="infographics-banner-detail__button-delete"
         >
           <template #icon-left>
             <JdsIcon
@@ -21,9 +25,10 @@
         <!-- Update Button -->
 
         <LinkButton
-          href="/"
+          :href="`/landing-page/infographics-banner/detail/${this.banner.id}/ubah`"
           variant="secondary"
           class="hover:bg-green-50 font-lato text-sm font-bold text-green-700"
+          data-cy="infographics-banner-detail__button-edit"
         >
           <template #icon-left>
             <JdsIcon
@@ -52,6 +57,7 @@
               'bg-gray-300 text-gray-800 transition duration-150 ease-linear': selectedPreview === item.name
             }"
             @click="showPreviewImage(item)"
+            data-cy="infographics-banner__button-preview"
           >
             <template #icon-left>
               <img
@@ -71,16 +77,21 @@
       <div class="bg-gray-50 w-full h-full overflow-hidden rounded-[8px]">
         <component
           :is="imagePreviewComponent"
-          :image-desktop="defaultImageDesktop"
-          :image-mobile="defaultImageMobile"
+          :image-desktop="banner?.image.desktop || defaultImageDesktop"
+          :image-mobile="banner?.image.mobile || defaultImageMobile"
           :is-selected="selectedPreview"
+          @showContentMobile="showContentMobile"
+          data-cy="infographics-banner-detail__image-preview"
         />
       </div>
 
       <!-- Data Preview -->
 
       <div class="rounded-lg overflow-hidden border border-gray-200">
-        <InfoGraphicsDetailTable />
+        <InfoGraphicsDetailTable
+          :banner="banner"
+          :loading="loading"
+        />
       </div>
 
       <!-- Delete Action Modal -->
@@ -95,7 +106,7 @@
             Apakah Anda yakin ingin menghapus banner ini?
           </p>
           <h2 class="font-lato text-md font-bold text-gray-800">
-            Akses Sapawarga
+            {{ banner.title }}
           </h2>
         </div>
         <template #footer>
@@ -103,13 +114,15 @@
             <BaseButton
               class="border-green-700 hover:bg-green-50 text-sm text-green-700"
               @click="onCancel"
+              data-cy="infographics-banner-detail__button-action-cancel"
             >
               Batal
             </BaseButton>
             <BaseButton
               class="bg-red-500 hover:bg-red-400 text-sm text-white"
               :disabled="deleteLoading"
-              @click="deleteBanner"
+              @click="deleteBanner(banner.id)"
+              data-cy="infographics-banner-detail__button-action-delete"
             >
               <p v-if="!deleteLoading">
                 Ya, saya yakin
@@ -160,6 +173,7 @@
             <BaseButton
               class="bg-green-700 hover:bg-green-600 text-sm text-white"
               @click="messageAction"
+              data-cy="infographics-banner-detail__button-action-confirmation"
             >
               Saya Mengerti
             </BaseButton>
@@ -179,6 +193,9 @@ import ProgressModal from '@/common/components/ProgressModal';
 import { STATUS_MODAL } from '@/common/constants/index';
 import InfoGraphicsImagePreview from '@/components/LandingPage/InfoGraphics/InfoGraphicsImagePreview';
 import InfoGraphicsDetailTable from '@/components/LandingPage/InfoGraphics/InfoGraphicsDetailTable';
+import { RepositoryFactory } from '@/repositories/RepositoryFactory';
+
+const infographicsBannerRepository = RepositoryFactory.get('infographicsBanner');
 
 export default {
   name: 'InfoGraphicsDetailPage',
@@ -209,9 +226,11 @@ export default {
           height: '18',
         },
       ],
-      defaultImageDesktop: require('@/assets/images/banner-aljabar.webp'),
-      defaultImageMobile: require('@/assets/images/banner-aljabar.webp'),
+      defaultImageDesktop: 'https://picsum.photos/1000/400',
+      defaultImageMobile: 'https://picsum.photos/200/300',
       selectedPreview: 'Desktop',
+      banner: {},
+      loading: false,
       modalStatus: STATUS_MODAL.NONE,
       isModalDelete: false,
       deleteLoading: false,
@@ -243,9 +262,31 @@ export default {
       return this.modalStatus === 'SUCCESS' ? 'text-green-600' : 'text-red-600';
     },
   },
+  async mounted() {
+    await this.fetchBannerById();
+  },
   methods: {
+    async fetchBannerById() {
+      try {
+        this.loading = true;
+        const response = await infographicsBannerRepository.getBannerById(this.$route.params.id);
+        const { data } = response.data;
+        this.banner = data;
+      } catch (error) {
+        this.$toast({
+          type: 'error',
+          message: 'Gagal mendapatkan data Info Graphics Banner, silakan coba beberapa saat lagi',
+        });
+      } finally {
+        this.loading = false;
+      }
+    },
     showPreviewImage(item) {
       this.selectedPreview = item.name;
+      if (item.name === 'Mobile') this.isContentMobile = true;
+    },
+    showContentMobile() {
+      this.isContentMobile = !this.isContentMobile;
     },
     onCancel() {
       this.modalStatus = STATUS_MODAL.NONE;
@@ -261,23 +302,37 @@ export default {
       this.errorMessage.title = '';
       this.errorMessage.body = '';
     },
-    deleteBanner() {
-      // @TODO: Hit delete action API by ID
-      setTimeout(() => {
-        this.modalStatus = STATUS_MODAL.LOADING;
-        this.progressValue = 25;
-        setTimeout(() => {
-          this.successMessage = {
-            title: 'Berhasil dihapus!',
-            body: 'Banner Akses Sapawarga berhasil hapus.',
-          };
-          this.modalStatus = STATUS_MODAL.SUCCESS;
-        }, 150);
-      }, 150);
+    async deleteBanner(id) {
+      try {
+        this.deleteLoading = true;
+        const response = await infographicsBannerRepository.deleteBannerById(id);
+        if (response.status === 200) {
+          this.modalStatus = STATUS_MODAL.LOADING;
+          this.progressValue = 25;
+          setTimeout(() => {
+            this.progressValue = 75;
+            setTimeout(() => {
+              this.successMessage = {
+                title: 'Berhasil dihapus!',
+                body: `Banner ${this.banner.title} berhasil hapus.`,
+              };
+              this.modalStatus = STATUS_MODAL.SUCCESS;
+            }, 150);
+          }, 150);
+        }
+      } catch {
+        this.errorMessage = {
+          title: 'Hapus Banner Gagal',
+          body: `Banner ${this.banner.title} gagal dihapus.`,
+        };
+        this.modalStatus = STATUS_MODAL.ERROR;
+      } finally {
+        this.deleteLoading = false;
+      }
     },
     messageAction() {
       if (this.modalStatus === STATUS_MODAL.SUCCESS) {
-        this.$router.push('/');
+        this.$router.push('/landing-page/infographics-banner');
       } else {
         this.resetDeleteState();
       }
