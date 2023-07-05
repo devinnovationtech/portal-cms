@@ -63,7 +63,7 @@ export default [
       {
         path: 'akses-cepat',
         name: 'Landing Page',
-        component: () => import('@/common/components/Maintenance'),
+        component: () => import('@/components/LandingPage/QuickLink'),
         meta: {
           layout: 'AppLayoutPrivate',
           permission: 'landing-page.manage',
