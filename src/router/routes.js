@@ -125,6 +125,15 @@ export default [
     },
   },
   {
+    path: '/landing-page/akses-cepat/tambah',
+    name: 'Landing Page',
+    component: () => import('@/pages/LandingPage/CreateEditAccessLink.vue'),
+    meta: {
+      mode: 'create',
+      layout: 'AppLayoutPrivate',
+    },
+  },
+  {
     path: '/layanan',
     name: 'Layanan Pemerintah Daerah Provinsi Jawa Barat',
     component: () => import('@/pages/Services'),
