@@ -90,7 +90,9 @@
                 <p
                   class="text-xs text-right text-gray-600"
                 >
-                  Tersisa {{ descriptionCharCounter }} karakter
+                  Tersisa
+                  <strong>{{ descriptionCharCounter }}</strong>
+                  karakter
                 </p>
               </div>
             </ValidationProvider>
@@ -135,10 +137,10 @@
                   placeholder-key="label"
                   name="radio-button-group"
                   orientation="horizontal"
+                  data-cy="access-link-form__status"
                   :value="form.is_active"
                   :error-message="errors[0]"
                   @change="setStatus"
-                  data-cy="access-link-form__status"
                 />
               </div>
             </ValidationProvider>
