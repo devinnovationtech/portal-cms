@@ -156,13 +156,13 @@
       data-cy="access-link-modal__list-logo"
     >
       <template #header>
-        <div class="w-full h-full px-4 py-6 border border-b-2 border-gray-100 flex items-center">
+        <div class="w-full h-full px-6 py-6 border border-b-2 border-gray-100 flex items-center">
           <h1 class="font-roboto font-medium text-green-700 text-[21px] leading-[34px]">
             Pilih Logo
           </h1>
         </div>
       </template>
-      <div class="w-full h-full px-2 pb-4">
+      <div class="w-full h-full px-2">
         <div class="flex flex-col items-center gap-4">
           <div class="min-w-0 w-full flex items-center">
             <SearchBar
@@ -174,7 +174,34 @@
             <h1 class="font-medium">
               Daftar Icon
             </h1>
-            list icon
+            <div class="bg-white w-full max-h-[240px] grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 grid-rows-[max-content] max-w-4xl mx-auto py-4 gap-2 overflow-y-scroll">
+              <div
+                v-for="icon in listIcon"
+                :key="icon.id"
+                class="max-h-max w-full"
+              >
+                <Button
+                  class="h-full w-full flex flex-col justify-center items-center rounded-lg p-4 hover:border hover:border-green-600 active:border active:border-green-600 focus:border focus:border-green-600"
+                  @click="onSelectLogo(icon)"
+                >
+                  <div class="w-16 h-16 flex items-center justify-center">
+                    <img
+                      :src="icon.url"
+                      :alt="`Ilustrasi logo ${icon.name}`"
+                      width="40"
+                      height="40"
+                      class="object-cover object-center"
+                    >
+                  </div>
+                  <p
+                    v-if="icon.name"
+                    class="text-gray-700 font-lato text-sm text-center line-clamp-1"
+                  >
+                    {{ icon.name }}
+                  </p>
+                </Button>
+              </div>
+            </div>
           </section>
         </div>
       </div>
@@ -201,6 +228,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 import HeaderMenu from '@/common/components/HeaderMenu';
 import BaseButton from '@/common/components/BaseButton';
 import BaseModal from '@/common/components/BaseModal';
@@ -235,6 +263,7 @@ export default {
   },
   data() {
     return {
+      listIcon: [],
       form: {
         image: '',
         title: '',
@@ -273,7 +302,15 @@ export default {
       return 200;
     },
   },
+  mounted() {
+    this.fetchListIcon();
+  },
   methods: {
+    async fetchListIcon() {
+      // @todo: replace mock API with dedicated API
+      const response = await axios.get('https://63d0d0903f08e4a8ff8aa241.mockapi.io/api/v1/showcase');
+      this.listIcon = response.data;
+    },
     setStatus(status) {
       this.form.is_active = status;
     },
@@ -290,6 +327,9 @@ export default {
     },
     onSearch() {
       // TODO: handle search
+    },
+    onSelectLogo() {
+      // TODO: handle select logo
     },
   },
 };
