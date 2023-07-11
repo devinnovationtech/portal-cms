@@ -38,6 +38,7 @@
               <BaseButton
                 class="bg-green-700 hover:bg-green-600 font-lato text-sm text-white"
                 data-cy="access-link-form__button-select-logo"
+                @click="showListLogo = true"
               >
                 <p>
                   Pilih Logo Layanan
@@ -148,12 +149,62 @@
         </div>
       </form>
     </ValidationObserver>
+
+    <!-- List Logo Modal -->
+    <BaseModal
+      :open="showListLogo"
+      data-cy="access-link-modal__list-logo"
+    >
+      <template #header>
+        <div class="w-full h-full px-4 py-6 border border-b-2 border-gray-100 flex items-center">
+          <h1 class="font-roboto font-medium text-green-700 text-[21px] leading-[34px]">
+            Pilih Logo
+          </h1>
+        </div>
+      </template>
+      <div class="w-full h-full px-2 pb-4">
+        <div class="flex flex-col items-center gap-4">
+          <div class="min-w-0 w-full flex items-center">
+            <SearchBar
+              placeholder="Cari logo"
+              @input="onSearch($event)"
+            />
+          </div>
+          <section class="w-full h-full border border-gray-100 rounded-lg px-4 py-6">
+            <h1 class="font-medium">
+              Daftar Icon
+            </h1>
+            list icon
+          </section>
+        </div>
+      </div>
+      <template #footer>
+        <div class="flex w-full h-full items-center justify-end gap-4 p-2">
+          <BaseButton
+            class="border border-green-700 hover:bg-green-50 text-sm text-green-700"
+            data-cy="access-link-modal__button-cancel"
+            @click="showListLogo = false"
+          >
+            Batal
+          </BaseButton>
+          <BaseButton
+            class="bg-green-700 hover:bg-green-600 text-sm text-white"
+            data-cy="access-link-modal__button-save"
+            @click="handleSubmitLogo"
+          >
+            Simpan Logo
+          </BaseButton>
+        </div>
+      </template>
+    </BaseModal>
   </main>
 </template>
 
 <script>
 import HeaderMenu from '@/common/components/HeaderMenu';
 import BaseButton from '@/common/components/BaseButton';
+import BaseModal from '@/common/components/BaseModal';
+import SearchBar from '@/common/components/SearchBar';
 import CardIcon from '@/assets/icons/card.svg?inline';
 
 import '@/common/helpers/vee-validate.js';
@@ -164,6 +215,8 @@ export default {
   components: {
     HeaderMenu,
     BaseButton,
+    BaseModal,
+    SearchBar,
     CardIcon,
     ValidationProvider,
     ValidationObserver,
@@ -187,11 +240,11 @@ export default {
         title: '',
         description: '',
         link: '',
-        is_active: 1,
+        is_active: '1',
       },
       status: [
-        { label: 'Aktif', value: 1 },
-        { label: 'Non-Aktif', value: 0 },
+        { label: 'Aktif', value: '1' },
+        { label: 'Non-Aktif', value: '0' },
       ],
       successMessage: {
         title: '',
@@ -203,6 +256,7 @@ export default {
       },
       isActiveLink: true,
       isToggled: false,
+      showListLogo: false,
     };
   },
   computed: {
@@ -227,6 +281,15 @@ export default {
       if (this.isEditMode) {
         this.isToggled = true;
       }
+    },
+    handleSubmitLogo() {
+      this.showListLogo = false;
+    },
+    onConfirmation() {
+      // TODO: handle post
+    },
+    onSearch() {
+      // TODO: handle search
     },
   },
 };
