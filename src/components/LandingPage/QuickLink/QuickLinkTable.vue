@@ -84,6 +84,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    meta: {
+      type: Object,
+      default: () => ({}),
+    },
   },
   data() {
     return {
@@ -101,6 +105,17 @@ export default {
     items: {
       handler() {
         this.listData = this.items;
+      },
+      immediate: true,
+    },
+    meta: {
+      handler() {
+        this.pagination = {
+          ...this.pagination,
+          currentPage: this.meta?.current_page || 1,
+          itemsPerPage: this.meta?.per_page || 5,
+          totalRows: this.meta?.total_count || 0,
+        };
       },
       immediate: true,
     },
