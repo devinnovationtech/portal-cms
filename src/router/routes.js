@@ -125,11 +125,28 @@ export default [
     },
   },
   {
+    path: '/landing-page/akses-cepat/detail/:id/ubah',
+    name: 'Landing Page',
+    component: () => import('@/common/components/Maintenance'),
+    meta: {
+      mode: 'edit',
+      layout: 'AppLayoutPrivate',
+    },
+  },
+  {
     path: '/landing-page/akses-cepat/tambah',
     name: 'Landing Page',
     component: () => import('@/pages/LandingPage/CreateEditAccessLink.vue'),
     meta: {
       mode: 'create',
+      layout: 'AppLayoutPrivate',
+    },
+  },
+  {
+    path: '/landing-page/akses-cepat/detail/:id',
+    name: 'Landing Page',
+    component: () => import('@/pages/LandingPage/QuickLinkDetailPage'),
+    meta: {
       layout: 'AppLayoutPrivate',
     },
   },

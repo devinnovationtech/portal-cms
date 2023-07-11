@@ -9,6 +9,7 @@ import registrationRepository from './registrationRepository';
 import templateRepository from './templateRepository';
 import popupBannersRepository from './popupBannerRepository';
 import infographicsBannerRepository from './infographicsBannerRepository';
+import quickLinkRepository from './quickLinkRepository';
 import masterDataServiceRepository from './masterDataServiceRepository';
 import masterDataPublicationRepository from './masterDatapublicationRepository';
 
@@ -24,6 +25,7 @@ const repositories = {
   template: templateRepository,
   popupBanner: popupBannersRepository,
   infographicsBanner: infographicsBannerRepository,
+  quickLink: quickLinkRepository,
   masterDataService: masterDataServiceRepository,
   masterDataPublication: masterDataPublicationRepository,
 };

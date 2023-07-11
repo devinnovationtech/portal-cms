@@ -40,7 +40,7 @@
       </div>
     </section>
 
-    <!-- Action Prompt -->l
+    <!-- Action Prompt -->
     <BaseModal
       :open="
         modalState === 'DELETE_CONFIRMATION' ||

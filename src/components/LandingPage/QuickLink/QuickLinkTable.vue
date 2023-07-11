@@ -70,7 +70,7 @@
           </td>
           <!-- @todo: change action component -->
           <td>
-            <InfoGraphicsBannerTableAction
+            <QuickLinkTableAction
               :item="item"
               @delete="$emit('delete', $event)"
             />
@@ -82,13 +82,13 @@
 </template>
 
 <script>
-import InfoGraphicsBannerTableAction from '@/components/LandingPage/InfoGraphics/InfoGraphicsBannerTableAction';
+import QuickLinkTableAction from '@/components/LandingPage/QuickLink/QuickLinkTableAction';
 import { QUICK_LINK_TABLE_HEADER } from '@/common/constants';
 
 export default {
   name: 'QuickLinkTable',
   components: {
-    InfoGraphicsBannerTableAction,
+    QuickLinkTableAction,
   },
   props: {
     items: {
