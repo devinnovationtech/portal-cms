@@ -52,7 +52,7 @@
 
       <!-- Image -->
 
-      <div class="flex justify-center py-10 bg-gray-50 rounded-lg">
+      <div class="flex justify-center py-12 bg-gray-50 rounded-lg">
         <img
           :src="quickLink.image"
           :alt="quickLink.title"
@@ -185,14 +185,7 @@ export default {
   data() {
     return {
       defaultImageDesktop: 'https://picsum.photos/1000/400',
-      quickLink: {
-        title: 'Laporan Keuangan',
-        image: 'https://dvgddkosknh6r.cloudfront.net/staging/media/img/1688464070-img_4876x1627.jpg',
-        description: 'Lakukan aktivitas pengajuan perizinan secara virtual, kapanpun dan dimanapun melalui Mall Pelayanan Publik Digital di Jawa Barat.',
-        link: 'www.google.com',
-        is_active: true,
-        updated_at: '2023-07-05T07:31:07Z',
-      },
+      quickLink: {},
       loading: false,
       modalStatus: STATUS_MODAL.NONE,
       isModalDelete: false,
@@ -222,15 +215,14 @@ export default {
       return this.modalStatus === 'SUCCESS' ? 'text-green-600' : 'text-red-600';
     },
   },
-  // @todo: implement fetching data from API
-  // async mounted() {
-  //   await this.fetchQuickLinkById();
-  // },
+  mounted() {
+    this.fetchQuickLinkById();
+  },
   methods: {
     async fetchQuickLinkById() {
       try {
         this.loading = true;
-        const response = await quickLinkRepository.getQuickLinkById(this.$route.params.id);
+        const response = await quickLinkRepository.getLinkById(this.$route.params.id);
         const { data } = response.data;
         this.quickLink = data;
       } catch (error) {
