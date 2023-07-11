@@ -166,14 +166,7 @@ export default {
   },
   data() {
     return {
-      links: [
-        {
-          title: 'Laporan Keuangan',
-          image: 'https://dvgddkosknh6r.cloudfront.net/staging/media/img/1688464070-img_4876x1627.jpg',
-          link: 'www.google.com',
-          is_active: true,
-        },
-      ],
+      links: [],
       loading: false,
       params: {
         per_page: 5,
@@ -191,15 +184,14 @@ export default {
       linkDetail: {},
     };
   },
-  // @todo: implement mounted in next PR
-  // async mounted() {
-  //   await this.fetchQuickLinks();
-  // },
+  mounted() {
+    this.fetchQuickLinks();
+  },
   methods: {
     async fetchQuickLinks() {
       try {
-        // @todo: change vuex method name
-        const response = await quickLinkRepository.getBanners(this.params);
+        this.loading = true;
+        const response = await quickLinkRepository.getLinks(this.params);
         const { data } = response.data;
         this.links = data;
       } catch (error) {
@@ -245,7 +237,7 @@ export default {
       try {
         this.modalState = MODAL_STATE.LOADING;
 
-        const response = await quickLinkRepository.updateQuickLinkStatusById(id, {
+        const response = await quickLinkRepository.updateLinkStatusById(id, {
           is_active: status,
         });
 
