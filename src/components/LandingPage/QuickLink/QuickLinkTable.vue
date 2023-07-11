@@ -1,83 +1,68 @@
 <template>
   <div class="quick-link rounded-lg border border-gray-100">
-    <JdsSimpleTable class="!table-auto">
-      <thead>
-        <tr>
-          <th
-            v-for="header in tableHeader"
-            :key="header.key"
-          >
-            {{ header.text }}
-          </th>
-        </tr>
-      </thead>
-      <tbody v-if="loading">
-        <tr>
-          <td colspan="6" class="text-center">
-            <JdsSpinner
-              size="56px"
-              class="py-14"
-            />
-          </td>
-        </tr>
-      </tbody>
-      <tbody v-else-if="items.length === 0">
-        <tr>
-          <td>Data tidak tersedia</td>
-        </tr>
-      </tbody>
-
-      <tbody v-else>
-        <tr
-          v-for="(item, index) in listData"
-          :key="index"
+    <JdsDataTable
+      :headers="tableHeader"
+      :items="items"
+      :loading="loading"
+      :pagination="pagination"
+      empty-text="Data tidak tersedia"
+      @next-page="onPaginationChange('next-page', $event)"
+      @previous-page="onPaginationChange('previous-page', $event)"
+      @per-page-change="onPaginationChange('per-page-change', $event)"
+      @page-change="onPaginationChange('page-change', $event)"
+    >
+      <!-- eslint-disable-next-line vue/valid-v-slot -->
+      <template #item.title="{item}">
+        <p
+          class="line-clamp-2"
+          :title="item.title"
         >
-          <td>
-            <p
-              class="px-2 line-clamp-2"
-              :title="item.title"
-            >
-              {{ item.title }}
-            </p>
-          </td>
-          <td>
-            <div class="w-[172px] h-[63px] rounded-md overflow-hidden">
-              <img
-                :src="item.image"
-                :alt="item.title"
-                class="w-full h-full object-cover"
-              >
-            </div>
-          </td>
-          <td class="px-2">
-            <a
-              v-if="item.link"
-              :href="item.link"
-              class="font-lato text-sm text-blue-700 underline hover:text-blue-800 break-all"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              {{ item.link }}
-            </a>
-            <span v-else>-</span>
-          </td>
-          <td>
-            <JdsToggle
-              :label="getStatusLabel(item.is_active)"
-              :checked="item.is_active"
-              @change="$emit('change:status', item)"
-            />
-          </td>
-          <!-- @todo: change action component -->
-          <td>
-            <QuickLinkTableAction
-              :item="item"
-              @delete="$emit('delete', $event)"
-            />
-          </td>
-        </tr>
-      </tbody>
-    </JdsSimpleTable>
+          {{ item.title }}
+        </p>
+      </template>
+
+      <!-- eslint-disable-next-line vue/valid-v-slot -->
+      <template #item.preview="{item}">
+        <div class="w-[172px] h-[63px] rounded-md overflow-hidden">
+          <img
+            :src="item.image"
+            :alt="item.title"
+            class="w-full h-full object-cover"
+          >
+        </div>
+      </template>
+
+      <!-- eslint-disable-next-line vue/valid-v-slot -->
+      <template #item.link="{item}">
+        <a
+          v-if="item.link"
+          :href="item.link"
+          class="font-lato text-sm text-blue-700 underline hover:text-blue-800 break-all"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          {{ item.link }}
+        </a>
+        <span v-else>-</span>
+      </template>
+
+      <!-- eslint-disable-next-line vue/valid-v-slot -->
+      <template #item.status="{item}">
+        <JdsToggle
+          :label="getStatusLabel(item.is_active)"
+          :checked="item.is_active"
+          @change="$emit('change:status', item)"
+        />
+      </template>
+
+      <!-- eslint-disable-next-line vue/valid-v-slot -->
+      <template #item.action="{item}">
+        <QuickLinkTableAction
+          :item="item"
+          @delete="$emit('delete', $event)"
+        />
+      </template>
+    </JdsDataTable>
   </div>
 </template>
 
@@ -103,6 +88,12 @@ export default {
   data() {
     return {
       tableHeader: QUICK_LINK_TABLE_HEADER,
+      pagination: {
+        currentPage: 1,
+        itemsPerPage: 5,
+        totalRows: 0,
+        itemsPerPageOptions: [5, 10, 15, 30],
+      },
       listData: [],
     };
   },
@@ -117,6 +108,45 @@ export default {
   methods: {
     getStatusLabel(isActive) {
       return isActive ? 'Aktif' : 'Tidak Aktif';
+    },
+    onPaginationChange(action, value) {
+      const paginationObj = { ...this.pagination };
+
+      switch (action) {
+        case 'next-page':
+        case 'previous-page':
+        case 'page-change':
+          paginationObj.currentPage = value;
+          break;
+
+        case 'per-page-change':
+          paginationObj.itemsPerPage = value;
+          break;
+
+        default:
+          break;
+      }
+
+      this.pagination = { ...paginationObj };
+
+      /**
+       *  NOTE:
+       *  `jds-pagination` emits `per-page-change` and `page-change` events
+       *  whenever user changes per page value.
+       *
+       *  To avoid double fetch, we immediately stop this function on
+       *  `per-page-change` event and let `page-change` event to
+       *  fetch data from API
+       */
+
+      if (action === 'per-page-change') {
+        return;
+      }
+
+      this.$emit('update:pagination', {
+        page: this.pagination.currentPage,
+        per_page: this.pagination.itemsPerPage,
+      });
     },
   },
 };
