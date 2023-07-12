@@ -1,6 +1,7 @@
 import Repository from './Repository';
 
 const resource = '/quick-accesses';
+const resourceLogo = '/logos';
 
 export default {
 
@@ -80,5 +81,19 @@ export default {
    */
   updateLinkStatusById(id, body) {
     return Repository.patch(`${resource}/${id}/status`, body);
+  },
+
+  /**
+   * Get Quick Link data Icon List
+   * @param {object} params
+   *
+   * @property {string} q - filter icon by name
+   * @property {number, string} per_page - how many icon data to show
+   * @property {number, string} page - filter icon by page number
+   *
+   * @returns {Promise}
+   */
+  getListIcon(params = {}) {
+    return Repository.get(`${resourceLogo}`, { params });
   },
 };
