@@ -30,6 +30,7 @@
           <QuickLinkTable
             :items="links"
             :loading="loading"
+            :meta="meta"
             class="min-w-[1000px]"
             @update:pagination="onUpdatePagination($event)"
             @delete="handleDeleteQuickLink($event)"
@@ -174,6 +175,12 @@ export default {
         q: '',
         is_active: null,
       },
+      meta: {
+        total_count: 0,
+        total_page: 0,
+        current_page: 1,
+        per_page: 5,
+      },
       progressValue: 0,
       modalState: MODAL_STATE.NONE,
       modalMessage: {
@@ -192,8 +199,9 @@ export default {
       try {
         this.loading = true;
         const response = await quickLinkRepository.getLinks(this.params);
-        const { data } = response.data;
+        const { data, meta } = response.data;
         this.links = data;
+        this.meta = meta;
       } catch (error) {
         this.$toast({
           type: 'error',
@@ -278,7 +286,7 @@ export default {
     async deleteQuickLinkById(id) {
       try {
         this.modalState = MODAL_STATE.LOADING;
-        const response = await quickLinkRepository.deleteQuickLinkById(id);
+        const response = await quickLinkRepository.deleteLinkById(id);
         if (response.status === 200) {
           this.progressValue = 25;
           setTimeout(() => {
