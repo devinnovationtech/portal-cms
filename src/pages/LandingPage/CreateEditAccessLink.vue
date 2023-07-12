@@ -33,6 +33,7 @@
                 Upload Logo Akses Cepat
               </h2>
             </div>
+            <!-- TODO: change display if image selected -->
             <div class="w-full border border-[#E3E7ED] rounded-[10px] px-[125px] py-[50px] flex flex-col justify-center items-center">
               <CardIcon class="w-[220px] h-[160px] mb-6" />
               <BaseButton
@@ -175,31 +176,38 @@
               Daftar Icon
             </h1>
             <div class="bg-white w-full max-h-[240px] grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 grid-rows-[max-content] max-w-4xl mx-auto py-4 gap-2 overflow-y-scroll">
-              <div
-                v-for="icon in listIcon"
-                :key="icon.id"
-                class="max-h-max w-full"
-              >
-                <Button
-                  class="h-full w-full flex flex-col justify-center items-center rounded-lg p-4 hover:border hover:border-green-600 active:border active:border-green-600 focus:border focus:border-green-600"
-                  @click="onSelectLogo(icon)"
+              <div v-if="listIcon && listIcon.length > 0">
+                <div
+                  v-for="icon in listIcon"
+                  :key="icon.id"
+                  class="max-h-max w-full"
                 >
-                  <div class="w-16 h-16 flex items-center justify-center">
-                    <img
-                      :src="icon.url"
-                      :alt="`Ilustrasi logo ${icon.name}`"
-                      width="40"
-                      height="40"
-                      class="object-cover object-center"
-                    >
-                  </div>
-                  <p
-                    v-if="icon.name"
-                    class="text-gray-700 font-lato text-sm text-center line-clamp-1"
+                  <Button
+                    class="h-full w-full flex flex-col justify-center items-center rounded-lg p-4 hover:border hover:border-green-600 active:border active:border-green-600 focus:border focus:border-green-600"
+                    @click="onSelectLogo(icon.image)"
                   >
-                    {{ icon.name }}
-                  </p>
-                </Button>
+                    <div class="w-16 h-16 flex items-center justify-center">
+                      <img
+                        :src="icon.image"
+                        :alt="`Ilustrasi logo ${icon.title}`"
+                        width="40"
+                        height="40"
+                        class="object-cover object-center"
+                      >
+                    </div>
+                    <p
+                      v-if="icon.title"
+                      class="text-gray-700 font-lato text-sm text-center line-clamp-1"
+                    >
+                      {{ icon.title }}
+                    </p>
+                  </Button>
+                </div>
+              </div>
+              <div v-else>
+                <p>
+                  Daftar icon tidak tersedia.
+                </p>
               </div>
             </div>
           </section>
@@ -228,7 +236,6 @@
 </template>
 
 <script>
-import axios from 'axios';
 import HeaderMenu from '@/common/components/HeaderMenu';
 import BaseButton from '@/common/components/BaseButton';
 import BaseModal from '@/common/components/BaseModal';
@@ -237,6 +244,9 @@ import CardIcon from '@/assets/icons/card.svg?inline';
 
 import '@/common/helpers/vee-validate.js';
 import { ValidationProvider, ValidationObserver } from 'vee-validate';
+import { RepositoryFactory } from '@/repositories/RepositoryFactory';
+
+const quickLinkRepository = RepositoryFactory.get('quickLink');
 
 export default {
   name: 'CreateEditAccessLink',
@@ -264,6 +274,11 @@ export default {
   data() {
     return {
       listIcon: [],
+      params: {
+        q: '',
+        per_page: 99,
+        page: 1,
+      },
       form: {
         image: '',
         title: '',
@@ -307,9 +322,15 @@ export default {
   },
   methods: {
     async fetchListIcon() {
-      // @todo: replace mock API with dedicated API
-      const response = await axios.get('https://63d0d0903f08e4a8ff8aa241.mockapi.io/api/v1/showcase');
-      this.listIcon = response.data;
+      try {
+        const response = await quickLinkRepository.getListIcon(this.params);
+        this.listIcon = response?.data?.data;
+      } catch (error) {
+        this.$toast({
+          type: 'error',
+          message: 'Gagal mendapatkan data icon akses cepat, silakan coba beberapa saat lagi',
+        });
+      }
     },
     setStatus(status) {
       this.form.is_active = status;
@@ -325,11 +346,12 @@ export default {
     onConfirmation() {
       // TODO: handle post
     },
-    onSearch() {
-      // TODO: handle search
+    onSearch(query) {
+      this.params.q = query;
+      this.fetchListIcon();
     },
-    onSelectLogo() {
-      // TODO: handle select logo
+    onSelectLogo(image) {
+      this.form.image = image;
     },
   },
 };
