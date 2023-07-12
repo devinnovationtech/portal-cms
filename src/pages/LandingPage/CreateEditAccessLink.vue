@@ -33,16 +33,45 @@
                 Upload Logo Akses Cepat
               </h2>
             </div>
-            <!-- TODO: change display if image selected -->
-            <div class="w-full border border-[#E3E7ED] rounded-[10px] px-[125px] py-[50px] flex flex-col justify-center items-center">
-              <CardIcon class="w-[220px] h-[160px] mb-6" />
+            <div class="w-full border border-[#E3E7ED] rounded-[10px] px-[125px] py-[50px] flex flex-col justify-center items-center gap-[10px]">
+              <div
+                v-if="!form.image"
+                class="flex flex-col items-center gap-[10px]"
+              >
+                <CardIcon class="w-[220px] h-[160px]" />
+                <p class="text-sm font-lato text-gray-700">
+                  Belum Terpilih
+                </p>
+              </div>
+              <div
+                v-else
+                class="flex flex-col items-center gap-[10px]"
+              >
+                <div class="grid place-content-center">
+                  <img
+                    ref="access-link-form_logo"
+                    data-cy="access-link-form__logo"
+                    :src="form.image"
+                    alt="Ilustrasi logo terpilih"
+                    width="160"
+                    height="160"
+                    class="w-[160px] h-[160px] max-w-full object-cover object-center rounded-full bg-gray-50"
+                  >
+                </div>
+                <p class="text-sm font-lato text-gray-700">
+                  Icon Terpilih
+                </p>
+              </div>
               <BaseButton
-                class="bg-green-700 hover:bg-green-600 font-lato text-sm text-white"
+                class="bg-green-700 hover:bg-green-600 font-lato text-sm text-white mt-5"
                 data-cy="access-link-form__button-select-logo"
                 @click="showListLogo = true"
               >
-                <p>
+                <p v-if="!form.image">
                   Pilih Logo Layanan
+                </p>
+                <p v-else>
+                  Ganti Icon
                 </p>
               </BaseButton>
             </div>
@@ -279,6 +308,7 @@ export default {
         per_page: 99,
         page: 1,
       },
+      selectedLogo: '',
       form: {
         image: '',
         title: '',
@@ -340,18 +370,19 @@ export default {
         this.isToggled = true;
       }
     },
-    handleSubmitLogo() {
-      this.showListLogo = false;
-    },
-    onConfirmation() {
-      // TODO: handle post
-    },
     onSearch(query) {
       this.params.q = query;
       this.fetchListIcon();
     },
-    onSelectLogo(image) {
-      this.form.image = image;
+    onSelectLogo(logo) {
+      this.selectedLogo = logo;
+    },
+    handleSubmitLogo() {
+      this.showListLogo = false;
+      this.form.image = this.selectedLogo;
+    },
+    onConfirmation() {
+      // TODO: handle post
     },
   },
 };
