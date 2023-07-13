@@ -65,7 +65,7 @@
               <BaseButton
                 class="bg-green-700 hover:bg-green-600 font-lato text-sm text-white mt-5"
                 data-cy="access-link-form__button-select-logo"
-                @click="showListLogo = true"
+                @click="openModalListLogo"
               >
                 <p v-if="!form.image">
                   Pilih Logo Layanan
@@ -254,7 +254,7 @@
           <BaseButton
             class="bg-green-700 hover:bg-green-600 text-sm text-white"
             data-cy="access-link-modal__button-save"
-            @click="handleSubmitLogo"
+            @click="onSaveLogo"
           >
             Simpan Logo
           </BaseButton>
@@ -264,7 +264,7 @@
 
     <!-- Confirmation Popup -->
     <BaseModal
-      :open="submitStatus === 'CONFIRMATION'"
+      v-if="!showListLogo && submitStatus === 'CONFIRMATION'"
       data-cy="access-link-form__confirmation-modal"
     >
       <div class="w-full h-full px-2 pb-4">
@@ -343,6 +343,7 @@
 import HeaderMenu from '@/common/components/HeaderMenu';
 import BaseButton from '@/common/components/BaseButton';
 import BaseModal from '@/common/components/BaseModal';
+import ProgressModal from '@/common/components/ProgressModal';
 import SearchBar from '@/common/components/SearchBar';
 import CardIcon from '@/assets/icons/card.svg?inline';
 
@@ -366,6 +367,7 @@ export default {
     HeaderMenu,
     BaseButton,
     BaseModal,
+    ProgressModal,
     SearchBar,
     CardIcon,
     ValidationProvider,
@@ -431,6 +433,18 @@ export default {
       }
       return 200;
     },
+    messageTitle() {
+      return this.submitStatus === 'SUCCESS' ? this.successMessage.title : this.errorMessage.title;
+    },
+    messageBody() {
+      return this.submitStatus === 'SUCCESS' ? this.successMessage.body : this.errorMessage.body;
+    },
+    messageIconName() {
+      return this.submitStatus === 'SUCCESS' ? 'check-mark-circle' : 'warning';
+    },
+    messageIconClassName() {
+      return this.submitStatus === 'SUCCESS' ? 'text-green-600' : 'text-red-600';
+    },
   },
   mounted() {
     this.fetchListIcon();
@@ -459,10 +473,14 @@ export default {
       this.params.q = query;
       this.fetchListIcon();
     },
+    openModalListLogo() {
+      this.showListLogo = true;
+      this.submitStatus = FORM_SUBMIT_STATUS.NONE;
+    },
     onSelectLogo(logo) {
       this.selectedLogo = logo;
     },
-    handleSubmitLogo() {
+    onSaveLogo() {
       this.showListLogo = false;
       this.form.image = this.selectedLogo;
     },
