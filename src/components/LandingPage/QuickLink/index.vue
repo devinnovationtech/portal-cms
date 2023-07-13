@@ -41,6 +41,13 @@
       </div>
     </section>
 
+    <!-- Action Progress -->
+    <ProgressModal
+      v-if="modalState === 'LOADING'"
+      :open="modalState === 'LOADING'"
+      :value="progressValue"
+    />
+
     <!-- Action Prompt -->
     <BaseModal
       :open="
@@ -144,6 +151,7 @@ import BaseButton from '@/common/components/BaseButton';
 import BaseModal from '@/common/components/BaseModal';
 import LinkButton from '@/common/components/LinkButton';
 import QuickLinkTable from '@/components/LandingPage/QuickLink/QuickLinkTable';
+import ProgressModal from '@/common/components/ProgressModal';
 
 const quickLinkRepository = RepositoryFactory.get('quickLink');
 
@@ -164,6 +172,7 @@ export default {
     BaseModal,
     LinkButton,
     QuickLinkTable,
+    ProgressModal,
   },
   data() {
     return {
