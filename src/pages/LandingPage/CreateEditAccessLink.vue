@@ -152,29 +152,6 @@
                 />
               </div>
             </ValidationProvider>
-
-            <ValidationProvider
-              v-slot="{ errors }"
-              rules="required"
-            >
-              <div class="flex flex-col mb-5">
-                <label
-                  class="font-lato text-blue-gray-800 mb-3 text-[15px]"
-                >
-                  Status Akses
-                </label>
-                <JdsRadioButtonGroup
-                  :items="status"
-                  placeholder-key="label"
-                  name="radio-button-group"
-                  orientation="horizontal"
-                  data-cy="access-link-form__status"
-                  :value="form.is_active"
-                  :error-message="errors[0]"
-                  @change="setStatus"
-                />
-              </div>
-            </ValidationProvider>
           </section>
         </div>
       </form>
@@ -399,12 +376,7 @@ export default {
         title: '',
         description: '',
         link: '',
-        is_active: '1',
       },
-      status: [
-        { label: 'Aktif', value: '1' },
-        { label: 'Non-Aktif', value: '0' },
-      ],
       successMessage: {
         title: '',
         body: '',
@@ -460,9 +432,6 @@ export default {
           message: 'Gagal mendapatkan data, silakan coba beberapa saat lagi',
         });
       }
-    },
-    setStatus(status) {
-      this.form.is_active = status;
     },
     onToggleClick() {
       if (this.isEditMode) {
