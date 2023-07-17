@@ -4,10 +4,9 @@
       ref="form"
       v-slot="{ invalid, changed }"
     >
-      <form
+      <div
         class="access-link__form"
         data-cy="access-link-form__container"
-        @submit.prevent="onConfirmation"
       >
         <!-- Submit -->
         <HeaderMenu>
@@ -17,6 +16,7 @@
               class="bg-green-700 hover:bg-green-600 font-lato text-sm text-white"
               data-cy="access-link-form__save-button"
               :disabled="invalid || (!changed && !isToggled)"
+              @click="onConfirmation"
             >
               <p>
                 Simpan Data
@@ -154,7 +154,7 @@
             </ValidationProvider>
           </section>
         </div>
-      </form>
+      </div>
     </ValidationObserver>
 
     <!-- List Logo Modal -->
@@ -241,7 +241,7 @@
 
     <!-- Confirmation Popup -->
     <BaseModal
-      v-if="!showListLogo && submitStatus === 'CONFIRMATION'"
+      :open="submitStatus === 'CONFIRMATION'"
       data-cy="access-link-form__confirmation-modal"
     >
       <div class="w-full h-full px-2 pb-4">
