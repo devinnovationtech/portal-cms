@@ -4,10 +4,9 @@
       ref="form"
       v-slot="{ invalid, changed }"
     >
-      <form
+      <div
         class="access-link__form"
         data-cy="access-link-form__container"
-        @submit.prevent="onConfirmation"
       >
         <!-- Submit -->
         <HeaderMenu>
@@ -17,6 +16,7 @@
               class="bg-green-700 hover:bg-green-600 font-lato text-sm text-white"
               data-cy="access-link-form__save-button"
               :disabled="invalid || (!changed && !isToggled)"
+              @click="onConfirmation"
             >
               <p>
                 Simpan Data
@@ -26,7 +26,7 @@
         </HeaderMenu>
 
         <div class="w-full h-full py-8 px-5 rounded-xl bg-white">
-          <!-- Banner Upload -->
+          <!-- Logo Upload -->
           <section class="mb-8">
             <div class="col-span-2 flex justify-between">
               <h2 class="font-lato font-bold text-base leading-6 text-blue-gray-800 mb-3">
@@ -65,7 +65,7 @@
               <BaseButton
                 class="bg-green-700 hover:bg-green-600 font-lato text-sm text-white mt-5"
                 data-cy="access-link-form__button-select-logo"
-                @click="showListLogo = true"
+                @click="openModalListLogo"
               >
                 <p v-if="!form.image">
                   Pilih Logo Layanan
@@ -152,32 +152,9 @@
                 />
               </div>
             </ValidationProvider>
-
-            <ValidationProvider
-              v-slot="{ errors }"
-              rules="required"
-            >
-              <div class="flex flex-col mb-5">
-                <label
-                  class="font-lato text-blue-gray-800 mb-3 text-[15px]"
-                >
-                  Status Akses
-                </label>
-                <JdsRadioButtonGroup
-                  :items="status"
-                  placeholder-key="label"
-                  name="radio-button-group"
-                  orientation="horizontal"
-                  data-cy="access-link-form__status"
-                  :value="form.is_active"
-                  :error-message="errors[0]"
-                  @change="setStatus"
-                />
-              </div>
-            </ValidationProvider>
           </section>
         </div>
-      </form>
+      </div>
     </ValidationObserver>
 
     <!-- List Logo Modal -->
@@ -254,9 +231,84 @@
           <BaseButton
             class="bg-green-700 hover:bg-green-600 text-sm text-white"
             data-cy="access-link-modal__button-save"
-            @click="handleSubmitLogo"
+            @click="onSaveLogo"
           >
             Simpan Logo
+          </BaseButton>
+        </div>
+      </template>
+    </BaseModal>
+
+    <!-- Confirmation Popup -->
+    <BaseModal
+      :open="submitStatus === 'CONFIRMATION'"
+      data-cy="access-link-form__confirmation-modal"
+    >
+      <div class="w-full h-full px-2 pb-4">
+        <h1 class="font-roboto font-medium text-green-700 text-[21px] leading-[34px] mb-6">
+          Simpan Data
+        </h1>
+        <div class="flex items-center gap-4">
+          <p class="text-sm leading-6 to-blue-gray-800">
+            Apakah Anda ingin menyimpan data?
+          </p>
+        </div>
+      </div>
+      <template #footer>
+        <div class="flex w-full h-full items-center justify-end gap-4 p-2">
+          <BaseButton
+            class="border border-green-700 hover:bg-green-50 text-sm text-green-700"
+            data-cy="access-link-form__confirmation-cancel"
+            @click="onCancel"
+          >
+            Tidak
+          </BaseButton>
+          <BaseButton
+            class="bg-green-700 hover:bg-green-600 text-sm text-white"
+            data-cy="access-link-form__confirmation-save"
+            @click="handleSubmit"
+          >
+            Ya, simpan data
+          </BaseButton>
+        </div>
+      </template>
+    </BaseModal>
+
+    <!-- Submit Progress -->
+    <ProgressModal
+      :open="submitStatus === 'LOADING'"
+      :value="submitProgress"
+      message="Mohon tunggu, penyimpanan data sedang diproses"
+      data-cy="access-link-form__progress-modal"
+    />
+
+    <!-- Success/Error Message -->
+    <BaseModal
+      :open="submitStatus === 'SUCCESS' || submitStatus === 'ERROR'"
+      data-cy="access-link-form__message-modal"
+    >
+      <div class="w-full h-full px-2 pb-4">
+        <h1 class="font-roboto font-medium text-green-700 text-[21px] leading-[34px] mb-6">
+          {{ messageTitle }}
+        </h1>
+        <div class="flex items-center gap-4">
+          <JdsIcon
+            :name="messageIconName"
+            :class="messageIconClassName"
+          />
+          <p class="text-sm leading-6 to-blue-gray-800">
+            {{ messageBody }}
+          </p>
+        </div>
+      </div>
+      <template #footer>
+        <div class="flex w-full h-full items-center justify-center gap-4 p-2">
+          <BaseButton
+            class="bg-green-700 hover:bg-green-600 text-sm text-white"
+            data-cy="access-link-form__message-button"
+            @click="messageAction"
+          >
+            Saya Mengerti
           </BaseButton>
         </div>
       </template>
@@ -268,6 +320,7 @@
 import HeaderMenu from '@/common/components/HeaderMenu';
 import BaseButton from '@/common/components/BaseButton';
 import BaseModal from '@/common/components/BaseModal';
+import ProgressModal from '@/common/components/ProgressModal';
 import SearchBar from '@/common/components/SearchBar';
 import CardIcon from '@/assets/icons/card.svg?inline';
 
@@ -277,12 +330,21 @@ import { RepositoryFactory } from '@/repositories/RepositoryFactory';
 
 const quickLinkRepository = RepositoryFactory.get('quickLink');
 
+const FORM_SUBMIT_STATUS = Object.freeze({
+  NONE: 'NONE',
+  CONFIRMATION: 'CONFIRMATION',
+  LOADING: 'LOADING',
+  SUCCESS: 'SUCCESS',
+  ERROR: 'ERROR',
+});
+
 export default {
   name: 'CreateEditAccessLink',
   components: {
     HeaderMenu,
     BaseButton,
     BaseModal,
+    ProgressModal,
     SearchBar,
     CardIcon,
     ValidationProvider,
@@ -314,12 +376,7 @@ export default {
         title: '',
         description: '',
         link: '',
-        is_active: '1',
       },
-      status: [
-        { label: 'Aktif', value: '1' },
-        { label: 'Non-Aktif', value: '0' },
-      ],
       successMessage: {
         title: '',
         body: '',
@@ -328,6 +385,8 @@ export default {
         title: '',
         body: '',
       },
+      submitStatus: FORM_SUBMIT_STATUS.NONE,
+      submitProgress: 0,
       isActiveLink: true,
       isToggled: false,
       showListLogo: false,
@@ -346,6 +405,18 @@ export default {
       }
       return 200;
     },
+    messageTitle() {
+      return this.submitStatus === 'SUCCESS' ? this.successMessage.title : this.errorMessage.title;
+    },
+    messageBody() {
+      return this.submitStatus === 'SUCCESS' ? this.successMessage.body : this.errorMessage.body;
+    },
+    messageIconName() {
+      return this.submitStatus === 'SUCCESS' ? 'check-mark-circle' : 'warning';
+    },
+    messageIconClassName() {
+      return this.submitStatus === 'SUCCESS' ? 'text-green-600' : 'text-red-600';
+    },
   },
   mounted() {
     this.fetchListIcon();
@@ -358,12 +429,9 @@ export default {
       } catch (error) {
         this.$toast({
           type: 'error',
-          message: 'Gagal mendapatkan data icon akses cepat, silakan coba beberapa saat lagi',
+          message: 'Gagal mendapatkan data, silakan coba beberapa saat lagi',
         });
       }
-    },
-    setStatus(status) {
-      this.form.is_active = status;
     },
     onToggleClick() {
       if (this.isEditMode) {
@@ -374,15 +442,73 @@ export default {
       this.params.q = query;
       this.fetchListIcon();
     },
+    openModalListLogo() {
+      this.showListLogo = true;
+      this.submitStatus = FORM_SUBMIT_STATUS.NONE;
+    },
     onSelectLogo(logo) {
       this.selectedLogo = logo;
     },
-    handleSubmitLogo() {
+    onSaveLogo() {
       this.showListLogo = false;
       this.form.image = this.selectedLogo;
     },
     onConfirmation() {
-      // TODO: handle post
+      this.submitStatus = FORM_SUBMIT_STATUS.CONFIRMATION;
+    },
+    onCancel() {
+      this.submitStatus = FORM_SUBMIT_STATUS.NONE;
+    },
+    handleSubmit() {
+      if (this.mode === 'create') {
+        this.submitForm();
+      }
+      // TODO: handle if edit
+    },
+    async submitForm() {
+      if (!this.isActiveLink) {
+        this.form.link = '';
+      }
+      try {
+        this.submitStatus = FORM_SUBMIT_STATUS.LOADING;
+        this.submitProgress = 25;
+
+        const response = await quickLinkRepository.createLink(this.form);
+        if (response.status === 201) {
+          // Add timeout to prevent progress bar too fast
+          setTimeout(() => {
+            this.submitProgress = 75;
+            setTimeout(() => {
+              this.successMessage = {
+                title: 'Berhasil!',
+                body: 'Data yang Anda buat berhasil disimpan.',
+              };
+              this.submitStatus = FORM_SUBMIT_STATUS.SUCCESS;
+            }, 150);
+          }, 150);
+        }
+      } catch (error) {
+        this.errorMessage = {
+          title: 'Gagal!',
+          body: 'Data yang Anda buat gagal disimpan.',
+        };
+        this.submitStatus = FORM_SUBMIT_STATUS.ERROR;
+      }
+    },
+    messageAction() {
+      if (this.submitStatus === FORM_SUBMIT_STATUS.SUCCESS) {
+        this.$router.push('/landing-page/akses-cepat');
+      } else {
+        this.resetSubmitState();
+      }
+    },
+    resetSubmitState() {
+      this.submitStatus = FORM_SUBMIT_STATUS.NONE;
+      this.submitProgress = 0;
+      this.successMessage.title = '';
+      this.successMessage.body = '';
+      this.errorMessage.title = '';
+      this.errorMessage.body = '';
     },
   },
 };
