@@ -127,7 +127,7 @@ export default [
   {
     path: '/landing-page/akses-cepat/detail/:id/ubah',
     name: 'Landing Page',
-    component: () => import('@/common/components/Maintenance'),
+    component: () => import('@/pages/LandingPage/CreateEditAccessLink.vue'),
     meta: {
       mode: 'edit',
       layout: 'AppLayoutPrivate',
