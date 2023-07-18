@@ -80,7 +80,7 @@
           <section>
             <ValidationProvider
               v-slot="{ errors }"
-              rules="required|max:50"
+              rules="required|max:100"
             >
               <div class="flex flex-col mb-5">
                 <label
