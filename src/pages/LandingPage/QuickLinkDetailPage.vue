@@ -251,7 +251,7 @@ export default {
     async deleteQuickLink(id) {
       try {
         this.deleteLoading = true;
-        const response = await quickLinkRepository.deleteQuickLinkById(id);
+        const response = await quickLinkRepository.deleteLinkById(id);
         if (response.status === 200) {
           this.modalStatus = STATUS_MODAL.LOADING;
           this.progressValue = 25;

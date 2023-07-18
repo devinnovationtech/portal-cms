@@ -14,7 +14,7 @@
       <!-- eslint-disable-next-line vue/valid-v-slot -->
       <template #item.title="{item}">
         <p
-          class="line-clamp-2"
+          class="line-clamp-2 max-w-[228px]"
           :title="item.title"
         >
           {{ item.title }}
