@@ -355,7 +355,8 @@ export default {
       if (to.meta.mode === 'create') {
         next();
       } else {
-        // TODO : fetch data form if edit
+        const { id } = to.params;
+        await quickLinkRepository.getLinkById(id);
         next();
       }
     } catch (error) {
@@ -418,8 +419,21 @@ export default {
       return this.submitStatus === 'SUCCESS' ? 'text-green-600' : 'text-red-600';
     },
   },
-  mounted() {
+  async mounted() {
     this.fetchListIcon();
+    if (this.isEditMode) {
+      try {
+        const { id } = this.$route.params;
+        const response = await this.fetchData(id);
+        const { data } = response.data;
+        this.setInitialData(data);
+      } catch (error) {
+        this.$toast({
+          type: 'error',
+          message: 'Gagal mendapatkan data.',
+        });
+      }
+    }
   },
   methods: {
     async fetchListIcon() {
@@ -430,6 +444,18 @@ export default {
         this.$toast({
           type: 'error',
           message: 'Gagal mendapatkan data, silakan coba beberapa saat lagi',
+        });
+      }
+    },
+    async fetchData(id) {
+      try {
+        const response = await quickLinkRepository.getLinkById(id);
+        return new Promise((resolve) => {
+          resolve(response);
+        });
+      } catch (error) {
+        return new Promise(() => {
+          throw new Error(error);
         });
       }
     },
@@ -462,8 +488,9 @@ export default {
     handleSubmit() {
       if (this.mode === 'create') {
         this.submitForm();
+      } else {
+        this.updateForm();
       }
-      // TODO: handle if edit
     },
     async submitForm() {
       if (!this.isActiveLink) {
@@ -495,6 +522,39 @@ export default {
         this.submitStatus = FORM_SUBMIT_STATUS.ERROR;
       }
     },
+    async updateForm() {
+      if (!this.isActiveLink) {
+        this.form.link = '';
+      }
+      try {
+        this.submitStatus = FORM_SUBMIT_STATUS.LOADING;
+        this.submitProgress = 25;
+
+        const { id } = this.$route.params;
+        const response = await quickLinkRepository.updateLink(id, this.form);
+
+        if (response.status === 200) {
+          // Add timeout to prevent progress bar too fast
+          setTimeout(() => {
+            this.submitProgress = 75;
+
+            setTimeout(() => {
+              this.successMessage = {
+                title: 'Update Berhasil!',
+                body: 'Data yang Anda ubah berhasil disimpan.',
+              };
+              this.submitStatus = FORM_SUBMIT_STATUS.SUCCESS;
+            }, 150);
+          }, 150);
+        }
+      } catch (error) {
+        this.errorMessage = {
+          title: 'Update Gagal!',
+          body: 'Data yang Anda ubah gagal disimpan.',
+        };
+        this.submitStatus = FORM_SUBMIT_STATUS.ERROR;
+      }
+    },
     messageAction() {
       if (this.submitStatus === FORM_SUBMIT_STATUS.SUCCESS) {
         this.$router.push('/landing-page/akses-cepat');
@@ -509,6 +569,13 @@ export default {
       this.successMessage.body = '';
       this.errorMessage.title = '';
       this.errorMessage.body = '';
+    },
+    setInitialData(data) {
+      this.form.image = data.image;
+      this.form.title = data.title;
+      this.form.description = data.description;
+      this.form.link = data.link;
+      this.isActiveLink = !!(this.form.link);
     },
   },
 };
