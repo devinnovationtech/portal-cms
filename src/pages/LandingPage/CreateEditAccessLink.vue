@@ -190,7 +190,7 @@
             <h1 class="font-medium">
               Daftar Icon
             </h1>
-            <div class="bg-white w-full max-h-[240px] grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 grid-rows-[max-content] max-w-4xl mx-auto py-4 gap-2 overflow-y-scroll">
+            <div class="bg-white w-[800px] max-h-[240px] grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 grid-rows-[max-content] max-w-4xl mx-auto py-4 gap-2 overflow-y-scroll">
               <div
                 v-for="icon in listIcon"
                 :key="icon.id"
