@@ -182,35 +182,33 @@
               Daftar Icon
             </h1>
             <div class="bg-white w-full max-h-[240px] grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 grid-rows-[max-content] max-w-4xl mx-auto py-4 gap-2 overflow-y-scroll">
-              <div v-if="listIcon && listIcon.length > 0">
-                <div
-                  v-for="icon in listIcon"
-                  :key="icon.id"
-                  class="max-h-max w-full"
+              <div
+                v-for="icon in listIcon"
+                :key="icon.id"
+                class="max-h-max w-full"
+              >
+                <Button
+                  class="h-full w-full flex flex-col justify-center items-center rounded-lg p-4 hover:border hover:border-green-600 active:border active:border-green-600 focus:border focus:border-green-600"
+                  @click="onSelectLogo(icon.image)"
                 >
-                  <Button
-                    class="h-full w-full flex flex-col justify-center items-center rounded-lg p-4 hover:border hover:border-green-600 active:border active:border-green-600 focus:border focus:border-green-600"
-                    @click="onSelectLogo(icon.image)"
-                  >
-                    <div class="w-16 h-16 flex items-center justify-center">
-                      <img
-                        :src="icon.image"
-                        :alt="`Ilustrasi logo ${icon.title}`"
-                        width="40"
-                        height="40"
-                        class="object-cover object-center"
-                      >
-                    </div>
-                    <p
-                      v-if="icon.title"
-                      class="text-gray-700 font-lato text-sm text-center line-clamp-1"
+                  <div class="w-16 h-16 flex items-center justify-center">
+                    <img
+                      :src="icon.image"
+                      :alt="`Ilustrasi logo ${icon.title}`"
+                      width="40"
+                      height="40"
+                      class="object-cover object-center"
                     >
-                      {{ icon.title }}
-                    </p>
-                  </Button>
-                </div>
+                  </div>
+                  <p
+                    v-if="icon.title"
+                    class="text-gray-700 font-lato text-sm text-center line-clamp-1"
+                  >
+                    {{ icon.title }}
+                  </p>
+                </Button>
               </div>
-              <div v-else>
+              <div v-if="listIcon.length === 0">
                 <p>
                   Daftar icon tidak tersedia.
                 </p>
