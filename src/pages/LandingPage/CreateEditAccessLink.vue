@@ -47,15 +47,15 @@
                 v-else
                 class="flex flex-col items-center gap-[10px]"
               >
-                <div class="grid place-content-center">
+                <div class="w-[160px] h-[160px] grid place-content-center rounded-full bg-gray-50">
                   <img
                     ref="access-link-form_logo"
                     data-cy="access-link-form__logo"
                     :src="form.image"
                     alt="Ilustrasi logo terpilih"
-                    width="160"
-                    height="160"
-                    class="w-[160px] h-[160px] max-w-full object-cover object-center rounded-full bg-gray-50"
+                    width="65"
+                    height="65"
+                    class="w-[65px] h-[65px] max-w-full object-contain object-center"
                   >
                 </div>
                 <p class="text-sm font-lato text-gray-700">
@@ -74,6 +74,15 @@
                   Ganti Icon
                 </p>
               </BaseButton>
+              <ValidationProvider
+                v-slot="{ errors }"
+                rules="required"
+              >
+                <input type="hidden" v-model="form.image">
+                <span class="font-lato text-[13px] text-red-700 mt-3">
+                  {{ errors[0] }}
+                </span>
+              </ValidationProvider>
             </div>
           </section>
 
