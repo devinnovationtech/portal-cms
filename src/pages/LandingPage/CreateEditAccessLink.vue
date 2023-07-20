@@ -198,6 +198,7 @@
               >
                 <Button
                   class="h-full w-full flex flex-col justify-center items-center rounded-lg p-4 hover:border hover:border-green-600 active:border active:border-green-600 focus:border focus:border-green-600"
+                  data-cy="access-link-form__button-logo"
                   @click="onSelectLogo(icon.image)"
                 >
                   <div class="w-16 h-16 flex items-center justify-center">
