@@ -24,3 +24,8 @@ pnpm-debug.log*
 
 # tailwind
 /src/assets/styles/main.css
+
+# sonarqube
+sonar-project.properties
+.sonar/
+.scannerwork/
