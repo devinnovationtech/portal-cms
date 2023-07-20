@@ -110,7 +110,7 @@
       :open="modalState === 'ERROR' || modalState === 'SUCCESS'"
       data-cy="quick-link__message-modal"
     >
-      <div class="w-full h-full px-2 pb-4">
+      <div class="w-full h-full max-w-[510px] px-2 pb-4">
         <h1 class="font-roboto font-medium text-green-700 text-[21px] leading-[34px] mb-6">
           {{ modalMessage.title }}
         </h1>
@@ -273,10 +273,15 @@ export default {
           }, 150);
         }
       } catch (error) {
-        this.setModalMessage({
-          title: 'Update Gagal!',
-          message: 'Update status gagal, mohon coba beberapa saat lagi',
-        });
+        let message = 'Update status gagal, mohon coba beberapa saat lagi';
+        let title = 'Update Gagal !';
+
+        if (error.response.status === 400) {
+          message = 'Batas maksimum data aktif adalah 8. Mohon nonaktifkan terlebih dahulu data yang telah aktif sebelum mengaktifkan data baru.';
+          title = 'Data Aktif Mencapai Batas !';
+        }
+
+        this.setModalMessage({ title, message });
         this.modalState = MODAL_STATE.ERROR;
       }
     },

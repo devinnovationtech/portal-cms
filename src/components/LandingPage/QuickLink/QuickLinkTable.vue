@@ -27,7 +27,7 @@
           <img
             :src="item.image"
             :alt="item.title"
-            class="w-full h-full object-cover"
+            class="w-full h-full object-contain"
           >
         </div>
       </template>
