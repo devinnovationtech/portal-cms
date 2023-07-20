@@ -190,7 +190,7 @@
             <h1 class="font-medium">
               Daftar Icon
             </h1>
-            <div class="bg-white w-[800px] max-h-[240px] grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 grid-rows-[max-content] max-w-4xl mx-auto py-4 gap-2 overflow-y-scroll">
+            <div class="access-link bg-white w-[800px] max-h-[240px] grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 grid-rows-[max-content] max-w-4xl mx-auto py-4 pr-4 gap-2 overflow-y-scroll">
               <div
                 v-for="icon in listIcon"
                 :key="icon.id"
@@ -587,3 +587,29 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+  .access-link {
+    /* Scroll bar stylings */
+    scrollbar-color: #E0E0E0 white;
+    scrollbar-width: thin;
+
+    &::-webkit-scrollbar {
+      width: 20px;
+      height: 20px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background-color: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: #E0E0E0;
+      height: 80px;
+      border: 6px solid transparent;
+      border-radius: 10px;
+      background-clip: content-box;
+    }
+    /* End of scroll bar stylings */
+  }
+</style>
