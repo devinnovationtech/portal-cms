@@ -15,7 +15,7 @@
               type="submit"
               class="bg-green-700 hover:bg-green-600 font-lato text-sm text-white"
               data-cy="access-link-form__save-button"
-              :disabled="invalid || (!changed && !isToggled)"
+              :disabled="invalid || (!changed && !isToggled && !isLogoChanged)"
               @click="onConfirmation"
             >
               <p>
@@ -239,6 +239,7 @@
           <BaseButton
             class="bg-green-700 hover:bg-green-600 text-sm text-white"
             data-cy="access-link-modal__button-save"
+            :disabled="isDisableSaveLogo"
             @click="onSaveLogo"
           >
             Simpan Logo
@@ -380,6 +381,7 @@ export default {
         page: 1,
       },
       selectedLogo: '',
+      isLogoChanged: false,
       form: {
         image: '',
         title: '',
@@ -425,6 +427,9 @@ export default {
     },
     messageIconClassName() {
       return this.submitStatus === 'SUCCESS' ? 'text-green-600' : 'text-red-600';
+    },
+    isDisableSaveLogo() {
+      return !(this.selectedLogo);
     },
   },
   async mounted() {
@@ -486,6 +491,9 @@ export default {
     onSaveLogo() {
       this.showListLogo = false;
       this.form.image = this.selectedLogo;
+      if (this.isEditMode) {
+        this.isLogoChanged = true;
+      }
     },
     onConfirmation() {
       this.submitStatus = FORM_SUBMIT_STATUS.CONFIRMATION;
