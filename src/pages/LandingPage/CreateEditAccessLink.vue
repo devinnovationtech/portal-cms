@@ -47,15 +47,15 @@
                 v-else
                 class="flex flex-col items-center gap-[10px]"
               >
-                <div class="grid place-content-center">
+                <div class="w-[160px] h-[160px] grid place-content-center rounded-full bg-gray-50">
                   <img
                     ref="access-link-form_logo"
                     data-cy="access-link-form__logo"
                     :src="form.image"
                     alt="Ilustrasi logo terpilih"
-                    width="160"
-                    height="160"
-                    class="w-[160px] h-[160px] max-w-full object-cover object-center rounded-full bg-gray-50"
+                    width="65"
+                    height="65"
+                    class="w-[65px] h-[65px] max-w-full object-contain object-center"
                   >
                 </div>
                 <p class="text-sm font-lato text-gray-700">
@@ -74,6 +74,15 @@
                   Ganti Icon
                 </p>
               </BaseButton>
+              <ValidationProvider
+                v-slot="{ errors }"
+                rules="required"
+              >
+                <input type="hidden" v-model="form.image">
+                <span class="font-lato text-[13px] text-red-700 mt-3">
+                  {{ errors[0] }}
+                </span>
+              </ValidationProvider>
             </div>
           </section>
 
@@ -181,36 +190,35 @@
             <h1 class="font-medium">
               Daftar Icon
             </h1>
-            <div class="bg-white w-full max-h-[240px] grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 grid-rows-[max-content] max-w-4xl mx-auto py-4 gap-2 overflow-y-scroll">
-              <div v-if="listIcon && listIcon.length > 0">
-                <div
-                  v-for="icon in listIcon"
-                  :key="icon.id"
-                  class="max-h-max w-full"
+            <div class="access-link bg-white w-[800px] max-h-[240px] grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 grid-rows-[max-content] max-w-4xl mx-auto py-4 pr-4 gap-2 overflow-y-scroll">
+              <div
+                v-for="icon in listIcon"
+                :key="icon.id"
+                class="max-h-max w-full"
+              >
+                <Button
+                  class="h-full w-full flex flex-col justify-center items-center rounded-lg p-4 hover:border hover:border-green-600 active:border active:border-green-600 focus:border focus:border-green-600"
+                  data-cy="access-link-form__button-logo"
+                  @click="onSelectLogo(icon.image)"
                 >
-                  <Button
-                    class="h-full w-full flex flex-col justify-center items-center rounded-lg p-4 hover:border hover:border-green-600 active:border active:border-green-600 focus:border focus:border-green-600"
-                    @click="onSelectLogo(icon.image)"
-                  >
-                    <div class="w-16 h-16 flex items-center justify-center">
-                      <img
-                        :src="icon.image"
-                        :alt="`Ilustrasi logo ${icon.title}`"
-                        width="40"
-                        height="40"
-                        class="object-cover object-center"
-                      >
-                    </div>
-                    <p
-                      v-if="icon.title"
-                      class="text-gray-700 font-lato text-sm text-center line-clamp-1"
+                  <div class="w-16 h-16 flex items-center justify-center">
+                    <img
+                      :src="icon.image"
+                      :alt="`Ilustrasi logo ${icon.title}`"
+                      width="40"
+                      height="40"
+                      class="object-cover object-center"
                     >
-                      {{ icon.title }}
-                    </p>
-                  </Button>
-                </div>
+                  </div>
+                  <p
+                    v-if="icon.title"
+                    class="text-gray-700 font-lato text-sm text-center line-clamp-1"
+                  >
+                    {{ icon.title }}
+                  </p>
+                </Button>
               </div>
-              <div v-else>
+              <div v-if="listIcon.length === 0">
                 <p>
                   Daftar icon tidak tersedia.
                 </p>
@@ -580,3 +588,29 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+  .access-link {
+    /* Scroll bar stylings */
+    scrollbar-color: #E0E0E0 white;
+    scrollbar-width: thin;
+
+    &::-webkit-scrollbar {
+      width: 20px;
+      height: 20px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background-color: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: #E0E0E0;
+      height: 80px;
+      border: 6px solid transparent;
+      border-radius: 10px;
+      background-clip: content-box;
+    }
+    /* End of scroll bar stylings */
+  }
+</style>
