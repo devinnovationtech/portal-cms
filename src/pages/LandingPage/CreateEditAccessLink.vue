@@ -494,6 +494,9 @@ export default {
       if (this.isEditMode) {
         this.isLogoChanged = true;
       }
+      if (this.params.q) {
+        this.onSearch('');
+      }
     },
     onConfirmation() {
       this.submitStatus = FORM_SUBMIT_STATUS.CONFIRMATION;
