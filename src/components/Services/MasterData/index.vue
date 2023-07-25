@@ -9,8 +9,8 @@
       <section class="w-full bg-white py-6 px-3">
         <div class="full flex justify-between mb-5 items-center">
           <SearchBar
-            v-if="isShowSearchBar"
             placeholder="Cari layanan"
+            @input="onSearch($event)"
           />
           <LinkButton
             href="/layanan/master-data/tambah"
@@ -177,8 +177,6 @@ export default {
           count: null,
         },
       ],
-      // @TODO: remove isShowSearchBar varible when search feature is develop
-      isShowSearchBar: false,
       services: [],
       serviceDetail: {},
       currentTab: 'ALL',
@@ -313,6 +311,10 @@ export default {
         message: 'Apakah Anda yakin ingin menghapus Layanan ini?',
         action: () => this.deleteMasterDataById(id),
       });
+    },
+    onSearch(query) {
+      this.setParams({ q: query });
+      this.fetchMasterData();
     },
     onUpdatePagination(data) {
       this.setParams(data);
