@@ -607,6 +607,7 @@ export default {
       state.stepOne.services.location = payload.services.locations;
 
       state.stepTwo.application.status = payload.application.status;
+      state.stepTwo.application.title = payload.application.title;
       state.stepTwo.application.name = payload.application.name;
       state.stepTwo.application.features = payload.application.features;
 
