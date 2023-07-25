@@ -8,6 +8,10 @@
       />
       <section class="w-full bg-white py-6 px-3">
         <div class="full flex justify-between mb-5 items-center">
+          <SearchBar
+            placeholder="Cari layanan"
+            @input="onSearch($event)"
+          />
           <LinkButton
             href="/layanan/daftar-publikasi/tambah"
             title="Tambah Layanan"
@@ -129,6 +133,7 @@ import LinkButton from '@/common/components/LinkButton';
 import PublicationTable from '@/components/Services/Publication/PublicationTable';
 import PublicationTabBar from '@/components/Services/Publication/PublicationTabBar';
 import { RepositoryFactory } from '@/repositories/RepositoryFactory';
+import SearchBar from '@/common/components/SearchBar';
 
 const masterDataPublicationRepository = RepositoryFactory.get('masterDataPublication');
 
@@ -148,6 +153,7 @@ export default {
     LinkButton,
     PublicationTabBar,
     PublicationTable,
+    SearchBar,
   },
   data() {
     return {
@@ -297,6 +303,10 @@ export default {
         message: 'Apakah Anda yakin ingin menghapus Layanan ini?',
         action: () => this.deletePublication(id),
       });
+    },
+    onSearch(query) {
+      this.setParams({ q: query });
+      this.fetchPublicationData();
     },
     onUpdatePagination(params) {
       this.setParams(params);
