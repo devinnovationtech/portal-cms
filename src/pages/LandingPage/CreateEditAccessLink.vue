@@ -50,7 +50,7 @@
                 <div class="w-[160px] h-[160px] grid place-content-center rounded-full bg-gray-50">
                   <img
                     ref="access-link-form_logo"
-                    data-cy="access-link-form__logo"
+                    data-cy="access-link-form__logo-selected"
                     :src="form.image"
                     alt="Ilustrasi logo terpilih"
                     width="65"
@@ -209,11 +209,13 @@
                         width="40"
                         height="40"
                         class="object-cover object-center"
+                        data-cy="access-link-form__logo-list"
                       >
                     </div>
                     <p
                       v-if="icon.title"
                       class="text-gray-700 font-lato text-sm text-center line-clamp-1"
+                        data-cy="access-link-form__logo-title"
                     >
                       {{ icon.title }}
                     </p>
