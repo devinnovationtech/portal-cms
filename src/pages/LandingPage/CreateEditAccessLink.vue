@@ -215,7 +215,7 @@
                     <p
                       v-if="icon.title"
                       class="text-gray-700 font-lato text-sm text-center line-clamp-1"
-                        data-cy="access-link-form__logo-title"
+                      data-cy="access-link-form__logo-title"
                     >
                       {{ icon.title }}
                     </p>
