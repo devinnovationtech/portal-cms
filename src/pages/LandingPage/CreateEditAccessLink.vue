@@ -50,7 +50,7 @@
                 <div class="w-[160px] h-[160px] grid place-content-center rounded-full bg-gray-50">
                   <img
                     ref="access-link-form_logo"
-                    data-cy="access-link-form__logo"
+                    data-cy="access-link-form__logo-selected"
                     :src="form.image"
                     alt="Ilustrasi logo terpilih"
                     width="65"
@@ -187,42 +187,53 @@
             />
           </div>
           <section class="w-full h-full border border-gray-100 rounded-lg px-4 py-6">
-            <h1 class="font-medium">
-              Daftar Icon
-            </h1>
-            <div class="access-link bg-white w-[800px] max-h-[240px] grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 grid-rows-[max-content] max-w-4xl mx-auto py-4 pr-4 gap-2 overflow-y-scroll">
-              <div
-                v-for="icon in listIcon"
-                :key="icon.id"
-                class="max-h-max w-full"
-              >
-                <Button
-                  class="h-full w-full flex flex-col justify-center items-center rounded-lg p-4 hover:border hover:border-green-600 active:border active:border-green-600 focus:border focus:border-green-600"
-                  data-cy="access-link-form__button-logo"
-                  @click="onSelectLogo(icon.image)"
+            <div v-if="listIcon && listIcon.length > 0">
+              <h1 class="font-medium">
+                Daftar Icon
+              </h1>
+              <div class="access-link bg-white w-[800px] max-h-[255px] grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 grid-rows-[max-content] max-w-4xl mx-auto py-4 pr-4 gap-2 overflow-y-scroll">
+                <div
+                  v-for="icon in listIcon"
+                  :key="icon.id"
+                  class="max-h-max w-full"
                 >
-                  <div class="w-16 h-16 flex items-center justify-center">
-                    <img
-                      :src="icon.image"
-                      :alt="`Ilustrasi logo ${icon.title}`"
-                      width="40"
-                      height="40"
-                      class="object-cover object-center"
-                    >
-                  </div>
-                  <p
-                    v-if="icon.title"
-                    class="text-gray-700 font-lato text-sm text-center line-clamp-1"
+                  <Button
+                    class="h-full w-full flex flex-col justify-center items-center rounded-lg p-4 hover:border hover:border-green-600 active:border active:border-green-600 focus:border focus:border-green-600"
+                    data-cy="access-link-form__button-logo"
+                    @click="onSelectLogo(icon.image)"
                   >
-                    {{ icon.title }}
-                  </p>
-                </Button>
+                    <div class="w-16 h-16 flex items-center justify-center">
+                      <img
+                        :src="icon.image"
+                        :alt="`Ilustrasi logo ${icon.title}`"
+                        width="40"
+                        height="40"
+                        class="object-cover object-center"
+                        data-cy="access-link-form__logo-list"
+                      >
+                    </div>
+                    <p
+                      v-if="icon.title"
+                      class="text-gray-700 font-lato text-sm text-center line-clamp-1"
+                      data-cy="access-link-form__logo-title"
+                    >
+                      {{ icon.title }}
+                    </p>
+                  </Button>
+                </div>
               </div>
-              <div v-if="listIcon.length === 0">
-                <p>
-                  Daftar icon tidak tersedia.
-                </p>
-              </div>
+            </div>
+            <div
+              v-else
+              class="w-[800px] h-full p-6 flex flex-col items-center gap-[10px]"
+            >
+              <SearchNotFoundIcon />
+              <h1 class="font-medium text-gray-900 text-[21px]">
+                Data tidak ditemukan !
+              </h1>
+              <p class="text-gray-700 text-sm">
+                Data yang Kamu minta tidak dapat ditemukan. Mohon pastikan Kamu telah memasukkan informasi yang benar.
+              </p>
             </div>
           </section>
         </div>
@@ -232,7 +243,7 @@
           <BaseButton
             class="border border-green-700 hover:bg-green-50 text-sm text-green-700"
             data-cy="access-link-modal__button-cancel"
-            @click="showListLogo = false"
+            @click="onCancelSelectLogo"
           >
             Batal
           </BaseButton>
@@ -332,6 +343,7 @@ import BaseModal from '@/common/components/BaseModal';
 import ProgressModal from '@/common/components/ProgressModal';
 import SearchBar from '@/common/components/SearchBar';
 import CardIcon from '@/assets/icons/card.svg?inline';
+import SearchNotFoundIcon from '@/assets/icons/search-not-found.svg?inline';
 
 import '@/common/helpers/vee-validate.js';
 import { ValidationProvider, ValidationObserver } from 'vee-validate';
@@ -356,6 +368,7 @@ export default {
     ProgressModal,
     SearchBar,
     CardIcon,
+    SearchNotFoundIcon,
     ValidationProvider,
     ValidationObserver,
   },
@@ -494,6 +507,12 @@ export default {
       if (this.isEditMode) {
         this.isLogoChanged = true;
       }
+      if (this.params.q) {
+        this.onSearch('');
+      }
+    },
+    onCancelSelectLogo() {
+      this.showListLogo = false;
       if (this.params.q) {
         this.onSearch('');
       }
