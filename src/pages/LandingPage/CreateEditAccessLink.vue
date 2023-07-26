@@ -232,7 +232,7 @@
           <BaseButton
             class="border border-green-700 hover:bg-green-50 text-sm text-green-700"
             data-cy="access-link-modal__button-cancel"
-            @click="showListLogo = false"
+            @click="onCancelSelectLogo"
           >
             Batal
           </BaseButton>
@@ -494,6 +494,12 @@ export default {
       if (this.isEditMode) {
         this.isLogoChanged = true;
       }
+      if (this.params.q) {
+        this.onSearch('');
+      }
+    },
+    onCancelSelectLogo() {
+      this.showListLogo = false;
       if (this.params.q) {
         this.onSearch('');
       }
