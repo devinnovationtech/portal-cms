@@ -69,7 +69,7 @@
             <span>di kolom judul banner</span>
           </p>
         </div>
-        <div class="w-full h-full overflow-hidden overflow-y-scroll relative">
+        <div class="w-full h-full overflow-hidden overflow-y-scroll relative rounded-xl">
           <InfoGraphicsBannerTable
             :items="banners"
             :additional-items="additionalBanners"

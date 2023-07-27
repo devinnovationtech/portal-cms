@@ -63,7 +63,7 @@ export default [
       {
         path: 'akses-cepat',
         name: 'Landing Page',
-        component: () => import('@/common/components/Maintenance'),
+        component: () => import('@/components/LandingPage/QuickLink'),
         meta: {
           layout: 'AppLayoutPrivate',
           permission: 'landing-page.manage',
@@ -120,6 +120,32 @@ export default [
     path: '/landing-page/infographics-banner/detail/:id',
     name: 'Landing Page',
     component: () => import('@/pages/LandingPage/InfoGraphicsDetailPage'),
+    meta: {
+      layout: 'AppLayoutPrivate',
+    },
+  },
+  {
+    path: '/landing-page/akses-cepat/detail/:id/ubah',
+    name: 'Landing Page',
+    component: () => import('@/pages/LandingPage/CreateEditAccessLink.vue'),
+    meta: {
+      mode: 'edit',
+      layout: 'AppLayoutPrivate',
+    },
+  },
+  {
+    path: '/landing-page/akses-cepat/tambah',
+    name: 'Landing Page',
+    component: () => import('@/pages/LandingPage/CreateEditAccessLink.vue'),
+    meta: {
+      mode: 'create',
+      layout: 'AppLayoutPrivate',
+    },
+  },
+  {
+    path: '/landing-page/akses-cepat/detail/:id',
+    name: 'Landing Page',
+    component: () => import('@/pages/LandingPage/QuickLinkDetailPage'),
     meta: {
       layout: 'AppLayoutPrivate',
     },
