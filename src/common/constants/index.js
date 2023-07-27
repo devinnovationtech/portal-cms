@@ -418,3 +418,26 @@ export const INFO_GRAPHICS_BANNER_TABLE_HEADER = [
     text: 'Aksi',
   },
 ];
+
+export const QUICK_LINK_TABLE_HEADER = [
+  {
+    key: 'title',
+    text: 'Judul Program',
+  },
+  {
+    key: 'preview',
+    text: 'Preview',
+  },
+  {
+    key: 'link',
+    text: 'Link Redirect',
+  },
+  {
+    key: 'status',
+    text: 'Status',
+  },
+  {
+    key: 'action',
+    text: 'Aksi',
+  },
+];
