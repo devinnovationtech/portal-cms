@@ -1,7 +1,5 @@
 import Vue from 'vue';
-import * as Sentry from '@sentry/vue';
 import { DesignSystem } from '@jabardigitalservice/jds-design-system';
-import { BrowserTracing } from '@sentry/tracing';
 import PortalVue from 'portal-vue';
 import toast from '@/plugins/toast';
 import permission from '@/plugins/permission';
@@ -25,21 +23,6 @@ if (process.env.VUE_APP_ENV === 'local') {
   const { worker } = require('./mocks/browser');
   worker.start();
 }
-
-Sentry.init({
-  Vue,
-  dsn: process.env.VUE_APP_SENTRY_DSN,
-  integrations: [
-    new BrowserTracing({
-      routingInstrumentation: Sentry.vueRouterInstrumentation(router),
-      // NOTE: this origins should not be hardcoded
-      // TODO: find a way to make this values dynamic
-      tracingOrigins: ['develop--portal-jabar-cms.netlify.app'],
-    }),
-  ],
-  tracesSampleRate: parseFloat(process.env.VUE_APP_SENTRY_SAMPLE_RATE) || 0.2,
-  environment: process.env.VUE_APP_ENV || 'development',
-});
 
 store.dispatch('auth/getUser')
   .then(() => store.dispatch('auth/getPermissions'))
