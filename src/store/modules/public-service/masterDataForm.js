@@ -683,13 +683,19 @@ export default {
 
       // generate different state based on step one state (technical)
       if (technical === 'ONLINE') {
-        stepOneFacilities = { ...defaultFacilityState };
+        stepOneFacilities = {
+          ...defaultFacilityState,
+          is_active: 0,
+        };
         stepTwoState = { ...state.stepTwo };
       }
 
       // generate different state based on step two state (status)
       if (technical === 'ONLINE' && applicationStatus === 'NOT-AVAILABLE') {
-        stepOneFacilities = { ...defaultFacilityState };
+        stepOneFacilities = {
+          ...defaultFacilityState,
+          is_active: 0,
+        };
         stepTwoState = {
           application: {
             ...defaultApplicationState,
