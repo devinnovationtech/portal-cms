@@ -420,7 +420,7 @@ export default {
       state.stepTwo.service_description.locations = payload.services.locations.map((item) => ({
         ...item,
       }));
-      state.stepTwo.service_description.application.title = payload.application.title;
+      state.stepTwo.service_description.application.title = payload.application.title || 'Fitur Aplikasi';
       state.stepTwo.service_description.application.name = payload.application.name;
       state.stepTwo.service_description.application.status = payload.application.status;
       state.stepTwo.service_description.application.features = payload.application.features.map((item) => ({
@@ -543,7 +543,7 @@ export default {
         image_upload_status: item.file_download_uri ? IMAGE_UPLOAD_STATUS.HASDEFAULT : IMAGE_UPLOAD_STATUS.NONE,
       }));
 
-      state.stepTwo.service_description.application.title = payload.service_description.application.title;
+      state.stepTwo.service_description.application.title = payload.service_description.application.title || 'Fitur Aplikasi';
       state.stepTwo.service_description.application.name = payload.service_description.application.name;
       state.stepTwo.service_description.application.status = payload.service_description.application.status;
       state.stepTwo.service_description.application.features = [...payload.service_description.application.features];
