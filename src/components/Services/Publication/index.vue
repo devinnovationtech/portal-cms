@@ -12,6 +12,11 @@
             placeholder="Cari layanan"
             @input="onSearch($event)"
           />
+          <ServiceFilter
+            :opd-name-options="opdNameLists"
+            :params="params"
+            @change:filter="onChangeFilter($event)"
+          />
           <LinkButton
             href="/layanan/daftar-publikasi/tambah"
             title="Tambah Layanan"
@@ -31,7 +36,7 @@
         </div>
         <div class="w-full overflow-auto">
           <PublicationTable
-            :items="services"
+            :items="items"
             :loading="loading"
             :meta="meta"
             class="min-w-[1000px]"
@@ -126,6 +131,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import { formatDate } from '@/common/helpers/date';
 import BaseButton from '@/common/components/BaseButton';
 import BaseModal from '@/common/components/BaseModal';
@@ -134,8 +140,10 @@ import PublicationTable from '@/components/Services/Publication/PublicationTable
 import PublicationTabBar from '@/components/Services/Publication/PublicationTabBar';
 import { RepositoryFactory } from '@/repositories/RepositoryFactory';
 import SearchBar from '@/common/components/SearchBar';
+import ServiceFilter from '@/components/Services/serviceFilter';
 
 const masterDataPublicationRepository = RepositoryFactory.get('masterDataPublication');
+const unitRepository = RepositoryFactory.get('unit');
 
 const MODAL_STATE = Object.freeze({
   NONE: 'NONE',
@@ -154,6 +162,7 @@ export default {
     PublicationTabBar,
     PublicationTable,
     SearchBar,
+    ServiceFilter,
   },
   data() {
     return {
@@ -187,6 +196,11 @@ export default {
         page: 1,
         q: '',
         status: '',
+        opd_name: '',
+        service_user: '',
+        technical: '',
+        start_date: '',
+        end_date: '',
       },
       meta: {
         total_count: 0,
@@ -200,11 +214,36 @@ export default {
         message: '',
         action: null,
       },
+      opdNameLists: [],
     };
+  },
+  computed: {
+    ...mapGetters('auth', ['user']),
+    isSuperAdmin() {
+      return this.user?.role?.name === 'Super Admin';
+    },
+    items() {
+      if (Array.isArray(this.services)) {
+        const items = this.services.map((item) => ({
+          id: item.id,
+          opd_name: item.opd_name,
+          service_name: item.service_name,
+          service_user: item.service_user,
+          technical: item.technical,
+          status: item.status,
+          updated_at: item.updated_at,
+        }));
+        return items;
+      }
+      return [];
+    },
   },
   mounted() {
     this.fetchPublicationData();
     this.fetchStatusCounter();
+    if (this.isSuperAdmin) {
+      this.fetchOpdNameLists();
+    }
   },
   methods: {
     async deletePublication(id) {
@@ -226,6 +265,20 @@ export default {
         this.modalState = MODAL_STATE.ERROR;
       } finally {
         this.fetchStatusCounter();
+      }
+    },
+    async fetchOpdNameLists() {
+      try {
+        const response = await unitRepository.getUnitLists();
+        const { data, meta } = response.data;
+        this.meta = meta;
+        // Mapping data to get opd name lists and push to opdNameLists variable
+        data.map((unit) => this.opdNameLists.push(unit.name));
+      } catch {
+        this.$toast({
+          type: 'error',
+          message: 'Gagal mendapatkan data author, silakan coba beberapa saat lagi',
+        });
       }
     },
     async fetchPublicationData() {
@@ -324,6 +377,21 @@ export default {
       this.modalMessage.title = '';
       this.modalMessage.message = '';
       this.modalMessage.action = null;
+    },
+    /**
+     * Set new params when filter changes
+     * and fetch master data again
+     *
+     * @param {object} data - object cotaining new param based on emit values
+     * @property {string} opd_name
+     * @property {string} service_user
+     * @property {string} technical
+     * @property {string} start_date
+     * @property {string} end_date
+     */
+    onChangeFilter(data) {
+      this.setParams(data);
+      this.fetchPublicationData();
     },
   },
 };
