@@ -7,10 +7,15 @@
         @update:currentTab="filterMasterDataByStatus"
       />
       <section class="w-full bg-white py-6 px-3">
-        <div class="full flex justify-between mb-5 items-center">
+        <div class="w-full flex gap-x-4 justify-between mb-5 items-center">
           <SearchBar
             placeholder="Cari layanan"
             @input="onSearch($event)"
+          />
+          <ServiceFilter
+            :opd-name-options="opdNameLists"
+            :params="params"
+            @change:filter="onChangeFilter($event)"
           />
           <LinkButton
             href="/layanan/master-data/tambah"
@@ -24,14 +29,14 @@
                 fill="#fff"
               />
             </template>
-            <p class="font-lato font-bold text-snm text-white leading-none">
+            <p class="font-lato font-bold text-sm text-white leading-none">
               Tambah Layanan
             </p>
           </LinkButton>
         </div>
         <div class="w-full overflow-auto">
           <MasterDataTable
-            :items="services"
+            :items="items"
             :loading="loading"
             :meta="meta"
             class="min-w-[1000px]"
@@ -134,8 +139,11 @@ import LinkButton from '@/common/components/LinkButton';
 import SearchBar from '@/common/components/SearchBar';
 import { formatDate } from '@/common/helpers/date';
 import { RepositoryFactory } from '@/repositories/RepositoryFactory';
+import { mapGetters } from 'vuex';
+import ServiceFilter from '@/components/Services/serviceFilter';
 
 const masterDataRepository = RepositoryFactory.get('masterDataService');
+const unitRepository = RepositoryFactory.get('unit');
 
 const MODAL_STATE = Object.freeze({
   NONE: 'NONE',
@@ -154,6 +162,7 @@ export default {
     MasterDataTable,
     LinkButton,
     SearchBar,
+    ServiceFilter,
   },
   data() {
     return {
@@ -197,13 +206,41 @@ export default {
         per_page: 10,
         page: 1,
         q: '',
+        opd_name: '',
+        service_user: '',
+        technical: '',
+        start_date: '',
+        end_date: '',
       },
       formatDate,
+      opdNameLists: [],
     };
+  },
+  computed: {
+    ...mapGetters('auth', ['user']),
+    isSuperAdmin() {
+      return this.user?.role?.name === 'Super Admin';
+    },
+    items() {
+      if (Array.isArray(this.services)) {
+        const items = this.services.map((item) => ({
+          id: item.id,
+          opd_name: item.opd_name,
+          service_name: item.service_name,
+          service_user: item.service_user,
+          technical: item.technical,
+        }));
+        return items;
+      }
+      return [];
+    },
   },
   mounted() {
     this.fetchMasterData();
     this.fetchStatusCounter();
+    if (this.isSuperAdmin) {
+      this.fetchOpdNameLists();
+    }
   },
   methods: {
     async deleteMasterDataById(id) {
@@ -249,6 +286,20 @@ export default {
         });
       } finally {
         this.loading = false;
+      }
+    },
+    async fetchOpdNameLists() {
+      try {
+        const response = await unitRepository.getUnitLists();
+        const { data, meta } = response.data;
+        this.meta = meta;
+        // Mapping data to get opd name lists and push to opdNameLists variable
+        data.map((unit) => this.opdNameLists.push(unit.name));
+      } catch {
+        this.$toast({
+          type: 'error',
+          message: 'Gagal mendapatkan data author, silakan coba beberapa saat lagi',
+        });
       }
     },
     async fetchStatusCounter() {
@@ -332,6 +383,21 @@ export default {
     setParams(data) {
       const newParams = { ...this.params, ...data };
       this.params = { ...newParams };
+    },
+    /**
+     * Set new params when filter changes
+     * and fetch master data again
+     *
+     * @param {object} data - object cotaining new param based on emit values
+     * @property {string} opd_name
+     * @property {string} service_user
+     * @property {string} technical
+     * @property {string} start_date
+     * @property {string} end_date
+     */
+    onChangeFilter(data) {
+      this.setParams(data);
+      this.fetchMasterData();
     },
   },
 };
