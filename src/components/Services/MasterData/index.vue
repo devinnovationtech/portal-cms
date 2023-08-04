@@ -367,7 +367,10 @@ export default {
       });
     },
     onSearch(query) {
-      this.setParams({ q: query });
+      this.setParams({
+        page: 1,
+        q: query,
+      });
       this.fetchMasterData();
     },
     onUpdatePagination(data) {
