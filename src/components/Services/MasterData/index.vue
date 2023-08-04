@@ -206,6 +206,7 @@ export default {
         per_page: 10,
         page: 1,
         q: '',
+        status: '',
         opd_name: '',
         service_user: '',
         technical: '',
@@ -229,6 +230,8 @@ export default {
           service_name: item.service_name,
           service_user: item.service_user,
           technical: item.technical,
+          status: item.status,
+          updated_at: item.updated_at,
         }));
         return items;
       }
