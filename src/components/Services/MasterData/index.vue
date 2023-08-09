@@ -47,6 +47,12 @@
             @update:pagination="onUpdatePagination($event)"
             @delete="handleDeleteMasterData($event)"
           />
+          <div
+            v-else-if="loading"
+            class="w-full flex items-center justify-center min-h-[300px]"
+          >
+            <JdsSpinner />
+          </div>
           <EmptyState
             v-else
             v-bind="emptyStateData"
