@@ -51,7 +51,7 @@
         <!-- Author Select Box -->
         <div
           v-if="isSuperAdmin"
-          class="w-full mb-6"
+          class="service-filter__author w-full mb-6"
         >
           <div class="min-w-0 w-full flex gap-3 items-center mb-4">
             <p class="font-lato text-sm text-blue-gray-700 leading-none whitespace-nowrap">
@@ -78,8 +78,6 @@
           <JdsSelect
             v-model="filter.service_user"
             placeholder="Pilih Pengguna Layanan"
-            filterable
-            filter-type="contain"
             :options="serviceUserOptions"
           />
         </div>
@@ -390,6 +388,11 @@ export default {
 
 .service-filter .jds-popover .jds-popover__content .jds-select__options {
   width: 478px !important;
+  max-height: 290px !important;
+}
+
+.service-filter .service-filter__author .jds-popover .jds-popover__content .jds-select__options .jds-options__option-list .jds-options__option-list-item {
+ height: 35px !important;
 }
 
 .service-filter .jds-popover .jds-popover__content {

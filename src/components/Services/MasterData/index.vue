@@ -263,6 +263,11 @@ export default {
         start_date: '',
         end_date: '',
       },
+      opdParams: {
+        per_page: 100,
+        page: 1,
+        q: '',
+      },
       formatDate,
       opdNameLists: [],
     };
@@ -368,7 +373,7 @@ export default {
     },
     async fetchOpdNameLists() {
       try {
-        const response = await unitRepository.getUnitLists();
+        const response = await unitRepository.getUnitLists(this.opdParams);
         const { data, meta } = response.data;
         this.meta = meta;
         // Mapping data to get opd name lists and push to opdNameLists variable
