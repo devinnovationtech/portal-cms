@@ -340,6 +340,51 @@ export default {
 
       return options;
     },
+    /**
+     * Map state to mock `Publication Get By Slug` API Response
+     * this getter is used for `Publication Preview` functionality
+     * @param {Object} state
+     * @returns {Object}
+     */
+    previewData(state) {
+      const previewData = {
+        opd_name: state.stepOne.default_information.opd_name,
+        logo: state.stepOne.default_information.logo,
+        portal_category: state.stepOne.default_information.portal_category,
+        service_name: state.stepOne.default_information.name,
+        program_name: state.stepOne.default_information.program_name,
+        description: state.stepOne.default_information.description,
+        service_form: state.stepOne.default_information.form,
+        service_user: state.stepOne.default_information.user,
+        operator_status: state.stepOne.default_information.operational_status,
+        technical: state.stepOne.default_information.technical,
+        slug: state.stepOne.default_information.slug,
+        website: state.stepOne.default_information.website,
+        benefits: state.stepOne.default_information.benefits,
+        facilities: state.stepOne.default_information.facilities,
+        cover: state.stepTwo.service_description.cover,
+        hotline_number: state.stepTwo.service_description.hotline_number,
+        hotline_mail: state.stepTwo.service_description.hotline_number,
+        operational_times: state.stepTwo.service_description.operational_times,
+        service_fee: state.stepTwo.service_description.service_fee,
+        locations: state.stepTwo.service_description.locations,
+        links: state.stepTwo.service_description.links,
+        social_media: state.stepTwo.service_description.social_media,
+        terms_and_conditions: state.stepTwo.service_description.terms_and_conditions,
+        service_procedures: state.stepTwo.service_description.service_procedures,
+        infographics: state.stepTwo.service_description.infographics,
+        application: state.stepTwo.service_description.application,
+        content_images: state.stepTwo.service_description.images,
+        keywords: state.stepThree.additional_information.keywords,
+        faq: {
+          ...state.stepThree.additional_information.faq,
+          Items: state.stepThree.additional_information.faq.items,
+        },
+        updated_at: new Date(),
+      };
+
+      return previewData;
+    },
   },
   mutations: {
     SET_CURRENT_FORM_STEP(state, payload) {

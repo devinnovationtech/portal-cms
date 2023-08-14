@@ -35,6 +35,14 @@
               class="border-green-700 hover:bg-green-50 font-lato text-sm text-green-700"
               @click="previousStep"
             >
+              <template #icon-left>
+                <JdsIcon
+                  name="arrow-left"
+                  size="16px"
+                  fill="#069550"
+                  class="h-4 w-4"
+                />
+              </template>
               <span>
                 Sebelumnya
               </span>
@@ -47,6 +55,24 @@
             >
               <span>
                 Simpan & Lanjutkan
+              </span>
+            </BaseButton>
+            <BaseButton
+              v-if="(isCreateMode || isDraft) && isLastStep"
+              type="button"
+              class="border-green-700 hover:bg-green-50 font-lato text-sm text-green-700"
+              @click="handlePublicationPreview"
+            >
+              <template #icon-left>
+                <JdsIcon
+                  name="eye"
+                  size="16px"
+                  fill="#069550"
+                  class="h-4 w-4"
+                />
+              </template>
+              <span>
+                Pratinjau
               </span>
             </BaseButton>
             <BaseButton
@@ -275,6 +301,10 @@ export default {
     StepTwo: () => import('@/components/Services/Publication/Form/StepTwo'),
     StepThree: () => import('@/components/Services/Publication/Form/StepThree'),
   },
+  beforeRouteLeave(to, from, next) {
+    this.$store.dispatch('publicationForm/resetFormData');
+    next();
+  },
   computed: {
     ...mapGetters('publicationForm', [
       'currentFormStep',
@@ -365,6 +395,10 @@ export default {
     },
     handleCancelation() {
       this.$router.back();
+    },
+    handlePublicationPreview() {
+      const url = '/layanan/daftar-publikasi/pratinjau';
+      window.open(url, '_blank').focus();
     },
   },
 };
