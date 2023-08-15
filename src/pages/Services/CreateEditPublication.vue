@@ -83,7 +83,7 @@
               @click="openSaveConfirmation"
             >
               <span>
-                Simpan
+                Simpan Draft
               </span>
             </BaseButton>
             <BaseButton
@@ -94,7 +94,7 @@
               @click="publishConfirmation"
             >
               <span>
-                Tambahkan Layanan
+                Terbitkan Publikasi
               </span>
             </BaseButton>
             <BaseButton

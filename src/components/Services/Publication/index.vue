@@ -31,7 +31,7 @@
               />
             </template>
             <p class="font-lato font-bold text-sm text-white leading-none">
-              Tambah Layanan Publik
+              Publikasi Layanan
             </p>
           </LinkButton>
         </div>
