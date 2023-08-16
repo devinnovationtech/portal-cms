@@ -323,14 +323,14 @@ export default [
       {
         path: 'arsip-dan-dokumen',
         name: 'Profil Jawa Barat',
-        component: () => import('@/common/components/Maintenance'),
+        component: () => import('@/components/Profiles/Documents'),
         meta: {
           layout: 'AppLayoutPrivate',
         },
       },
       {
         path: 'tentang-jawa-barat',
-        name: 'Tentang Jawa Barat',
+        name: 'Profil Jawa Barat',
         component: () => import('@/common/components/Maintenance'),
         meta: {
           layout: 'AppLayoutPrivate',

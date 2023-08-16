@@ -448,3 +448,37 @@ export const QUICK_LINK_TABLE_HEADER = [
     text: 'Aksi',
   },
 ];
+
+export const DOCUMENT_TABLE_HEADER = [
+  {
+    key: 'title',
+    text: 'Judul Dokumen',
+    sortable: false,
+  },
+  {
+    key: 'category',
+    text: 'Kategori',
+    sortable: false,
+  },
+  {
+    key: 'status',
+    text: 'Status',
+    sortable: false,
+  },
+  {
+    key: 'updated',
+    text: 'Terakhir Diupdate',
+    sortable: false,
+  },
+  {
+    key: 'action',
+    text: 'Aksi',
+    sortable: false,
+  },
+];
+
+export const DOCUMENT_STATUS_MAP = {
+  ALLSERVICES: 'Semua Layanan',
+  DRAFT: 'Draf',
+  ARCHIVE: 'Tersimpan',
+};
