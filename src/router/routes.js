@@ -309,6 +309,15 @@ export default [
     },
   },
   {
+    path: '/profil-jawa-barat/arsip-dan-dokumen/tambah',
+    name: 'Landing Page',
+    component: () => import('@/pages/ArchiveAndDocument/CreateEditArchiveAndDocument.vue'),
+    meta: {
+      mode: 'create',
+      layout: 'AppLayoutPrivate',
+    },
+  },
+  {
     path: '/pengaturan',
     name: 'Pengaturan',
     component: () => import('@/pages/Settings'),
