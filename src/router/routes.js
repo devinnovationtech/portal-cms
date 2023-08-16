@@ -309,6 +309,36 @@ export default [
     },
   },
   {
+    path: '/profil-jawa-barat',
+    name: 'Profil Jawa Barat',
+    component: () => import('@/pages/Profiles'),
+    meta: {
+      layout: 'AppLayoutPrivate',
+    },
+    children: [
+      {
+        path: '',
+        redirect: 'arsip-dan-dokumen', // Default children to navigate
+      },
+      {
+        path: 'arsip-dan-dokumen',
+        name: 'Profil Jawa Barat',
+        component: () => import('@/common/components/Maintenance'),
+        meta: {
+          layout: 'AppLayoutPrivate',
+        },
+      },
+      {
+        path: 'tentang-jawa-barat',
+        name: 'Tentang Jawa Barat',
+        component: () => import('@/common/components/Maintenance'),
+        meta: {
+          layout: 'AppLayoutPrivate',
+        },
+      },
+    ],
+  },
+  {
     path: '/pengaturan',
     name: 'Pengaturan',
     component: () => import('@/pages/Settings'),

@@ -116,6 +116,7 @@ import AgendaIcon from '@/assets/icons/agenda.svg?inline';
 import NewsIcon from '@/assets/icons/berita.svg?inline';
 import SettingIcon from '@/assets/icons/setting.svg?inline';
 import LandingPageIcon from '@/assets/icons/landing-page.svg?inline';
+import GedungSateIcon from '@/assets/icons/gedung-sate.svg?inline';
 
 export default {
   name: 'Sidebar',
@@ -126,6 +127,7 @@ export default {
     NewsIcon,
     SettingIcon,
     LandingPageIcon,
+    GedungSateIcon,
   },
   data() {
     return {
