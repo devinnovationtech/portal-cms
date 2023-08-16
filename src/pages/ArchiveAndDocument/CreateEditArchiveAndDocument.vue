@@ -36,7 +36,6 @@
                 type="submit"
                 class="bg-white font-lato text-sm text-green-700 border border-green-700"
                 data-cy="archive-document-form__button-draft"
-                :disabled="invalid"
                 @click="onDraftDocument"
               >
                 <p>
