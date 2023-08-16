@@ -12,6 +12,7 @@ import infographicsBannerRepository from './infographicsBannerRepository';
 import quickLinkRepository from './quickLinkRepository';
 import masterDataServiceRepository from './masterDataServiceRepository';
 import masterDataPublicationRepository from './masterDatapublicationRepository';
+import documentsRepository from './documentsRepository';
 
 const repositories = {
   auth: authRepository,
@@ -28,6 +29,7 @@ const repositories = {
   quickLink: quickLinkRepository,
   masterDataService: masterDataServiceRepository,
   masterDataPublication: masterDataPublicationRepository,
+  documents: documentsRepository,
 };
 
 export const RepositoryFactory = {
