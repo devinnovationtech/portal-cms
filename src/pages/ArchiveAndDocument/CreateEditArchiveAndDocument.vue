@@ -454,14 +454,9 @@ export default {
           key: fileName,
           domain: 'archives',
         });
-
-        return new Promise((resolve) => {
-          resolve(response);
-        });
+        return response;
       } catch (error) {
-        return new Promise(() => {
-          throw new Error(error);
-        });
+        return new Error(error);
       }
     },
     resetDocumentState() {
