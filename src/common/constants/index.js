@@ -32,6 +32,13 @@ export const NAVIGATION_MENU = [
     arrow: true,
     permission: null,
   },
+  {
+    link: '/profil-jawa-barat',
+    label: 'Profil Jawa Barat',
+    icon: 'GedungSateIcon',
+    arrow: true,
+    permission: null,
+  },
 ];
 
 export const AGENDA_TABLE_HEADER = [
