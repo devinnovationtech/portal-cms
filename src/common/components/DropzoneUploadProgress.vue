@@ -183,6 +183,8 @@ import ExcelIcon from '@/assets/icons/excel.svg?inline';
 import WordIcon from '@/assets/icons/word.svg?inline';
 import PdfIcon from '@/assets/icons/pdf.svg?inline';
 
+import mime from 'mime-types';
+
 export default {
   name: 'DropzoneUploadProgress',
   components: {
@@ -249,7 +251,7 @@ export default {
       return this.image;
     },
     fileType() {
-      return this.file && this.file.name ? this.file.name.split('.').pop() : '';
+      return this.file && this.file.type ? mime.extension(this.file.type) : '';
     },
   },
   watch: {
