@@ -70,7 +70,7 @@
               <ValidationProvider
                 ref="documentUploader"
                 v-slot="{ errors }"
-                rules="required|size:5000"
+                rules="size:5000"
               >
                 <Dropzone
                   :is-error="errors.length > 0"
@@ -158,7 +158,7 @@
             </div>
             <ValidationProvider
               v-slot="{ errors }"
-              rules="required"
+              rules="required|max:500"
             >
               <div class="flex flex-col">
                 <textarea
