@@ -58,7 +58,7 @@
               </span>
             </BaseButton>
             <BaseButton
-              v-if="(isCreateMode || isDraft) && isLastStep"
+              v-if="isLastStep"
               type="button"
               class="border-green-700 hover:bg-green-50 font-lato text-sm text-green-700"
               @click="handlePublicationPreview"
