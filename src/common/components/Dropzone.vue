@@ -27,7 +27,7 @@
             hidden
             :accept="accept"
             :disabled="disabled"
-            data-cy="dropzone__input-file"
+            :data-cy="dataCy ? `${dataCy}-dropzone__input-file` : 'dropzone__input-file'"
             @change="onChooseFile"
           >
         </label>
@@ -43,7 +43,7 @@
             'opacity-50': disabled
           }"
           :disabled="disabled"
-          data-cy="dropzone__button-link"
+          :data-cy="dataCy ? `${dataCy}-dropzone__button-link` : 'dropzone__button-link'"
           @click="onClick"
         >
           <span class="text-sm">Link Document</span>
@@ -112,6 +112,10 @@ export default {
     isLinkField: {
       type: Boolean,
       default: false,
+    },
+    dataCy: {
+      type: String,
+      default: null,
     },
   },
   mounted() {

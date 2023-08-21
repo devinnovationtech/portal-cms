@@ -7,7 +7,7 @@
         'border-gray-300' : disabled,
         'border-red-600': status === 'ERROR',
       }"
-      data-cy="dropzone-upload-progress"
+      :data-cy="dataCy ? `${dataCy}-dropzone-upload-progress` : 'dropzone-upload-progress'"
     >
       <div
         :class="{
@@ -64,7 +64,7 @@
                 'hover:bg-black hover:opacity-60' : !disabled,
               }"
               :disabled="disabled"
-              data-cy="dropzone-upload-progress__button-preview"
+              :data-cy="dataCy ? `${dataCy}-dropzone-upload-progress__button-preview` : 'dropzone-upload-progress__button-preview'"
               @click="toggleImagePreview"
             >
               <div
@@ -131,7 +131,7 @@
             type="button"
             class="w-7 h-7 flex items-center justify-center bg-red-50 rounded-full"
             :disabled="disabled"
-            data-cy="dropzone-upload-progress__button-delete"
+            :data-cy="dataCy ? `${dataCy}-dropzone-upload-progress__button-delete` : 'dropzone-upload-progress__button-delete'"
             @click="$emit('delete')"
           >
             <JdsIcon
@@ -147,7 +147,7 @@
             type="button"
             class="w-7 h-7 flex items-center justify-center bg-blue-gray-50 rounded-full"
             :disabled="disabled"
-            data-cy="dropzone-upload-progress__button-retry"
+            :data-cy="dataCy ? `${dataCy}-dropzone-upload-progress__button-retry` : 'dropzone-upload-progress__button-retry'"
             @click="$emit('retry')"
           >
             <RetryIcon />
@@ -223,6 +223,10 @@ export default {
         return ['NONE', 'UPLOADING', 'SUCCESS', 'ERROR', 'HASDEFAULT'].includes(value);
       },
       default: 'NONE',
+    },
+    dataCy: {
+      type: String,
+      default: null,
     },
   },
   data() {

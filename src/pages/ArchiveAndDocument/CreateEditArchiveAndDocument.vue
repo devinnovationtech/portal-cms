@@ -70,11 +70,13 @@
               <ValidationProvider
                 ref="documentUploader"
                 v-slot="{ errors }"
-                rules="required|size:5000"
+                rules="size:5000"
               >
                 <Dropzone
                   :is-error="errors.length > 0"
                   :is-link-field="false"
+                  :disabled="!!document"
+                  data-cy="archive-document"
                   accept="application/pdf, .doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
                   guide="drag and drop berkas disini atau"
                   @change="uploadDocument($event)"
@@ -85,6 +87,12 @@
                     </span>
                   </template>
                 </Dropzone>
+                <span
+                  data-cy="archive-document-form__error-message-file"
+                  class="font-lato text-[13px] text-red-600 mt-1 ml-1"
+                >
+                  {{ errors[0] }}
+                </span>
               </ValidationProvider>
             </div>
             <transition name="slide-fade">
@@ -95,6 +103,7 @@
                 :status="documentUploadStatus"
                 :image-url="form.document.url"
                 :image-size="form.document.size"
+                data-cy="archive-document"
                 class="mt-4"
                 @retry="handleRetryUpload()"
                 @delete="handleDeleteUpload()"
@@ -123,7 +132,12 @@
                     class="text-sm placeholder:text-gray-600 p-2 w-full bg-white focus:outline-none"
                   >
                 </div>
-                <span class="font-lato text-[13px] text-red-600 mt-1 ml-1">{{ errors[0] }}</span>
+                <span
+                  data-cy="archive-document-form__error-message-title"
+                  class="font-lato text-[13px] text-red-600 mt-1 ml-1"
+                >
+                  {{ errors[0] }}
+                </span>
               </div>
             </ValidationProvider>
           </div>
@@ -147,6 +161,12 @@
                   :error-message="errors[0]"
                 />
               </div>
+              <span
+                data-cy="archive-document-form__error-message-category"
+                class="font-lato text-[13px] text-red-600 mt-1 ml-1"
+              >
+                {{ errors[0] }}
+              </span>
             </ValidationProvider>
           </div>
 
@@ -158,7 +178,7 @@
             </div>
             <ValidationProvider
               v-slot="{ errors }"
-              rules="required"
+              rules="required|max:500"
             >
               <div class="flex flex-col">
                 <textarea
@@ -169,7 +189,19 @@
                   class="border border-gray-500 rounded-lg px-2 py-1 bg-gray-50 mb-1 hover:bg-white hover:border-green-600 focus:outline-none focus:border-green-500 focus:outline-1 focus:outline-offset-[-2px] focus:outline-yellow-500"
                   data-cy="archive-document-form__description"
                 />
-                <span class="font-lato text-[13px] text-red-600 mt-1">{{ errors[0] }}</span>
+                <div class="flex justify-between">
+                  <span
+                    data-cy="archive-document-form__error-message-description"
+                    class="font-lato text-[13px] text-red-600 mt-1 ml-1"
+                  >
+                    {{ errors[0] }}
+                  </span>
+                  <p class="text-xs text-right text-gray-600">
+                    Tersisa
+                    <strong>{{ descriptionCharCounter }}</strong>
+                    karakter
+                  </p>
+                </div>
               </div>
             </ValidationProvider>
           </div>
@@ -380,6 +412,12 @@ export default {
     },
     messageIconClassName() {
       return this.submitStatus === 'SUCCESS' ? 'text-green-600' : 'text-red-600';
+    },
+    descriptionCharCounter() {
+      if (this.form.description !== '') {
+        return 500 - this.form.description.length;
+      }
+      return 500;
     },
   },
   methods: {
