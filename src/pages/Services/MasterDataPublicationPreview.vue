@@ -1,6 +1,6 @@
 <template>
   <main class="relative">
-    <div class="fixed top-0 z-20 w-full min-h-[72px] bg-black bg-opacity-[35%] backdrop-filter backdrop-blur-sm flex items-center">
+    <div class="fixed top-0 z-20 w-full min-h-[72px] bg-gray-900 flex items-center">
       <div class="px-8 lg:px-0 max-w-screen-xl w-full mx-auto flex ">
         <BaseButton
           class="text-sm text-white border-transparent bg-green-700 hover:bg-green-800"
