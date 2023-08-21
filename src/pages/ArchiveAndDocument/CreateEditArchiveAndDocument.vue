@@ -173,6 +173,11 @@
                   data-cy="archive-document-form__description"
                 />
                 <span class="font-lato text-[13px] text-red-600 mt-1">{{ errors[0] }}</span>
+                <p class="text-xs text-right text-gray-600">
+                  Tersisa
+                  <strong>{{ descriptionCharCounter }}</strong>
+                  karakter
+                </p>
               </div>
             </ValidationProvider>
           </div>
@@ -383,6 +388,12 @@ export default {
     },
     messageIconClassName() {
       return this.submitStatus === 'SUCCESS' ? 'text-green-600' : 'text-red-600';
+    },
+    descriptionCharCounter() {
+      if (this.form.description !== '') {
+        return 500 - this.form.description.length;
+      }
+      return 500;
     },
   },
   methods: {
