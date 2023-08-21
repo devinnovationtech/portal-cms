@@ -87,6 +87,12 @@
                     </span>
                   </template>
                 </Dropzone>
+                <span
+                  data-cy="archive-document-form__error-message-file"
+                  class="font-lato text-[13px] text-red-600 mt-1 ml-1"
+                >
+                  {{ errors[0] }}
+                </span>
               </ValidationProvider>
             </div>
             <transition name="slide-fade">
@@ -126,7 +132,12 @@
                     class="text-sm placeholder:text-gray-600 p-2 w-full bg-white focus:outline-none"
                   >
                 </div>
-                <span class="font-lato text-[13px] text-red-600 mt-1 ml-1">{{ errors[0] }}</span>
+                <span
+                  data-cy="archive-document-form__error-message-title"
+                  class="font-lato text-[13px] text-red-600 mt-1 ml-1"
+                >
+                  {{ errors[0] }}
+                </span>
               </div>
             </ValidationProvider>
           </div>
@@ -150,6 +161,12 @@
                   :error-message="errors[0]"
                 />
               </div>
+              <span
+                data-cy="archive-document-form__error-message-category"
+                class="font-lato text-[13px] text-red-600 mt-1 ml-1"
+              >
+                {{ errors[0] }}
+              </span>
             </ValidationProvider>
           </div>
 
@@ -172,12 +189,19 @@
                   class="border border-gray-500 rounded-lg px-2 py-1 bg-gray-50 mb-1 hover:bg-white hover:border-green-600 focus:outline-none focus:border-green-500 focus:outline-1 focus:outline-offset-[-2px] focus:outline-yellow-500"
                   data-cy="archive-document-form__description"
                 />
-                <span class="font-lato text-[13px] text-red-600 mt-1">{{ errors[0] }}</span>
-                <p class="text-xs text-right text-gray-600">
-                  Tersisa
-                  <strong>{{ descriptionCharCounter }}</strong>
-                  karakter
-                </p>
+                <div class="flex justify-between">
+                  <span
+                    data-cy="archive-document-form__error-message-description"
+                    class="font-lato text-[13px] text-red-600 mt-1 ml-1"
+                  >
+                    {{ errors[0] }}
+                  </span>
+                  <p class="text-xs text-right text-gray-600">
+                    Tersisa
+                    <strong>{{ descriptionCharCounter }}</strong>
+                    karakter
+                  </p>
+                </div>
               </div>
             </ValidationProvider>
           </div>

@@ -115,7 +115,7 @@ export default {
     },
     dataCy: {
       type: String,
-      default: '',
+      default: null,
     },
   },
   mounted() {
