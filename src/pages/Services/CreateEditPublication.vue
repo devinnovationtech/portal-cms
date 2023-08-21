@@ -187,11 +187,11 @@
     <BaseModal :open="submitStatus === 'PUBLISH_CONFIRMATION'">
       <div class="w-full h-full px-2 pb-4">
         <h1 class="font-roboto font-medium text-green-700 text-[21px] leading-[34px] mb-6">
-          Tambahkan Layanan
+          Terbitkan Publikasi
         </h1>
         <div class="flex items-center gap-4">
           <p class="text-sm leading-6 to-blue-gray-800">
-            Apakah Anda ingin menambah layanan ini?
+            Apakah Anda ingin menerbitkan publikasi ini?
           </p>
         </div>
       </div>
@@ -207,7 +207,7 @@
             class="bg-green-700 hover:bg-green-600 text-sm text-white"
             @click="handlePublishForm"
           >
-            Ya, simpan layanan
+            Ya, terbitkan publikasi
           </BaseButton>
         </div>
       </template>

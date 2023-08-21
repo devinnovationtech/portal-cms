@@ -294,7 +294,7 @@ export default {
       if (state.submitStatus === FORM_SUBMIT_STATUS.SUCCESS) {
         return {
           title: 'Berhasil!',
-          message: 'Layanan yang Anda buat berhasil ditambahkan.',
+          message: 'Publikasi yang Anda buat berhasil diterbitkan.',
           iconName: 'check-mark-circle',
           iconClass: 'text-green-600',
         };
@@ -1123,9 +1123,22 @@ export default {
     },
     async publishForm({ dispatch, commit }) {
       try {
+        commit('SET_SUBMIT_STATUS', FORM_SUBMIT_STATUS.LOADING);
+        commit('SET_SUBMIT_PROGRESS', 25);
+
         const formData = await dispatch('generateFormData', 'PUBLISH');
-        await masterDataPublicationRepository.createPublication(formData);
-        commit('SET_SUBMIT_STATUS', FORM_SUBMIT_STATUS.SUCCESS);
+        const response = await masterDataPublicationRepository.createPublication(formData);
+
+        if (response.status === 201) {
+          // Add timeout to prevent progress bar too fast
+          setTimeout(() => {
+            commit('SET_SUBMIT_PROGRESS', 75);
+
+            setTimeout(() => {
+              commit('SET_SUBMIT_STATUS', FORM_SUBMIT_STATUS.SUCCESS);
+            }, 150);
+          }, 150);
+        }
       } catch (error) {
         commit('SET_SUBMIT_STATUS', FORM_SUBMIT_STATUS.ERROR);
       }
