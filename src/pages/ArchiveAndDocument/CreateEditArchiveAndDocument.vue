@@ -75,6 +75,7 @@
                 <Dropzone
                   :is-error="errors.length > 0"
                   :is-link-field="false"
+                  :disabled="!!document"
                   accept="application/pdf, .doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
                   guide="drag and drop berkas disini atau"
                   @change="uploadDocument($event)"
