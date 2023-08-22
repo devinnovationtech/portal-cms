@@ -364,9 +364,13 @@ export default {
         facilities: state.stepOne.default_information.facilities,
         cover: state.stepTwo.service_description.cover,
         hotline_number: state.stepTwo.service_description.hotline_number,
-        hotline_mail: state.stepTwo.service_description.hotline_number,
+        hotline_mail: state.stepTwo.service_description.hotline_mail,
         operational_times: state.stepTwo.service_description.operational_times,
-        service_fee: state.stepTwo.service_description.service_fee,
+        service_fee: {
+          ...state.stepTwo.service_description.service_fee,
+          minimum_fee: Number(state.stepTwo.service_description.service_fee.minimum_fee),
+          maximum_fee: Number(state.stepTwo.service_description.service_fee.maximum_fee),
+        },
         locations: state.stepTwo.service_description.locations,
         links: state.stepTwo.service_description.links,
         social_media: state.stepTwo.service_description.social_media,
@@ -444,8 +448,9 @@ export default {
         ...item,
       }));
 
-      state.stepTwo.service_description.service_fee.minimum_fee = payload.services.service_fee.minimum_fee ? payload.services.service_fee.minimum_fee.toString() : '';
+      state.stepTwo.service_description.service_fee.minimum_fee = payload.services.service_fee.minimum_fee ? payload.services.service_fee.minimum_fee.toString() : '0';
       state.stepTwo.service_description.service_fee.maximum_fee = payload.services.service_fee.maximum_fee ? payload.services.service_fee.maximum_fee.toString() : '';
+      state.stepTwo.service_description.service_fee.has_range = payload.services.service_fee.has_range;
       state.stepTwo.service_description.service_fee.has_description = payload.services.service_fee.has_description;
       state.stepTwo.service_description.service_fee.description = payload.services.service_fee.description;
 
