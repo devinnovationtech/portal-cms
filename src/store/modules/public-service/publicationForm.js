@@ -294,7 +294,7 @@ export default {
       if (state.submitStatus === FORM_SUBMIT_STATUS.SUCCESS) {
         return {
           title: 'Berhasil!',
-          message: 'Layanan yang Anda buat berhasil ditambahkan.',
+          message: 'Publikasi yang Anda buat berhasil diterbitkan.',
           iconName: 'check-mark-circle',
           iconClass: 'text-green-600',
         };
@@ -339,6 +339,55 @@ export default {
       }));
 
       return options;
+    },
+    /**
+     * Map state to mock `Publication Get By Slug` API Response
+     * this getter is used for `Publication Preview` functionality
+     * @param {Object} state
+     * @returns {Object}
+     */
+    previewData(state) {
+      const previewData = {
+        opd_name: state.stepOne.default_information.opd_name,
+        logo: state.stepOne.default_information.logo,
+        portal_category: state.stepOne.default_information.portal_category,
+        service_name: state.stepOne.default_information.name,
+        program_name: state.stepOne.default_information.program_name,
+        description: state.stepOne.default_information.description,
+        service_form: state.stepOne.default_information.form,
+        service_user: state.stepOne.default_information.user,
+        operator_status: state.stepOne.default_information.operational_status,
+        technical: state.stepOne.default_information.technical,
+        slug: state.stepOne.default_information.slug,
+        website: state.stepOne.default_information.website,
+        benefits: state.stepOne.default_information.benefits,
+        facilities: state.stepOne.default_information.facilities,
+        cover: state.stepTwo.service_description.cover,
+        hotline_number: state.stepTwo.service_description.hotline_number,
+        hotline_mail: state.stepTwo.service_description.hotline_mail,
+        operational_times: state.stepTwo.service_description.operational_times,
+        service_fee: {
+          ...state.stepTwo.service_description.service_fee,
+          minimum_fee: Number(state.stepTwo.service_description.service_fee.minimum_fee),
+          maximum_fee: Number(state.stepTwo.service_description.service_fee.maximum_fee),
+        },
+        locations: state.stepTwo.service_description.locations,
+        links: state.stepTwo.service_description.links,
+        social_media: state.stepTwo.service_description.social_media,
+        terms_and_conditions: state.stepTwo.service_description.terms_and_conditions,
+        service_procedures: state.stepTwo.service_description.service_procedures,
+        infographics: state.stepTwo.service_description.infographics,
+        application: state.stepTwo.service_description.application,
+        content_images: state.stepTwo.service_description.images,
+        keywords: state.stepThree.additional_information.keywords,
+        faq: {
+          ...state.stepThree.additional_information.faq,
+          Items: state.stepThree.additional_information.faq.items,
+        },
+        updated_at: new Date(),
+      };
+
+      return previewData;
     },
   },
   mutations: {
@@ -399,8 +448,9 @@ export default {
         ...item,
       }));
 
-      state.stepTwo.service_description.service_fee.minimum_fee = payload.services.service_fee.minimum_fee ? payload.services.service_fee.minimum_fee.toString() : '';
+      state.stepTwo.service_description.service_fee.minimum_fee = payload.services.service_fee.minimum_fee ? payload.services.service_fee.minimum_fee.toString() : '0';
       state.stepTwo.service_description.service_fee.maximum_fee = payload.services.service_fee.maximum_fee ? payload.services.service_fee.maximum_fee.toString() : '';
+      state.stepTwo.service_description.service_fee.has_range = payload.services.service_fee.has_range;
       state.stepTwo.service_description.service_fee.has_description = payload.services.service_fee.has_description;
       state.stepTwo.service_description.service_fee.description = payload.services.service_fee.description;
 
@@ -514,8 +564,9 @@ export default {
         image_upload_status: payload.service_description.service_procedures.cover.file_download_uri ? IMAGE_UPLOAD_STATUS.HASDEFAULT : IMAGE_UPLOAD_STATUS.NONE,
       };
 
-      state.stepTwo.service_description.service_fee.minimum_fee = payload.service_description.service_fee.minimum_fee ? payload.service_description.service_fee.minimum_fee.toString() : '';
+      state.stepTwo.service_description.service_fee.minimum_fee = payload.service_description.service_fee.minimum_fee ? payload.service_description.service_fee.minimum_fee.toString() : '0';
       state.stepTwo.service_description.service_fee.maximum_fee = payload.service_description.service_fee.maximum_fee ? payload.service_description.service_fee.maximum_fee.toString() : '';
+      state.stepTwo.service_description.service_fee.has_range = payload.service_description.service_fee.has_range;
       state.stepTwo.service_description.service_fee.has_description = payload.service_description.service_fee.has_description;
       state.stepTwo.service_description.service_fee.description = payload.service_description.service_fee.description;
 
@@ -1078,9 +1129,22 @@ export default {
     },
     async publishForm({ dispatch, commit }) {
       try {
+        commit('SET_SUBMIT_STATUS', FORM_SUBMIT_STATUS.LOADING);
+        commit('SET_SUBMIT_PROGRESS', 25);
+
         const formData = await dispatch('generateFormData', 'PUBLISH');
-        await masterDataPublicationRepository.createPublication(formData);
-        commit('SET_SUBMIT_STATUS', FORM_SUBMIT_STATUS.SUCCESS);
+        const response = await masterDataPublicationRepository.createPublication(formData);
+
+        if (response.status === 201) {
+          // Add timeout to prevent progress bar too fast
+          setTimeout(() => {
+            commit('SET_SUBMIT_PROGRESS', 75);
+
+            setTimeout(() => {
+              commit('SET_SUBMIT_STATUS', FORM_SUBMIT_STATUS.SUCCESS);
+            }, 150);
+          }, 150);
+        }
       } catch (error) {
         commit('SET_SUBMIT_STATUS', FORM_SUBMIT_STATUS.ERROR);
       }
