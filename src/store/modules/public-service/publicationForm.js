@@ -564,8 +564,9 @@ export default {
         image_upload_status: payload.service_description.service_procedures.cover.file_download_uri ? IMAGE_UPLOAD_STATUS.HASDEFAULT : IMAGE_UPLOAD_STATUS.NONE,
       };
 
-      state.stepTwo.service_description.service_fee.minimum_fee = payload.service_description.service_fee.minimum_fee ? payload.service_description.service_fee.minimum_fee.toString() : '';
+      state.stepTwo.service_description.service_fee.minimum_fee = payload.service_description.service_fee.minimum_fee ? payload.service_description.service_fee.minimum_fee.toString() : '0';
       state.stepTwo.service_description.service_fee.maximum_fee = payload.service_description.service_fee.maximum_fee ? payload.service_description.service_fee.maximum_fee.toString() : '';
+      state.stepTwo.service_description.service_fee.has_range = payload.service_description.service_fee.has_range;
       state.stepTwo.service_description.service_fee.has_description = payload.service_description.service_fee.has_description;
       state.stepTwo.service_description.service_fee.description = payload.service_description.service_fee.description;
 
