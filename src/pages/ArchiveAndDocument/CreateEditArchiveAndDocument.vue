@@ -259,7 +259,7 @@
             v-else-if="confirmationMessage.type === 'publish'"
             class="bg-green-700 hover:bg-green-600 text-sm text-white"
             data-cy="archive-document-form__confirmation-button-save"
-            @click="handleSubmit"
+            @click="handlePublish"
           >
             Ya, terbitkan
           </BaseButton>
@@ -271,7 +271,8 @@
     <ProgressModal
       :open="submitStatus === 'LOADING'"
       :value="submitProgress"
-      message="Mohon tunggu, penyimpanan data sedang diproses"
+      title="Menerbitkan Arsip Dokumen"
+      message="Mohon tunggu, penerbitan arsip dokumen sedang diproses."
       data-cy="archive-document-form__progress-modal"
     />
 
@@ -328,6 +329,7 @@ import { ValidationProvider, ValidationObserver } from 'vee-validate';
 import { RepositoryFactory } from '@/repositories/RepositoryFactory';
 
 const mediaRepository = RepositoryFactory.get('media');
+const documentRepository = RepositoryFactory.get('documents');
 
 const DOCUMENT_UPLOAD_STATUS = Object.freeze({
   NONE: 'NONE',
@@ -368,6 +370,7 @@ export default {
           url: '',
           fileName: '',
           size: 0,
+          type: '',
         },
         title: '',
         category: '',
@@ -459,6 +462,7 @@ export default {
           this.form.document.url = data.file_download_uri;
           this.form.document.fileName = data.file_name;
           this.form.document.size = data.size;
+          this.form.document.type = file.type;
         }
       } catch (error) {
         this.documentUploadStatus = DOCUMENT_UPLOAD_STATUS.ERROR;
@@ -504,6 +508,14 @@ export default {
       this.document = null;
       this.documentUploadStatus = DOCUMENT_UPLOAD_STATUS.NONE;
     },
+    resetSubmitState() {
+      this.submitStatus = FORM_SUBMIT_STATUS.NONE;
+      this.submitProgress = 0;
+      this.successMessage.title = '';
+      this.successMessage.body = '';
+      this.errorMessage.title = '';
+      this.errorMessage.body = '';
+    },
     onCancel() {
       this.submitStatus = FORM_SUBMIT_STATUS.NONE;
     },
@@ -512,16 +524,81 @@ export default {
       this.$router.back();
     },
     handleDraft() {
-      this.submitStatus = FORM_SUBMIT_STATUS.NONE;
-      // TODO: create function draft data
+      this.draftDocument();
     },
-    handleSubmit() {
-      if (this.mode === 'create') {
-        this.submitForm();
+    generateFormData(type) {
+      const formData = {
+        title: this.form.title,
+        description: this.form.description,
+        source: this.form.document.url,
+        mimetype: this.form.document.type,
+        category: this.form.category,
+        status: type,
+      };
+
+      return formData;
+    },
+    async draftDocument() {
+      const formData = this.generateFormData('DRAFT');
+      try {
+        const response = await documentRepository.createDocument(formData);
+        if (response.status === 201) {
+          setTimeout(() => {
+            this.successMessage = {
+              title: 'Berhasil disimpan ke draf !',
+              body: 'Anda berhasil menyimpan dokumen ke draf.',
+            };
+            this.submitStatus = FORM_SUBMIT_STATUS.SUCCESS;
+          }, 150);
+        }
+      } catch (error) {
+        this.errorMessage = {
+          title: 'Gagal !',
+          body: 'Arsip Dokumen gagal disimpan ke draf.',
+        };
+        this.submitStatus = FORM_SUBMIT_STATUS.ERROR;
       }
     },
-    submitForm() {
-      // TODO: create function publish data
+    handlePublish() {
+      if (this.mode === 'create') {
+        this.publishDocument();
+      }
+    },
+    async publishDocument() {
+      const formData = this.generateFormData('PUBLISHED');
+      try {
+        this.submitStatus = FORM_SUBMIT_STATUS.LOADING;
+        this.submitProgress = 25;
+
+        const response = await documentRepository.createDocument(formData);
+        if (response.status === 201) {
+          // Add timeout to prevent progress bar too fast
+          setTimeout(() => {
+            this.submitProgress = 75;
+
+            setTimeout(() => {
+              this.successMessage = {
+                title: 'Berhasil !',
+                body: 'Anda berhasil menerbitkan Arsip Dokumen.',
+              };
+              this.submitStatus = FORM_SUBMIT_STATUS.SUCCESS;
+            }, 150);
+          }, 150);
+        }
+      } catch (error) {
+        this.errorMessage = {
+          title: 'Gagal !',
+          body: 'Arsip Dokumen gagal diterbitkan.',
+        };
+        this.submitStatus = FORM_SUBMIT_STATUS.ERROR;
+      }
+    },
+    messageAction() {
+      if (this.submitStatus === FORM_SUBMIT_STATUS.SUCCESS) {
+        this.$router.push('/profil-jawa-barat/arsip-dan-dokumen');
+      } else {
+        this.resetSubmitState();
+      }
     },
   },
 };
