@@ -103,6 +103,7 @@
                 :status="documentUploadStatus"
                 :image-url="form.document.url"
                 :image-size="form.document.size"
+                :is-show-preview="false"
                 data-cy="archive-document"
                 class="mt-4"
                 @retry="handleRetryUpload()"
