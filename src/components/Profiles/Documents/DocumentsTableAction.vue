@@ -52,6 +52,16 @@
             Hapus
           </button>
         </li>
+
+        <!-- Additional Action -->
+        <li>
+          <button
+            class="font-lato text-sm leading-4 text-gray-800"
+            @click="onAdditionalButtonClick(item)"
+          >
+            {{ getAdditionalButtonLabel(item.status) }}
+          </button>
+        </li>
       </ul>
     </div>
   </JdsPopover>
@@ -59,6 +69,7 @@
 
 <script>
 import { directive as onClickaway } from 'vue-clickaway';
+import { DOCUMENT_STATUS_ADDITIONAL_BUTTON } from '@/common/constants';
 
 export default {
   name: 'ListDocumentsTableAction',
@@ -90,6 +101,17 @@ export default {
     },
     closeDropdown() {
       this.isDropdownOpen = false;
+    },
+    getAdditionalButtonLabel(status) {
+      return DOCUMENT_STATUS_ADDITIONAL_BUTTON[status] ?? '-';
+    },
+    onAdditionalButtonClick(item) {
+      const { status } = item;
+      if (status === 'PUBLISHED') {
+        this.$emit('archive', item.id);
+      } else {
+        this.$emit('publish', item.id);
+      }
     },
   },
 };

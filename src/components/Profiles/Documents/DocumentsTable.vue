@@ -1,5 +1,5 @@
 <template>
-  <div class="service-table rounded-lg overflow-hidden border border-gray-100">
+  <div class="document-table rounded-lg overflow-hidden border border-gray-100">
     <JdsDataTable
       :headers="tableHeader"
       :items="items"
@@ -33,7 +33,7 @@
       <!-- eslint-disable-next-line vue/valid-v-slot -->
       <template #item.status="{item}">
         <p>
-          {{ getServiceStatus(item?.status) || '-' }}
+          {{ getDocumentStatus(item?.status) || '-' }}
         </p>
       </template>
       <!-- eslint-disable-next-line vue/valid-v-slot -->
@@ -41,6 +41,8 @@
         <DocumentsTableAction
           :item="item"
           @delete="$emit('delete', $event)"
+          @archive="$emit('archive', $event)"
+          @publish="$emit('publish', $event)"
         />
       </template>
     </JdsDataTable>
@@ -137,7 +139,7 @@ export default {
       });
     },
 
-    getServiceStatus(status) {
+    getDocumentStatus(status) {
       return DOCUMENT_STATUS_MAP[status] ?? status;
     },
 
@@ -147,6 +149,7 @@ export default {
         sort_order: Object.values(sort)[0].toUpperCase(),
       });
     },
+
   },
 };
 </script>
@@ -155,24 +158,24 @@ export default {
 /**
  * Override default jds-data-table style
  */
-.service-table .jds-data-table {
+.document-table .jds-data-table {
   table-layout: fixed !important;
 }
 
-.service-table .jds-data-table thead tr th:nth-child(1) {
+.document-table .jds-data-table thead tr th:nth-child(1) {
   width: 300px !important;
 }
 
-.service-table .jds-data-table thead tr th:nth-child(3) {
+.document-table .jds-data-table thead tr th:nth-child(3) {
   width: 180px !important;
 }
 
-.service-table .jds-options .jds-options__filter {
+.document-table .jds-options .jds-options__filter {
   width: 100% !important;
   height: 48px !important;
 }
 
-.service-table .jds-options--filterable {
+.document-table .jds-options--filterable {
   min-width: 120px !important;
 }
 </style>

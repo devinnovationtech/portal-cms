@@ -61,4 +61,15 @@ export default {
   updateDocument(body, id = null) {
     return Repository.put(`${resource}/${id}`, body);
   },
+
+  /**
+   * update status Document (PUBLISHED, DRAFT, ARCHIVED)
+   * @param {object} body - form request body
+   * @param {number} id - ID of the document
+
+   * @returns {Promise}
+   */
+  updateStatusDocument(body, id = null) {
+    return Repository.put(`${resource}/${id}/status`, body);
+  },
 };

@@ -478,7 +478,13 @@ export const DOCUMENT_TABLE_HEADER = [
 ];
 
 export const DOCUMENT_STATUS_MAP = {
-  ALLSERVICES: 'Semua Layanan',
   DRAFT: 'Draf',
-  ARCHIVE: 'Tersimpan',
+  ARCHIVED: 'Diarsipkan',
+  PUBLISHED: 'Terbit',
+};
+
+export const DOCUMENT_STATUS_ADDITIONAL_BUTTON = {
+  DRAFT: 'Terbitkan',
+  ARCHIVED: 'Pulihkan',
+  PUBLISHED: 'Arsipkan',
 };

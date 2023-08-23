@@ -4,7 +4,7 @@
       <DocumentsTabBar
         :tabs="tabs"
         :current-tab.sync="currentTab"
-        @update:currentTab="filterMasterDataByStatus"
+        @update:currentTab="filterDocumentByStatus"
       />
       <section class="w-full bg-white py-6 px-3">
         <div class="full flex justify-between mb-5 items-center">
@@ -37,14 +37,16 @@
             :meta="meta"
             class="min-w-[1000px]"
             @update:pagination="onUpdatePagination($event)"
-            @delete="handleDeleteMasterData($event)"
+            @delete="handleDeleteDocument($event)"
+            @archive="handleArchiveDocument($event)"
+            @publish="handlePublishDocument($event)"
           />
         </div>
       </section>
     </section>
 
     <!-- Action Prompt -->
-    <BaseModal :open="modalState === 'DELETE_CONFIRMATION'">
+    <BaseModal :open="showConfirmationModal">
       <div class="w-full">
         <h1 class="font-roboto text-xl leading-8 font-medium text-green-700 mb-6">
           {{ modalMessage.title }}
@@ -53,7 +55,7 @@
           {{ modalMessage.message }}
         </p>
         <h2 class="font-lato text-md font-bold text-gray-800">
-          {{ serviceDetail.service_name }}
+          {{ documentDetail.category }}
         </h2>
       </div>
       <template #footer>
@@ -67,7 +69,7 @@
           <BaseButton
             class="bg-red-500 hover:bg-red-400 text-sm text-white"
             :disabled="modalState === 'LOADING'"
-            @click="modalMessage.action(serviceDetail.id)"
+            @click="modalMessage.action(documentDetail.id)"
           >
             <p
               v-if="modalState === 'LOADING'"
@@ -139,6 +141,8 @@ const MODAL_STATE = Object.freeze({
   NONE: 'NONE',
   LOADING: 'LOADING',
   DELETE_CONFIRMATION: 'DELETE_CONFIRMATION',
+  ARCHIVE_CONFIRMATION: 'ARCHIVE_CONFIRMATION',
+  PUBLISH_CONFIRMATION: 'PUBLISH_CONFIRMATION',
   ERROR: 'ERROR',
   SUCCESS: 'SUCCESS',
 });
@@ -169,14 +173,14 @@ export default {
           count: null,
         },
         {
-          key: 'PUBLISH',
-          label: 'Diterbitkan',
+          key: 'PUBLISHED',
+          label: 'Terbit',
           icon: 'PublishIcon',
           count: null,
         },
         {
-          key: 'ARCHIVE',
-          label: 'Tersimpan',
+          key: 'ARCHIVED',
+          label: 'Diarsipkan',
           icon: 'ArchiveIcon',
           count: null,
         },
@@ -184,7 +188,7 @@ export default {
       // @TODO: remove isShowSearchBar varible when search feature is develop
       isShowSearchBar: false,
       documents: [],
-      serviceDetail: {},
+      documentDetail: {},
       currentTab: 'ALL',
       loading: false,
       meta: {
@@ -206,6 +210,13 @@ export default {
       },
       formatDate,
     };
+  },
+  computed: {
+    showConfirmationModal() {
+      return this.modalState === 'DELETE_CONFIRMATION'
+        || this.modalState === 'ARCHIVE_CONFIRMATION'
+        || this.modalState === 'PUBLISH_CONFIRMATION';
+    },
   },
   mounted() {
     this.fetchDocument();
@@ -240,14 +251,14 @@ export default {
         });
       }
     },
-    async deleteMasterDataById(id) {
+    async deleteDocumentById(id) {
       try {
         this.modalState = MODAL_STATE.LOADING;
-        const response = await documentsRepository.deleteMasterDataById(id);
+        const response = await documentsRepository.deleteDocumentById(id);
         if (response.status === 204) {
           this.setModalMessage({
             title: 'Berhasil dihapus!',
-            message: `Program ${this.serviceDetail.service_name} berhasil dihapus.`,
+            message: `Dokumen ${this.documentDetail.title} berhasil dihapus.`,
           });
           this.modalState = MODAL_STATE.SUCCESS;
         }
@@ -264,6 +275,32 @@ export default {
           });
         }
 
+        this.modalState = MODAL_STATE.ERROR;
+      } finally {
+        this.fetchStatusCounter();
+      }
+    },
+    async updateStatusDocumentById(id, status) {
+      try {
+        this.modalState = MODAL_STATE.LOADING;
+        const body = { status };
+        const response = await documentsRepository.updateStatusDocument(body, id);
+        if (response.status === 204) {
+          this.setModalMessage({
+            title: 'Berhasil diperbaharui!',
+            message: 'Dokumen berhasil diarsipkan.',
+          });
+          this.modalState = MODAL_STATE.SUCCESS;
+        }
+      } catch {
+        this.$toast({
+          type: 'error',
+          message: 'Gagal memperbaharui status Dokumen, silakan coba beberapa saat lagi',
+        });
+        this.setModalMessage({
+          title: 'Arsipkan Dokumen Gagal',
+          message: 'Dokumen Anda gagal diarsipkan.',
+        });
         this.modalState = MODAL_STATE.ERROR;
       } finally {
         this.fetchStatusCounter();
@@ -290,7 +327,7 @@ export default {
       await this.$nextTick();
       this.fetchDocument();
     },
-    filterMasterDataByStatus(status) {
+    filterDocumentByStatus(status) {
       if (status === 'ALL') {
         this.setParams({
           status: null,
@@ -306,17 +343,40 @@ export default {
       }
       this.fetchDocument();
     },
-    handleDeleteMasterData(id) {
-      const selectedService = this.documents.find((service) => service.id === id);
-      this.serviceDetail = { ...selectedService };
-
+    handleDeleteDocument(id) {
+      this.findDocumentById(id);
       this.modalState = MODAL_STATE.DELETE_CONFIRMATION;
 
       this.setModalMessage({
         title: 'Hapus Layanan',
-        message: 'Apakah Anda yakin ingin menghapus Layanan ini?',
-        action: () => this.deleteMasterDataById(id),
+        message: 'Apakah Anda yakin ingin menghapus Dokumen ini?',
+        action: () => this.deleteDocumentById(id),
       });
+    },
+    async handleArchiveDocument(id) {
+      this.findDocumentById(id);
+      this.modalState = MODAL_STATE.ARCHIVE_CONFIRMATION;
+
+      this.setModalMessage({
+        title: 'Arsipkan Dokumen',
+        message: 'Apakah Anda yakin ingin mengarsipkan Dokumen ini?',
+        action: () => this.updateStatusDocumentById(id),
+      });
+    },
+    async handlePublishDocument(id) {
+      this.findDocumentById(id);
+      this.modalState = MODAL_STATE.DELETE_CONFIRMATION;
+
+      if (this.documentDetail.is_completed) {
+        this.setModalMessage({
+          title: 'Terbitkan Dokumen',
+          message: 'Apakah Anda yakin ingin menerbitkan Dokumen ini?',
+          action: () => this.updateStatusDocumentById(id),
+        });
+      } else {
+        // @TODO: change route into edit form route
+        this.$router.push('/profil-jawa-barat/arsip-dan-dokumen/tambah');
+      }
     },
     onUpdatePagination(data) {
       this.setParams(data);
@@ -334,6 +394,10 @@ export default {
     setParams(data) {
       const newParams = { ...this.params, ...data };
       this.params = { ...newParams };
+    },
+    findDocumentById(id) {
+      const selectedDocument = this.documents.find((document) => document.id === id);
+      this.documentDetail = { ...selectedDocument };
     },
   },
 };
