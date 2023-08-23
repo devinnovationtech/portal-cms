@@ -34,7 +34,7 @@
             <div class="flex gap-4">
               <BaseButton
                 type="submit"
-                class="bg-white font-lato text-sm text-green-700 border border-green-700"
+                class="bg-transparent font-lato text-sm text-green-700 border border-green-700"
                 data-cy="archive-document-form__button-draft"
                 @click="onDraftDocument"
               >
@@ -44,7 +44,7 @@
               </BaseButton>
               <BaseButton
                 type="submit"
-                class="bg-green-700 hover:bg-green-600 font-lato text-sm text-white"
+                class="bg-green-700 hover:bg-green-600 font-lato text-sm text-white disabled:bg-gray-500 disabled:text-white"
                 data-cy="archive-document-form__button-publish"
                 :disabled="invalid"
                 @click="onPublishDocument"
