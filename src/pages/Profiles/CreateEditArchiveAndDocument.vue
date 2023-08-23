@@ -66,12 +66,12 @@
                 Upload Arsip Dokumen
               </h2>
             </div>
-            <div class="w-full h-full bg-gray-50 border-dashed border-2 border-gray-200 rounded-[10px] flex flex-col justify-center items-center gap-[10px]">
-              <ValidationProvider
-                ref="documentUploader"
-                v-slot="{ errors }"
-                rules="size:5000"
-              >
+            <ValidationProvider
+              ref="documentUploader"
+              v-slot="{ errors }"
+              rules="size:5000"
+            >
+              <div class="w-full h-full flex flex-col justify-center items-center gap-[10px]">
                 <Dropzone
                   :is-error="errors.length > 0"
                   :is-link-field="false"
@@ -93,8 +93,8 @@
                 >
                   {{ errors[0] }}
                 </span>
-              </ValidationProvider>
-            </div>
+              </div>
+            </ValidationProvider>
             <transition name="slide-fade">
               <DropzoneUploadProgress
                 v-if="!!document"
