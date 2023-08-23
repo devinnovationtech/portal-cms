@@ -159,7 +159,6 @@
                   :options="categories"
                   placeholder="Pilih Kategori/Topik"
                   data-cy="archive-document-form__category"
-                  :error-message="errors[0]"
                 />
               </div>
               <span
