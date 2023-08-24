@@ -340,7 +340,7 @@ export default [
   },
   {
     path: '/profil-jawa-barat/arsip-dan-dokumen/tambah',
-    name: 'Profil Jawa Barat',
+    name: 'Tambah Arsip dan Dokumen',
     component: () => import('@/pages/Profiles/CreateEditArchiveAndDocument.vue'),
     meta: {
       mode: 'create',
