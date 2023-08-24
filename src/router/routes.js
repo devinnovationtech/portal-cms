@@ -340,8 +340,8 @@ export default [
   },
   {
     path: '/profil-jawa-barat/arsip-dan-dokumen/tambah',
-    name: 'Landing Page',
-    component: () => import('@/pages/ArchiveAndDocument/CreateEditArchiveAndDocument.vue'),
+    name: 'Profil Jawa Barat',
+    component: () => import('@/pages/Profiles/CreateEditArchiveAndDocument.vue'),
     meta: {
       mode: 'create',
       layout: 'AppLayoutPrivate',

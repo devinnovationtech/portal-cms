@@ -57,7 +57,7 @@
           <!-- Preview Button -->
           <transition name="fade">
             <button
-              v-if="status === 'SUCCESS' || status === 'HASDEFAULT'"
+              v-if="(status === 'SUCCESS' || status === 'HASDEFAULT') && isShowPreview"
               type="button"
               :class="{
                 'absolute inset-0 w-full h-full flex items-center justify-center transition-all ease-in group' : true,
@@ -227,6 +227,10 @@ export default {
     dataCy: {
       type: String,
       default: null,
+    },
+    isShowPreview: {
+      type: Boolean,
+      default: true,
     },
   },
   data() {

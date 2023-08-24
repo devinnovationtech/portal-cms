@@ -34,7 +34,7 @@
             <div class="flex gap-4">
               <BaseButton
                 type="submit"
-                class="bg-white font-lato text-sm text-green-700 border border-green-700"
+                class="bg-transparent font-lato text-sm text-green-700 border border-green-700"
                 data-cy="archive-document-form__button-draft"
                 @click="onDraftDocument"
               >
@@ -44,7 +44,7 @@
               </BaseButton>
               <BaseButton
                 type="submit"
-                class="bg-green-700 hover:bg-green-600 font-lato text-sm text-white"
+                class="bg-green-700 hover:bg-green-600 font-lato text-sm text-white disabled:bg-gray-500 disabled:text-white"
                 data-cy="archive-document-form__button-publish"
                 :disabled="invalid"
                 @click="onPublishDocument"
@@ -66,12 +66,12 @@
                 Upload Arsip Dokumen
               </h2>
             </div>
-            <div class="w-full h-full bg-gray-50 border-dashed border-2 border-gray-200 rounded-[10px] flex flex-col justify-center items-center gap-[10px]">
-              <ValidationProvider
-                ref="documentUploader"
-                v-slot="{ errors }"
-                rules="size:5000"
-              >
+            <ValidationProvider
+              ref="documentUploader"
+              v-slot="{ errors }"
+              rules="size:5000"
+            >
+              <div class="w-full h-full flex flex-col justify-center items-center gap-[10px]">
                 <Dropzone
                   :is-error="errors.length > 0"
                   :is-link-field="false"
@@ -93,8 +93,8 @@
                 >
                   {{ errors[0] }}
                 </span>
-              </ValidationProvider>
-            </div>
+              </div>
+            </ValidationProvider>
             <transition name="slide-fade">
               <DropzoneUploadProgress
                 v-if="!!document"
@@ -103,6 +103,7 @@
                 :status="documentUploadStatus"
                 :image-url="form.document.url"
                 :image-size="form.document.size"
+                :is-show-preview="false"
                 data-cy="archive-document"
                 class="mt-4"
                 @retry="handleRetryUpload()"
@@ -158,7 +159,6 @@
                   :options="categories"
                   placeholder="Pilih Kategori/Topik"
                   data-cy="archive-document-form__category"
-                  :error-message="errors[0]"
                 />
               </div>
               <span
