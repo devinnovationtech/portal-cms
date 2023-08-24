@@ -1,6 +1,7 @@
 import { extend } from 'vee-validate';
 import { required, numeric, image, size, max, email } from 'vee-validate/dist/rules';
 import { isAfter, isToday, differenceInMinutes } from 'date-fns';
+import mime from 'mime-types';
 
 extend('required', {
   ...required,
@@ -138,4 +139,15 @@ extend('numbergreaterthan', {
     return +value > +target;
   },
   message: 'Angka tidak boleh sama atau kurang dari {target}',
+});
+
+extend('document', {
+  validate(value) {
+    const acceptedFileExtension = [
+      'doc', 'docx', 'xls', 'xlsx', 'pdf',
+    ];
+    const isValidDocument = acceptedFileExtension.includes(mime.extension(value.type));
+    return isValidDocument;
+  },
+  message: 'Format file tidak didukung, format yang didukung hanya doc, xls dan pdf.',
 });
