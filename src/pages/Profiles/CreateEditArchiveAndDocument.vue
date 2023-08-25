@@ -69,7 +69,7 @@
             <ValidationProvider
               ref="documentUploader"
               v-slot="{ errors }"
-              rules="size:5000|document"
+              rules="size:5000|document:doc,docs,xls,xlsx,pdf"
             >
               <div class="w-full h-full flex flex-col gap-[10px]">
                 <Dropzone
