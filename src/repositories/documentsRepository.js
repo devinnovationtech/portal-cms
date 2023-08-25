@@ -70,6 +70,6 @@ export default {
    * @returns {Promise}
    */
   updateStatusDocument(body, id = null) {
-    return Repository.put(`${resource}/${id}/status`, body);
+    return Repository.patch(`${resource}/${id}/status`, body);
   },
 };

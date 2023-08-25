@@ -45,18 +45,31 @@
       </section>
     </section>
 
+    <!-- Action Progress -->
+    <ProgressModal
+      v-if="modalState === 'LOADING'"
+      :open="modalState === 'LOADING'"
+      :value="progressValue"
+      title="Menyimpan Data Dokumen"
+      message="Mohon tunggu, penyimpanan data dokumen sedang diproses."
+      data-cy="documents__progress-modal"
+    />
+
     <!-- Action Prompt -->
     <BaseModal :open="showConfirmationModal">
       <div class="w-full">
         <h1 class="font-roboto text-xl leading-8 font-medium text-green-700 mb-6">
           {{ modalMessage.title }}
         </h1>
-        <p class="font-lato text-sm text-gray-800 mb-2">
+        <p class="flex items-center font-lato text-sm text-gray-800 mb-2">
+          <JdsIcon
+            v-if="modalState === 'UNCOMPLETE_ALERT'"
+            name="warning"
+            size="16px"
+            class="text-[#FF7500] mr-2"
+          />
           {{ modalMessage.message }}
         </p>
-        <h2 class="font-lato text-md font-bold text-gray-800">
-          {{ documentDetail.category }}
-        </h2>
       </div>
       <template #footer>
         <div class="flex gap-4 justify-end">
@@ -67,19 +80,19 @@
             Batal
           </BaseButton>
           <BaseButton
-            class="bg-red-500 hover:bg-red-400 text-sm text-white"
-            :disabled="modalState === 'LOADING'"
+            :class="{
+              'bg-green-700 hover:bg-green-600  text-sm text-white': true,
+              '!bg-red-500 !hover:bg-red-400': modalState === 'DELETE_CONFIRMATION'
+            }"
             @click="modalMessage.action(documentDetail.id)"
           >
-            <p
-              v-if="modalState === 'LOADING'"
-              class="flex gap-2 items-center text-gray-500"
-            >
-              <JdsSpinner
-                size="16"
-                foreground="#757575"
+            <p v-if="modalState === 'UNCOMPLETE_ALERT'" class="flex items-center">
+              Lengkapi arsip dokumen
+              <JdsIcon
+                name="arrow-right"
+                size="16px"
+                class="ml-2"
               />
-              Loading...
             </p>
             <p v-else>
               Ya, saya yakin
@@ -132,6 +145,7 @@ import DocumentsTabBar from '@/components/Profiles/Documents/DocumentsTabBar';
 import DocumentsTable from '@/components/Profiles/Documents/DocumentsTable';
 import LinkButton from '@/common/components/LinkButton';
 import SearchBar from '@/common/components/SearchBar';
+import ProgressModal from '@/common/components/ProgressModal';
 import { formatDate } from '@/common/helpers/date';
 import { RepositoryFactory } from '@/repositories/RepositoryFactory';
 
@@ -143,6 +157,7 @@ const MODAL_STATE = Object.freeze({
   DELETE_CONFIRMATION: 'DELETE_CONFIRMATION',
   ARCHIVE_CONFIRMATION: 'ARCHIVE_CONFIRMATION',
   PUBLISH_CONFIRMATION: 'PUBLISH_CONFIRMATION',
+  UNCOMPLETE_ALERT: 'UNCOMPLETE_ALERT',
   ERROR: 'ERROR',
   SUCCESS: 'SUCCESS',
 });
@@ -156,6 +171,7 @@ export default {
     DocumentsTable,
     LinkButton,
     SearchBar,
+    ProgressModal,
   },
   data() {
     return {
@@ -209,13 +225,15 @@ export default {
         q: '',
       },
       formatDate,
+      progressValue: 0,
     };
   },
   computed: {
     showConfirmationModal() {
       return this.modalState === 'DELETE_CONFIRMATION'
         || this.modalState === 'ARCHIVE_CONFIRMATION'
-        || this.modalState === 'PUBLISH_CONFIRMATION';
+        || this.modalState === 'PUBLISH_CONFIRMATION'
+        || this.modalState === 'UNCOMPLETE_ALERT';
     },
   },
   mounted() {
@@ -255,12 +273,18 @@ export default {
       try {
         this.modalState = MODAL_STATE.LOADING;
         const response = await documentsRepository.deleteDocumentById(id);
-        if (response.status === 204) {
-          this.setModalMessage({
-            title: 'Berhasil dihapus!',
-            message: `Dokumen ${this.documentDetail.title} berhasil dihapus.`,
-          });
-          this.modalState = MODAL_STATE.SUCCESS;
+        if (response.status === 200) {
+          this.progressValue = 25;
+          setTimeout(() => {
+            this.progressValue = 75;
+            setTimeout(() => {
+              this.setModalMessage({
+                title: 'Berhasil dihapus!',
+                message: `Dokumen ${this.documentDetail.title} berhasil dihapus.`,
+              });
+              this.modalState = MODAL_STATE.SUCCESS;
+            }, 150);
+          }, 150);
         }
       } catch (error) {
         if (error.response.status === 403) {
@@ -285,12 +309,18 @@ export default {
         this.modalState = MODAL_STATE.LOADING;
         const body = { status };
         const response = await documentsRepository.updateStatusDocument(body, id);
-        if (response.status === 204) {
-          this.setModalMessage({
-            title: 'Berhasil diperbaharui!',
-            message: 'Dokumen berhasil diarsipkan.',
-          });
-          this.modalState = MODAL_STATE.SUCCESS;
+        if (response.status === 200) {
+          this.progressValue = 25;
+          setTimeout(() => {
+            this.progressValue = 75;
+            setTimeout(() => {
+              this.setModalMessage({
+                title: 'Berhasil diperbaharui!',
+                message: 'Dokumen berhasil diarsipkan.',
+              });
+              this.modalState = MODAL_STATE.SUCCESS;
+            }, 150);
+          }, 150);
         }
       } catch {
         this.$toast({
@@ -360,22 +390,26 @@ export default {
       this.setModalMessage({
         title: 'Arsipkan Dokumen',
         message: 'Apakah Anda yakin ingin mengarsipkan Dokumen ini?',
-        action: () => this.updateStatusDocumentById(id),
+        action: () => this.updateStatusDocumentById(id, 'ARCHIVED'),
       });
     },
     async handlePublishDocument(id) {
       this.findDocumentById(id);
-      this.modalState = MODAL_STATE.DELETE_CONFIRMATION;
-
       if (this.documentDetail.is_completed) {
+        this.modalState = MODAL_STATE.PUBLISH_CONFIRMATION;
         this.setModalMessage({
           title: 'Terbitkan Dokumen',
           message: 'Apakah Anda yakin ingin menerbitkan Dokumen ini?',
-          action: () => this.updateStatusDocumentById(id),
+          action: () => this.updateStatusDocumentById(id, 'PUBLISHED'),
         });
       } else {
+        this.modalState = MODAL_STATE.UNCOMPLETE_ALERT;
         // @TODO: change route into edit form route
-        this.$router.push('/profil-jawa-barat/arsip-dan-dokumen/tambah');
+        this.setModalMessage({
+          title: 'Dokumen belum lengkap',
+          message: 'Mohon lengkapi Dokumen Anda terlebih dahulu sebelum menerbitkan',
+          action: () => this.$router.push('/profil-jawa-barat/arsip-dan-dokumen/tambah'),
+        });
       }
     },
     onUpdatePagination(data) {
@@ -384,6 +418,7 @@ export default {
     },
     resetModalState() {
       this.modalState = MODAL_STATE.NONE;
+      this.progressValue = 0;
       this.modalMessage.title = '';
       this.modalMessage.body = '';
       this.modalMessage.action = null;
