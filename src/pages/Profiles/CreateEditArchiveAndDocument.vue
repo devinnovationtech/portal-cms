@@ -69,14 +69,15 @@
             <ValidationProvider
               ref="documentUploader"
               v-slot="{ errors }"
-              rules="size:5000"
+              rules="size:5000|document:doc,docs,xls,xlsx,pdf"
             >
-              <div class="w-full h-full flex flex-col justify-center items-center gap-[10px]">
+              <div class="w-full h-full flex flex-col gap-[10px]">
                 <Dropzone
                   :is-error="errors.length > 0"
                   :is-link-field="false"
                   :disabled="!!document"
                   data-cy="archive-document"
+                  class="w-full h-full"
                   accept="application/pdf, .doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
                   guide="drag and drop berkas disini atau"
                   @change="uploadDocument($event)"
@@ -443,6 +444,9 @@ export default {
       this.confirmationMessage.body = 'Apakah Anda ingin menerbitkan Arsip Dokumen ini?';
     },
     async uploadDocument(file) {
+      const { valid } = await this.$refs.documentUploader.validate(file);
+      if (!valid) return;
+
       const formData = new FormData();
       formData.append('file', file, file.name);
 
