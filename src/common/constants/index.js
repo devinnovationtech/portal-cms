@@ -37,7 +37,7 @@ export const NAVIGATION_MENU = [
     label: 'Profil Jawa Barat',
     icon: 'GedungSateIcon',
     arrow: true,
-    permission: null,
+    permission: 'profile-west-java.manage',
   },
 ];
 

@@ -17,6 +17,7 @@
             href="/profil-jawa-barat/arsip-dan-dokumen/tambah"
             title="Tambah Arsip Dokumen"
             class="ml-auto"
+            data-cy="document__add-button"
           >
             <template #icon-left>
               <JdsIcon
@@ -86,7 +87,10 @@
             }"
             @click="modalMessage.action(documentDetail.id)"
           >
-            <p v-if="modalState === 'UNCOMPLETE_ALERT'" class="flex items-center">
+            <p
+              v-if="modalState === 'UNCOMPLETE_ALERT'"
+              class="flex items-center"
+            >
               Lengkapi arsip dokumen
               <JdsIcon
                 name="arrow-right"
@@ -315,8 +319,8 @@ export default {
             this.progressValue = 75;
             setTimeout(() => {
               this.setModalMessage({
-                title: 'Berhasil diperbaharui!',
-                message: 'Dokumen berhasil diarsipkan.',
+                title: `Berhasil ${status === 'PUBLISHED' ? 'diterbitkan' : 'diarsipkan'}!`,
+                message: `Anda berhasil ${status === 'PUBLISHED' ? 'menerbitkan' : 'mengarsipkan'} dokumen.`,
               });
               this.modalState = MODAL_STATE.SUCCESS;
             }, 150);
