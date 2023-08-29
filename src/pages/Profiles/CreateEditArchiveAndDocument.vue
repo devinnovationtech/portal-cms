@@ -292,13 +292,6 @@
     </BaseModal>
 
     <!-- Submit Progress -->
-    <!-- <ProgressModal
-      :open="submitStatus === 'LOADING'"
-      :value="submitProgress"
-      title="Menerbitkan Arsip Dokumen"
-      message="Mohon tunggu, penerbitan arsip dokumen sedang diproses."
-      data-cy="archive-document-form__progress-modal"
-    /> -->
     <ProgressModal
       :open="submitStatus === 'LOADING'"
       :value="submitProgress"
