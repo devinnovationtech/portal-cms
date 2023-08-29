@@ -8,11 +8,18 @@
       />
       <section class="w-full bg-white py-6 px-3">
         <div class="full flex justify-between mb-5 items-center">
-          <!-- @TODO: implement search bar -->
-          <SearchBar
-            v-if="isShowSearchBar"
-            placeholder="Cari arsip"
-          />
+          <div class="flex">
+            <SearchBar
+              placeholder="Cari dokumen"
+              data-cy="documents__search-bar"
+              @input="onSearch($event)"
+            />
+            <!-- will be implemented in next PR
+            <DocumentsCategoryFilter
+              class="ml-6"
+              @change:filter="onFilter($event)"
+            /> -->
+          </div>
           <LinkButton
             href="/profil-jawa-barat/arsip-dan-dokumen/tambah"
             title="Tambah Arsip Dokumen"
@@ -76,6 +83,7 @@
         <div class="flex gap-4 justify-end">
           <BaseButton
             class="border-green-700 hover:bg-green-50 text-sm text-green-700"
+            data-cy="documents__modal-button--cancel"
             @click="handleCloseModal"
           >
             Batal
@@ -85,6 +93,7 @@
               'bg-green-700 hover:bg-green-600  text-sm text-white': true,
               '!bg-red-500 !hover:bg-red-400': modalState === 'DELETE_CONFIRMATION'
             }"
+            data-cy="documents__modal-button--confirm"
             @click="modalMessage.action(documentDetail.id)"
           >
             <p
@@ -132,6 +141,7 @@
         <div class="flex w-full h-full items-center justify-center gap-4 p-2">
           <BaseButton
             class="bg-green-700 hover:bg-green-600 text-sm text-white"
+            data-cy="documents__modal-button--undarstand"
             @click="handleCloseModal"
           >
             Saya Mengerti
@@ -437,6 +447,15 @@ export default {
     findDocumentById(id) {
       const selectedDocument = this.documents.find((document) => document.id === id);
       this.documentDetail = { ...selectedDocument };
+    },
+    /**
+     * Set new params and fetch news when search-bar value changes
+     *
+     * @param {string} query - search-bar emit values
+     */
+    onSearch(query) {
+      this.setParams({ q: query });
+      this.fetchDocument();
     },
   },
 };
