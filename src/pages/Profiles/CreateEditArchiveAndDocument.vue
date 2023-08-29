@@ -2,7 +2,7 @@
   <main class="pb-14">
     <ValidationObserver
       ref="form"
-      v-slot="{ invalid }"
+      v-slot="{ invalid, changed }"
     >
       <div
         class="archive-document-form"
@@ -33,6 +33,7 @@
           <div class="ml-auto">
             <div class="flex gap-4">
               <BaseButton
+                v-if="status === 'DRAFT'"
                 type="submit"
                 class="bg-transparent font-lato text-sm text-green-700 border border-green-700"
                 data-cy="archive-document-form__button-draft"
@@ -43,6 +44,20 @@
                 </p>
               </BaseButton>
               <BaseButton
+                v-if="status === 'PUBLISHED'"
+                type="submit"
+                class="bg-green-700 hover:bg-green-600 font-lato text-sm text-white disabled:bg-gray-500 disabled:text-white"
+                data-cy="archive-document-form__button-publish"
+                :disabled="invalid || !changed"
+                @click="onUpdateDocument"
+              >
+                <SaveIcon class="fill-white" />
+                <p>
+                  Simpan Perubahan
+                </p>
+              </BaseButton>
+              <BaseButton
+                v-else
                 type="submit"
                 class="bg-green-700 hover:bg-green-600 font-lato text-sm text-white disabled:bg-gray-500 disabled:text-white"
                 data-cy="archive-document-form__button-publish"
@@ -264,16 +279,31 @@
           >
             Ya, terbitkan
           </BaseButton>
+          <BaseButton
+            v-else-if="confirmationMessage.type === 'update'"
+            class="bg-green-700 hover:bg-green-600 text-sm text-white"
+            data-cy="archive-document-form__confirmation-button-save"
+            @click="updateDocument('PUBLISHED')"
+          >
+            Ya, Simpan Perubahan
+          </BaseButton>
         </div>
       </template>
     </BaseModal>
 
     <!-- Submit Progress -->
-    <ProgressModal
+    <!-- <ProgressModal
       :open="submitStatus === 'LOADING'"
       :value="submitProgress"
       title="Menerbitkan Arsip Dokumen"
       message="Mohon tunggu, penerbitan arsip dokumen sedang diproses."
+      data-cy="archive-document-form__progress-modal"
+    /> -->
+    <ProgressModal
+      :open="submitStatus === 'LOADING'"
+      :value="submitProgress"
+      :title="loadingMessage.title"
+      :message="loadingMessage.body"
       data-cy="archive-document-form__progress-modal"
     />
 
@@ -324,6 +354,7 @@ import ProgressModal from '@/common/components/ProgressModal';
 import Dropzone from '@/common/components/Dropzone';
 import DropzoneUploadProgress from '@/common/components/DropzoneUploadProgress';
 import PublishIcon from '@/assets/icons/plane.svg?inline';
+import SaveIcon from '@/assets/icons/uil-save.svg?inline';
 
 import '@/common/helpers/vee-validate.js';
 import { ValidationProvider, ValidationObserver } from 'vee-validate';
@@ -357,6 +388,7 @@ export default {
     Dropzone,
     DropzoneUploadProgress,
     PublishIcon,
+    SaveIcon,
     ValidationProvider,
     ValidationObserver,
   },
@@ -377,6 +409,7 @@ export default {
         category: '',
         description: '',
       },
+      status: 'DRAFT',
       document: null,
       documentUploadProgress: 0,
       documentUploadStatus: DOCUMENT_UPLOAD_STATUS.NONE,
@@ -391,6 +424,10 @@ export default {
         body: '',
       },
       errorMessage: {
+        title: '',
+        body: '',
+      },
+      loadingMessage: {
         title: '',
         body: '',
       },
@@ -424,7 +461,34 @@ export default {
       return 500;
     },
   },
+  async mounted() {
+    if (this.isEditMode) {
+      try {
+        const { id } = this.$route.params;
+        const response = await documentRepository.getDocumentById(id);
+        const { data } = response.data;
+        this.setInitialData(data);
+      } catch (error) {
+        this.$toast({
+          type: 'error',
+          message: 'Gagal mendapatkan data arsip dan dokumen.',
+        });
+      }
+    }
+  },
   methods: {
+    setInitialData(data) {
+      this.status = data.status;
+      this.form.title = data.title;
+      this.form.category = data.category;
+      this.form.description = data.description;
+      this.form.document.url = data.source;
+      this.form.document.type = data.mimetype;
+      if (data.source && data.mimetype) {
+        this.form.document.fileName = data.source.substring(data.source.lastIndexOf('/') + 1);
+        this.document = new File([''], this.form.document.fileName, { type: data.mimetype });
+      }
+    },
     onCancelArchiveAndDocument() {
       this.submitStatus = FORM_SUBMIT_STATUS.CONFIRMATION;
       this.confirmationMessage.type = 'cancel';
@@ -442,6 +506,12 @@ export default {
       this.confirmationMessage.type = 'publish';
       this.confirmationMessage.title = 'Terbitkan Arsip Dokumen';
       this.confirmationMessage.body = 'Apakah Anda ingin menerbitkan Arsip Dokumen ini?';
+    },
+    onUpdateDocument() {
+      this.submitStatus = FORM_SUBMIT_STATUS.CONFIRMATION;
+      this.confirmationMessage.type = 'update';
+      this.confirmationMessage.title = 'Simpan Perubahan';
+      this.confirmationMessage.body = 'Apakah Anda ingin menyimpan data perubahan?';
     },
     async uploadDocument(file) {
       const { valid } = await this.$refs.documentUploader.validate(file);
@@ -528,7 +598,11 @@ export default {
       this.$router.back();
     },
     handleDraft() {
-      this.draftDocument();
+      if (this.mode === 'create') {
+        this.draftDocument();
+      } else {
+        this.updateDocument('DRAFT');
+      }
     },
     generateFormData(type) {
       const formData = {
@@ -545,14 +619,24 @@ export default {
     async draftDocument() {
       const formData = this.generateFormData('DRAFT');
       try {
+        this.submitStatus = FORM_SUBMIT_STATUS.LOADING;
+        this.submitProgress = 25;
+        this.loadingMessage.title = 'Menyimpan Draf';
+        this.loadingMessage.body = 'Mohon tunggu, penyimpanan draf dokumen sedang diproses.';
+
         const response = await documentRepository.createDocument(formData);
         if (response.status === 201) {
+          // Add timeout to prevent progress bar too fast
           setTimeout(() => {
-            this.successMessage = {
-              title: 'Berhasil disimpan ke draf !',
-              body: 'Anda berhasil menyimpan dokumen ke draf.',
-            };
-            this.submitStatus = FORM_SUBMIT_STATUS.SUCCESS;
+            this.submitProgress = 75;
+
+            setTimeout(() => {
+              this.successMessage = {
+                title: 'Berhasil disimpan ke draf !',
+                body: 'Anda berhasil menyimpan dokumen ke draf.',
+              };
+              this.submitStatus = FORM_SUBMIT_STATUS.SUCCESS;
+            }, 150);
           }, 150);
         }
       } catch (error) {
@@ -566,6 +650,8 @@ export default {
     handlePublish() {
       if (this.mode === 'create') {
         this.publishDocument();
+      } else {
+        this.updateDocument('PUBLISHED');
       }
     },
     async publishDocument() {
@@ -573,6 +659,8 @@ export default {
       try {
         this.submitStatus = FORM_SUBMIT_STATUS.LOADING;
         this.submitProgress = 25;
+        this.loadingMessage.title = 'Menerbitkan Dokumen';
+        this.loadingMessage.body = 'Mohon tunggu, penerbitan dokumen sedang diproses.';
 
         const response = await documentRepository.createDocument(formData);
         if (response.status === 201) {
@@ -593,6 +681,38 @@ export default {
         this.errorMessage = {
           title: 'Gagal !',
           body: 'Arsip Dokumen gagal diterbitkan.',
+        };
+        this.submitStatus = FORM_SUBMIT_STATUS.ERROR;
+      }
+    },
+    async updateDocument(type) {
+      const formData = this.generateFormData(type);
+      try {
+        this.submitStatus = FORM_SUBMIT_STATUS.LOADING;
+        this.submitProgress = 25;
+        this.loadingMessage.title = 'Menyimpan Dokumen';
+        this.loadingMessage.body = 'Mohon tunggu, penyimpanan dokumen sedang diproses.';
+
+        const { id } = this.$route.params;
+        const response = await documentRepository.updateDocument(formData, id);
+        if (response.status === 200) {
+          // Add timeout to prevent progress bar too fast
+          setTimeout(() => {
+            this.submitProgress = 75;
+
+            setTimeout(() => {
+              this.successMessage = {
+                title: 'Berhasil disimpan !',
+                body: 'Dokumen Anda berhasil disimpan.',
+              };
+              this.submitStatus = FORM_SUBMIT_STATUS.SUCCESS;
+            }, 150);
+          }, 150);
+        }
+      } catch (error) {
+        this.errorMessage = {
+          title: 'Gagal !',
+          body: 'Dokumen Anda gagal disimpan.',
         };
         this.submitStatus = FORM_SUBMIT_STATUS.ERROR;
       }

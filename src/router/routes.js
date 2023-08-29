@@ -348,6 +348,15 @@ export default [
     },
   },
   {
+    path: '/profil-jawa-barat/arsip-dan-dokumen/:id/ubah',
+    name: 'Ubah Arsip dan Dokumen',
+    component: () => import('@/pages/Profiles/CreateEditArchiveAndDocument.vue'),
+    meta: {
+      mode: 'edit',
+      layout: 'AppLayoutPrivate',
+    },
+  },
+  {
     path: '/pengaturan',
     name: 'Pengaturan',
     component: () => import('@/pages/Settings'),
