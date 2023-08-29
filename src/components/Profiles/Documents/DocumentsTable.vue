@@ -14,7 +14,7 @@
     >
       <!-- eslint-disable-next-line vue/valid-v-slot -->
       <template #item.title="{item}">
-        <p class="line-clamp-1">
+        <p class="line-clamp-2">
           {{ item.title || '-' }}
         </p>
       </template>

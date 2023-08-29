@@ -18,8 +18,8 @@ export default {
   data() {
     return {
       tabs: [
-        { label: 'Arsip dan Dokumen', link: '/profil-jawa-barat/arsip-dan-dokumen' },
-        { label: 'Tentang Jawa Barat', link: '/profil-jawa-barat/tentang-jawa-barat' },
+        { label: 'Arsip dan Dokumen', link: '/profil-jawa-barat/arsip-dan-dokumen', dataCy: 'document__tab-menu' },
+        { label: 'Tentang Jawa Barat', link: '/profil-jawa-barat/tentang-jawa-barat', dataCy: 'about__tab-menu' },
       ],
     };
   },

@@ -10,6 +10,7 @@
       ref="tab-bar-item"
       :to="tab.link"
       custom
+      :data-cy="tab.dataCy || ''"
     >
       <li>
         <a

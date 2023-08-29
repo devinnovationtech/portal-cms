@@ -9,6 +9,7 @@
         v-on-clickaway="closeDropdown"
         class="py-[6px] px-4 rounded-lg border border-green-700 flex items-center font-lato
         font-bold text-sm leading-5 text-green-700 hover:bg-green-50"
+        data-cy="document__table-action-button"
         @click="toggleDropdown"
       >
         Aksi
@@ -24,20 +25,22 @@
 
     <div class="bg-white p-[18px] rounded-lg border border-gray-200 shadow-xl">
       <ul class="flex flex-col gap-4">
-        <li>
+        <li v-if="item.status !== 'ARCHIVED'">
           <router-link
             :to="`/profil-jawa-barat/arsip-dan-dokumen/detail/${item.id}`"
             class="font-lato text-sm leading-4 text-gray-800"
+            data-cy="document__action-button--detail"
           >
             Detail
           </router-link>
         </li>
 
         <!-- Edit Action -->
-        <li>
+        <li v-if="item.status !== 'ARCHIVED'">
           <router-link
-            class="font-lato text-sm leading-4 text-gray-800"
             :to="`/profil-jawa-barat/arsip-dan-dokumen/${item.id}/ubah`"
+            class="font-lato text-sm leading-4 text-gray-800"
+            data-cy="document__action-button--edit"
           >
             Ubah
           </router-link>
@@ -47,6 +50,7 @@
         <li>
           <button
             class="font-lato text-sm leading-4 text-gray-800"
+            data-cy="document__action-button--delete"
             @click="$emit('delete', item.id)"
           >
             Hapus

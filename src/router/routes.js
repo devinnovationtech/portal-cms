@@ -326,7 +326,9 @@ export default [
         component: () => import('@/components/Profiles/Documents'),
         meta: {
           layout: 'AppLayoutPrivate',
+          permission: 'profile-west-java.manage',
         },
+        beforeEnter: userHasPermission,
       },
       {
         path: 'tentang-jawa-barat',
@@ -334,7 +336,9 @@ export default [
         component: () => import('@/common/components/Maintenance'),
         meta: {
           layout: 'AppLayoutPrivate',
+          permission: 'profile-west-java.manage',
         },
+        beforeEnter: userHasPermission,
       },
     ],
   },
