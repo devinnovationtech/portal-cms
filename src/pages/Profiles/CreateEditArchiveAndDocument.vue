@@ -464,7 +464,7 @@ export default {
       } catch (error) {
         this.$toast({
           type: 'error',
-          message: 'Gagal mendapatkan data arsip dan dokumen.',
+          message: 'Gagal mendapatkan data dokumen.',
         });
       }
     }
@@ -485,8 +485,8 @@ export default {
     onCancelArchiveAndDocument() {
       this.submitStatus = FORM_SUBMIT_STATUS.CONFIRMATION;
       this.confirmationMessage.type = 'cancel';
-      this.confirmationMessage.title = 'Membatalkan Arsip Dokumen';
-      this.confirmationMessage.body = 'Apakah Anda yakin ingin membatalkan Arsip Dokumen ini?';
+      this.confirmationMessage.title = 'Membatalkan Dokumen';
+      this.confirmationMessage.body = 'Apakah Anda yakin ingin membatalkan Dokumen ini?';
     },
     onDraftDocument() {
       this.submitStatus = FORM_SUBMIT_STATUS.CONFIRMATION;
@@ -497,8 +497,8 @@ export default {
     onPublishDocument() {
       this.submitStatus = FORM_SUBMIT_STATUS.CONFIRMATION;
       this.confirmationMessage.type = 'publish';
-      this.confirmationMessage.title = 'Terbitkan Arsip Dokumen';
-      this.confirmationMessage.body = 'Apakah Anda ingin menerbitkan Arsip Dokumen ini?';
+      this.confirmationMessage.title = 'Terbitkan Dokumen';
+      this.confirmationMessage.body = 'Apakah Anda ingin menerbitkan Dokumen ini?';
     },
     onUpdateDocument() {
       this.submitStatus = FORM_SUBMIT_STATUS.CONFIRMATION;
@@ -635,7 +635,7 @@ export default {
       } catch (error) {
         this.errorMessage = {
           title: 'Gagal !',
-          body: 'Arsip Dokumen gagal disimpan ke draf.',
+          body: 'Dokumen gagal disimpan ke draf.',
         };
         this.submitStatus = FORM_SUBMIT_STATUS.ERROR;
       }
@@ -664,7 +664,7 @@ export default {
             setTimeout(() => {
               this.successMessage = {
                 title: 'Berhasil !',
-                body: 'Anda berhasil menerbitkan Arsip Dokumen.',
+                body: 'Anda berhasil menerbitkan Dokumen.',
               };
               this.submitStatus = FORM_SUBMIT_STATUS.SUCCESS;
             }, 150);
@@ -673,7 +673,7 @@ export default {
       } catch (error) {
         this.errorMessage = {
           title: 'Gagal !',
-          body: 'Arsip Dokumen gagal diterbitkan.',
+          body: 'Dokumen gagal diterbitkan.',
         };
         this.submitStatus = FORM_SUBMIT_STATUS.ERROR;
       }
