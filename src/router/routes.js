@@ -350,6 +350,7 @@ export default [
       mode: 'create',
       layout: 'AppLayoutPrivate',
     },
+    beforeEnter: userHasPermission,
   },
   {
     path: '/profil-jawa-barat/arsip-dan-dokumen/:id/ubah',
@@ -359,6 +360,7 @@ export default [
       mode: 'edit',
       layout: 'AppLayoutPrivate',
     },
+    beforeEnter: userHasPermission,
   },
   {
     path: '/pengaturan',
