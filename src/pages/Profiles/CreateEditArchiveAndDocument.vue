@@ -47,7 +47,7 @@
                 v-if="status === 'PUBLISHED'"
                 type="submit"
                 class="bg-green-700 hover:bg-green-600 font-lato text-sm text-white disabled:bg-gray-500 disabled:text-white"
-                data-cy="archive-document-form__button-publish"
+                data-cy="archive-document-form__button-update"
                 :disabled="invalid || !changed"
                 @click="onUpdateDocument"
               >
@@ -120,7 +120,7 @@
                 :image-url="form.document.url"
                 :image-size="form.document.size"
                 :is-show-preview="false"
-                data-cy="archive-document"
+                data-cy="archive-document-preview"
                 class="mt-4"
                 @retry="handleRetryUpload()"
                 @delete="handleDeleteUpload()"
@@ -266,7 +266,7 @@
           <BaseButton
             v-else-if="confirmationMessage.type === 'draft'"
             class="bg-green-700 hover:bg-green-600 text-sm text-white"
-            data-cy="archive-document-form__confirmation-button-publish"
+            data-cy="archive-document-form__confirmation-button-draft"
             @click="handleDraft"
           >
             Ya, masukan draf
@@ -274,7 +274,7 @@
           <BaseButton
             v-else-if="confirmationMessage.type === 'publish'"
             class="bg-green-700 hover:bg-green-600 text-sm text-white"
-            data-cy="archive-document-form__confirmation-button-save"
+            data-cy="archive-document-form__confirmation-button-publish"
             @click="handlePublish"
           >
             Ya, terbitkan
