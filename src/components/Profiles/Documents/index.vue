@@ -11,7 +11,7 @@
           <div class="flex">
             <SearchBar
               placeholder="Cari dokumen"
-              data-cy="documents__search-bar"
+              data-cy-suffix="documents"
               @input="onSearch($event)"
             />
             <!-- will be implemented in next PR
