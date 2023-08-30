@@ -142,5 +142,15 @@ extend('numbergreaterthan', {
 
 extend('document', {
   ...ext,
-  message: 'Format file tidak didukung, format yang didukung hanya doc, xls dan pdf.',
+  message: (_, values) => {
+    const extensions = [];
+
+    Object.keys(values).forEach((key) => {
+      if (!Number.isNaN(parseInt(key, 10))) {
+        extensions.push(values[key]);
+      }
+    });
+
+    return `Format file tidak didukung, format yang didukung hanya ${extensions.join(', ')}`;
+  },
 });
