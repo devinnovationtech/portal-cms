@@ -57,8 +57,8 @@
       v-if="modalState === 'LOADING'"
       :open="modalState === 'LOADING'"
       :value="progressValue"
-      title="Menyimpan Data Dokumen"
-      message="Mohon tunggu, penyimpanan data dokumen sedang diproses."
+      :title="loadingMessage.title"
+      :message="loadingMessage.body"
       data-cy="documents__progress-modal"
     />
 
@@ -241,6 +241,10 @@ export default {
       },
       formatDate,
       progressValue: 0,
+      loadingMessage: {
+        title: '',
+        body: '',
+      },
     };
   },
   computed: {
@@ -287,6 +291,8 @@ export default {
     async deleteDocumentById(id) {
       try {
         this.modalState = MODAL_STATE.LOADING;
+        this.loadingMessage.title = 'Menghapus Dokumen';
+        this.loadingMessage.body = 'Mohon tunggu, hapus dokumen sedang diproses.';
         const response = await documentsRepository.deleteDocumentById(id);
         if (response.status === 200) {
           this.progressValue = 25;
@@ -322,6 +328,13 @@ export default {
     async updateStatusDocumentById(id, status) {
       try {
         this.modalState = MODAL_STATE.LOADING;
+        if (status === 'ARCHIVED') {
+          this.loadingMessage.title = 'Mengarsipkan Dokumen';
+          this.loadingMessage.body = 'Mohon tunggu, pengarsipan dokumen sedang diproses.';
+        } else {
+          this.loadingMessage.title = 'Menerbitkan Dokumen';
+          this.loadingMessage.body = 'Mohon tunggu, penerbitan dokumen sedang diproses.';
+        }
         const body = { status };
         const response = await documentsRepository.updateStatusDocument(body, id);
         if (response.status === 200) {
@@ -393,7 +406,7 @@ export default {
       this.modalState = MODAL_STATE.DELETE_CONFIRMATION;
 
       this.setModalMessage({
-        title: 'Hapus Layanan',
+        title: 'Hapus Dokumen',
         message: 'Apakah Anda yakin ingin menghapus Dokumen ini?',
         action: () => this.deleteDocumentById(id),
       });
@@ -419,11 +432,10 @@ export default {
         });
       } else {
         this.modalState = MODAL_STATE.UNCOMPLETE_ALERT;
-        // @TODO: change route into edit form route
         this.setModalMessage({
           title: 'Dokumen belum lengkap',
           message: 'Mohon lengkapi Dokumen Anda terlebih dahulu sebelum menerbitkan',
-          action: () => this.$router.push('/profil-jawa-barat/arsip-dan-dokumen/tambah'),
+          action: () => this.$router.push(`/profil-jawa-barat/arsip-dan-dokumen/${id}/ubah`),
         });
       }
     },
