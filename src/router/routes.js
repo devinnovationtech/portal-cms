@@ -350,6 +350,17 @@ export default [
       mode: 'create',
       layout: 'AppLayoutPrivate',
     },
+    beforeEnter: userHasPermission,
+  },
+  {
+    path: '/profil-jawa-barat/arsip-dan-dokumen/:id/ubah',
+    name: 'Ubah Arsip dan Dokumen',
+    component: () => import('@/pages/Profiles/CreateEditArchiveAndDocument.vue'),
+    meta: {
+      mode: 'edit',
+      layout: 'AppLayoutPrivate',
+    },
+    beforeEnter: userHasPermission,
   },
   {
     path: '/pengaturan',
