@@ -432,11 +432,10 @@ export default {
         });
       } else {
         this.modalState = MODAL_STATE.UNCOMPLETE_ALERT;
-        // @TODO: change route into edit form route
         this.setModalMessage({
           title: 'Dokumen belum lengkap',
           message: 'Mohon lengkapi Dokumen Anda terlebih dahulu sebelum menerbitkan',
-          action: () => this.$router.push('/profil-jawa-barat/arsip-dan-dokumen/tambah'),
+          action: () => this.$router.push(`/profil-jawa-barat/arsip-dan-dokumen/${id}/ubah`),
         });
       }
     },
