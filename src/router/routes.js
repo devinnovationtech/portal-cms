@@ -349,6 +349,7 @@ export default [
     meta: {
       mode: 'create',
       layout: 'AppLayoutPrivate',
+      permission: 'profile-west-java.manage',
     },
     beforeEnter: userHasPermission,
   },
@@ -359,6 +360,7 @@ export default [
     meta: {
       mode: 'edit',
       layout: 'AppLayoutPrivate',
+      permission: 'profile-west-java.manage',
     },
     beforeEnter: userHasPermission,
   },
