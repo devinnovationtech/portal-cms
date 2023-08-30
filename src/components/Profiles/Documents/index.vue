@@ -14,11 +14,10 @@
               data-cy-suffix="documents"
               @input="onSearch($event)"
             />
-            <!-- will be implemented in next PR
             <DocumentsCategoryFilter
               class="ml-6"
               @change:filter="onFilter($event)"
-            /> -->
+            />
           </div>
           <LinkButton
             href="/profil-jawa-barat/arsip-dan-dokumen/tambah"
@@ -157,6 +156,7 @@ import BaseButton from '@/common/components/BaseButton';
 import BaseModal from '@/common/components/BaseModal';
 import DocumentsTabBar from '@/components/Profiles/Documents/DocumentsTabBar';
 import DocumentsTable from '@/components/Profiles/Documents/DocumentsTable';
+import DocumentsCategoryFilter from '@/components/Profiles/Documents/DocumentsCategoryFilter';
 import LinkButton from '@/common/components/LinkButton';
 import SearchBar from '@/common/components/SearchBar';
 import ProgressModal from '@/common/components/ProgressModal';
@@ -183,6 +183,7 @@ export default {
     BaseModal,
     DocumentsTabBar,
     DocumentsTable,
+    DocumentsCategoryFilter,
     LinkButton,
     SearchBar,
     ProgressModal,
@@ -455,6 +456,16 @@ export default {
      */
     onSearch(query) {
       this.setParams({ q: query });
+      this.fetchDocument();
+    },
+    /**
+     * Set new params and fetch news when filter changes
+     *
+     * @param {Object} data - object containing new param based on emit values
+     * @property {Array} cat - news category params
+     */
+    onFilter(data) {
+      this.setParams(data);
       this.fetchDocument();
     },
   },

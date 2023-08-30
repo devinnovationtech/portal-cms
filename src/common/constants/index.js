@@ -488,3 +488,26 @@ export const DOCUMENT_STATUS_ADDITIONAL_BUTTON = {
   ARCHIVED: 'Pulihkan',
   PUBLISHED: 'Arsipkan',
 };
+
+export const DOCUMENT_CATEGORIES = [
+  {
+    value: 'Dokumen Perencanaan',
+    label: 'Dokumen Perencanaan',
+  },
+  {
+    value: 'Laporan Pertanggungjawaban',
+    label: 'Laporan Pertanggungjawaban',
+  },
+  {
+    value: 'Produk Hukum',
+    label: 'Produk Hukum',
+  },
+  {
+    value: 'Transparansi Kepegawaian',
+    label: 'Transparansi Kepegawaian',
+  },
+  {
+    value: 'Transparansi Pengelolaan Keuangan Daerah',
+    label: 'Transparansi Pengelolaan Keuangan Daerah',
+  },
+];
