@@ -480,6 +480,7 @@ export default {
       if (data.source && data.mimetype) {
         this.form.document.fileName = data.source.substring(data.source.lastIndexOf('/') + 1);
         this.document = new File([''], this.form.document.fileName, { type: data.mimetype });
+        this.documentUploadStatus = DOCUMENT_UPLOAD_STATUS.SUCCESS;
       }
     },
     onCancelArchiveAndDocument() {
