@@ -241,6 +241,14 @@ export default [
     },
   },
   {
+    path: '/layanan/daftar-publikasi/pratinjau',
+    name: 'Pratinjau Layanan Publik',
+    component: () => import('@/pages/Services/MasterDataPublicationPreview.vue'),
+    meta: {
+      layout: 'AppLayoutPublic',
+    },
+  },
+  {
     path: '/agenda',
     name: 'Agenda Jawa Barat',
     component: () => import('@/pages/Agenda'),

@@ -9,12 +9,24 @@ import publicationForm from './modules/public-service/publicationForm';
 
 Vue.use(Vuex);
 
-const vuexLocalStorage = new VuexPersist({
+const newsPreviewLocalStorage = new VuexPersist({
   key: 'news-preview',
   storage: window.localStorage,
   reducer: (state) => ({
     news: {
       newsPreview: state.news.newsPreview,
+    },
+  }),
+});
+
+const publicationFormPreviewLocalStorage = new VuexPersist({
+  key: 'publication-form-preview',
+  storage: window.localStorage,
+  reducer: (state) => ({
+    publicationForm: {
+      stepOne: state.publicationForm.stepOne,
+      stepTwo: state.publicationForm.stepTwo,
+      stepThree: state.publicationForm.stepThree,
     },
   }),
 });
@@ -27,5 +39,5 @@ export default new Vuex.Store({
     masterDataForm,
     publicationForm,
   },
-  plugins: [vuexLocalStorage.plugin],
+  plugins: [newsPreviewLocalStorage.plugin, publicationFormPreviewLocalStorage.plugin],
 });

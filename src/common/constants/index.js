@@ -511,3 +511,12 @@ export const DOCUMENT_CATEGORIES = [
     label: 'Transparansi Pengelolaan Keuangan Daerah',
   },
 ];
+
+export const DATA_NOT_FOUND_STATE = {
+  image: require('@/assets/icons/search-not-found.svg'),
+  alternateImage: 'gambar dokumen dengan kaca pembesar',
+  width: 140,
+  height: 140,
+  title: 'Data tidak ditemukan !',
+  description: 'Data yang Kamu minta tidak dapat ditemukan. Mohon pastikan Kamu telah memasukkan informasi yang benar.',
+};

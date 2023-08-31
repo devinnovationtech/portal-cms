@@ -13,6 +13,7 @@ import quickLinkRepository from './quickLinkRepository';
 import masterDataServiceRepository from './masterDataServiceRepository';
 import masterDataPublicationRepository from './masterDatapublicationRepository';
 import documentsRepository from './documentsRepository';
+import unitRepository from './unitRepository';
 
 const repositories = {
   auth: authRepository,
@@ -30,6 +31,7 @@ const repositories = {
   masterDataService: masterDataServiceRepository,
   masterDataPublication: masterDataPublicationRepository,
   documents: documentsRepository,
+  unit: unitRepository,
 };
 
 export const RepositoryFactory = {

@@ -7,10 +7,20 @@
         @update:currentTab="filterPublicationByStatus"
       />
       <section class="w-full bg-white py-6 px-3">
-        <div class="full flex justify-between mb-5 items-center">
+        <div class="full flex gap-x-4 mb-5 items-center">
+          <SearchBar
+            placeholder="Cari layanan"
+            @input="onSearch($event)"
+          />
+          <ServiceFilter
+            :opd-name-options="opdNameLists"
+            :params="params"
+            @change:filter="onChangeFilter($event)"
+          />
           <LinkButton
+            v-show="showMasterDataTable || !showAddServiceButton"
             href="/layanan/daftar-publikasi/tambah"
-            title="Tambah Layanan"
+            title="Tambah Layanan Publik"
             class="ml-auto"
           >
             <template #icon-left>
@@ -21,19 +31,50 @@
               />
             </template>
             <p class="font-lato font-bold text-sm text-white leading-none">
-              Tambah Layanan
+              Publikasi Layanan
             </p>
           </LinkButton>
         </div>
         <div class="w-full overflow-auto">
           <PublicationTable
-            :items="services"
+            v-if="showMasterDataTable"
+            :items="items"
             :loading="loading"
             :meta="meta"
             class="min-w-[1000px]"
             @update:pagination="onUpdatePagination($event)"
             @delete="handleDeletePublication($event)"
           />
+          <div
+            v-else-if="loading"
+            class="w-full flex items-center justify-center min-h-[300px]"
+          >
+            <JdsSpinner />
+          </div>
+          <EmptyState
+            v-else
+            v-bind="emptyStateData"
+          >
+            <template #button>
+              <LinkButton
+                v-if="showAddServiceButton"
+                href="/layanan/daftar-publikasi/tambah"
+                title="Tambah Publikasi"
+                class="ml-auto"
+              >
+                <template #icon-left>
+                  <JdsIcon
+                    name="plus"
+                    size="14px"
+                    fill="#fff"
+                  />
+                </template>
+                <p class="font-lato font-bold text-sm text-white leading-none">
+                  Tambah Publikasi
+                </p>
+              </LinkButton>
+            </template>
+          </EmptyState>
         </div>
       </section>
     </section>
@@ -122,15 +163,21 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import { formatDate } from '@/common/helpers/date';
 import BaseButton from '@/common/components/BaseButton';
 import BaseModal from '@/common/components/BaseModal';
+import EmptyState from '@/common/components/EmptyState';
 import LinkButton from '@/common/components/LinkButton';
 import PublicationTable from '@/components/Services/Publication/PublicationTable';
 import PublicationTabBar from '@/components/Services/Publication/PublicationTabBar';
+import { DATA_NOT_FOUND_STATE } from '@/common/constants/index';
 import { RepositoryFactory } from '@/repositories/RepositoryFactory';
+import SearchBar from '@/common/components/SearchBar';
+import ServiceFilter from '@/components/Services/serviceFilter';
 
 const masterDataPublicationRepository = RepositoryFactory.get('masterDataPublication');
+const unitRepository = RepositoryFactory.get('unit');
 
 const MODAL_STATE = Object.freeze({
   NONE: 'NONE',
@@ -145,15 +192,31 @@ export default {
   components: {
     BaseButton,
     BaseModal,
+    EmptyState,
     LinkButton,
     PublicationTabBar,
     PublicationTable,
+    SearchBar,
+    ServiceFilter,
   },
   data() {
     return {
       currentTab: 'ALL',
+      dataNotFoundState: DATA_NOT_FOUND_STATE,
       formatDate,
       loading: false,
+      // isSearch use to check search feature is used or not
+      isSearch: false,
+      // isFilter use to check filter feature is used or not
+      isFilter: false,
+      publicationEmptyState: {
+        image: require('@/assets/images/empty-state.svg'),
+        alternateImage: 'gambar data layanan belum ada',
+        width: 140,
+        height: 140,
+        title: 'Anda belum memiliki data !',
+        description: 'Kamu belum memiliki data layanan , Kamu dapat menambahkan layanan dengan mengklik tombol tambahkan layanan dibawah',
+      },
       services: [],
       serviceDetail: {},
       tabs: [
@@ -181,6 +244,16 @@ export default {
         page: 1,
         q: '',
         status: '',
+        opd_name: '',
+        service_user: '',
+        technical: '',
+        start_date: '',
+        end_date: '',
+      },
+      opdParams: {
+        per_page: 100,
+        page: 1,
+        q: '',
       },
       meta: {
         total_count: 0,
@@ -194,11 +267,61 @@ export default {
         message: '',
         action: null,
       },
+      opdNameLists: [],
     };
+  },
+  computed: {
+    ...mapGetters('auth', ['user']),
+    isSuperAdmin() {
+      return this.user?.role?.name === 'Super Admin';
+    },
+    /**
+     * check condition services data is empty and search or filter feature is used or not
+     *
+     * @return {object} - dataNotFoundState or publicationEmptyState
+     * @property {string} image
+     * @property {string} alternateImage
+     * @property {string} width
+     * @property {string} height
+     * @property {string} title
+     * @property {string} description     *
+     */
+    emptyStateData() {
+      return this.services.length === 0 && (this.isSearch || this.isFilter) ? this.dataNotFoundState : this.publicationEmptyState;
+    },
+    /**
+     * check condition services data is empty and search or filter feature is used or not
+     *
+     * @return {boolean}
+     */
+    showAddServiceButton() {
+      return this.services.length === 0 && (this.isSearch || this.isFilter) ? !this.dataNotFoundState : !!this.publicationEmptyState;
+    },
+    showMasterDataTable() {
+      return this.services.length > 0;
+    },
+    items() {
+      if (Array.isArray(this.services)) {
+        const items = this.services.map((item) => ({
+          id: item.id,
+          opd_name: item.opd_name,
+          service_name: item.service_name,
+          service_user: item.service_user,
+          technical: item.technical,
+          status: item.status,
+          updated_at: item.updated_at,
+        }));
+        return items;
+      }
+      return [];
+    },
   },
   mounted() {
     this.fetchPublicationData();
     this.fetchStatusCounter();
+    if (this.isSuperAdmin) {
+      this.fetchOpdNameLists();
+    }
   },
   methods: {
     async deletePublication(id) {
@@ -220,6 +343,20 @@ export default {
         this.modalState = MODAL_STATE.ERROR;
       } finally {
         this.fetchStatusCounter();
+      }
+    },
+    async fetchOpdNameLists() {
+      try {
+        const response = await unitRepository.getUnitLists(this.opdParams);
+        const { data, meta } = response.data;
+        this.meta = meta;
+        // Mapping data to get opd name lists and push to opdNameLists variable
+        data.map((unit) => this.opdNameLists.push(unit.name));
+      } catch {
+        this.$toast({
+          type: 'error',
+          message: 'Gagal mendapatkan data author, silakan coba beberapa saat lagi',
+        });
       }
     },
     async fetchPublicationData() {
@@ -298,6 +435,19 @@ export default {
         action: () => this.deletePublication(id),
       });
     },
+    onSearch(query) {
+      if (query !== '') {
+        this.isSearch = true;
+      } else {
+        this.isSearch = false;
+      }
+
+      this.setParams({
+        page: 1,
+        q: query,
+      });
+      this.fetchPublicationData();
+    },
     onUpdatePagination(params) {
       this.setParams(params);
       this.fetchPublicationData();
@@ -314,6 +464,27 @@ export default {
       this.modalMessage.title = '';
       this.modalMessage.message = '';
       this.modalMessage.action = null;
+    },
+    /**
+     * Set new params when filter changes
+     * and fetch master data again
+     *
+     * @param {object} data - object cotaining new param based on emit values
+     * @property {string} opd_name
+     * @property {string} service_user
+     * @property {string} technical
+     * @property {string} start_date
+     * @property {string} end_date
+     */
+    onChangeFilter(data) {
+      if (Object.keys(data).some((key) => data[key] !== '' && data[key] !== null)) {
+        this.isFilter = true;
+      } else {
+        this.isFilter = false;
+      }
+
+      this.setParams(data);
+      this.fetchPublicationData();
     },
   },
 };
