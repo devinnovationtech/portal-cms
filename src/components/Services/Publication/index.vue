@@ -210,7 +210,7 @@ export default {
       // isFilter use to check filter feature is used or not
       isFilter: false,
       publicationEmptyState: {
-        image: require('@/assets/images/empty-state.svg'),
+        image: require('@/assets/icons/empty-state.svg'),
         alternateImage: 'gambar data layanan belum ada',
         width: 140,
         height: 140,

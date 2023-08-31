@@ -20,10 +20,11 @@
             />
           </div>
           <LinkButton
+            v-if="showAddDocumentButtonOnTop"
             href="/profil-jawa-barat/arsip-dan-dokumen/tambah"
             title="Tambah Arsip Dokumen"
             class="ml-auto"
-            data-cy="document__add-button"
+            data-cy="documents__add-button"
           >
             <template #icon-left>
               <JdsIcon
@@ -39,6 +40,7 @@
         </div>
         <div class="w-full overflow-auto">
           <DocumentsTable
+            v-if="documents.length || loading"
             :items="documents"
             :loading="loading"
             :meta="meta"
@@ -48,6 +50,30 @@
             @archive="handleArchiveDocument($event)"
             @publish="handlePublishDocument($event)"
           />
+          <EmptyState
+            v-else
+            v-bind="emptyStateData"
+          >
+            <template #button>
+              <LinkButton
+                v-if="showAddDocumentButtonOnBottom"
+                href="/profil-jawa-barat/arsip-dan-dokumen/tambah"
+                title="Tambah Arsip Dokumen"
+                class="ml-auto"
+              >
+                <template #icon-left>
+                  <JdsIcon
+                    name="plus"
+                    size="14px"
+                    fill="#fff"
+                  />
+                </template>
+                <p class="font-lato font-bold text-sm text-white leading-none">
+                  Tambah Arsip Dokumen
+                </p>
+              </LinkButton>
+            </template>
+          </EmptyState>
         </div>
       </section>
     </section>
@@ -152,16 +178,18 @@
 </template>
 
 <script>
+import { formatDate } from '@/common/helpers/date';
+import { RepositoryFactory } from '@/repositories/RepositoryFactory';
+import { DATA_NOT_FOUND_STATE } from '@/common/constants/index';
 import BaseButton from '@/common/components/BaseButton';
 import BaseModal from '@/common/components/BaseModal';
-import DocumentsTabBar from '@/components/Profiles/Documents/DocumentsTabBar';
-import DocumentsTable from '@/components/Profiles/Documents/DocumentsTable';
-import DocumentsCategoryFilter from '@/components/Profiles/Documents/DocumentsCategoryFilter';
+import EmptyState from '@/common/components/EmptyState';
 import LinkButton from '@/common/components/LinkButton';
 import SearchBar from '@/common/components/SearchBar';
 import ProgressModal from '@/common/components/ProgressModal';
-import { formatDate } from '@/common/helpers/date';
-import { RepositoryFactory } from '@/repositories/RepositoryFactory';
+import DocumentsTabBar from '@/components/Profiles/Documents/DocumentsTabBar';
+import DocumentsTable from '@/components/Profiles/Documents/DocumentsTable';
+import DocumentsCategoryFilter from '@/components/Profiles/Documents/DocumentsCategoryFilter';
 
 const documentsRepository = RepositoryFactory.get('documents');
 
@@ -187,6 +215,7 @@ export default {
     LinkButton,
     SearchBar,
     ProgressModal,
+    EmptyState,
   },
   data() {
     return {
@@ -216,8 +245,6 @@ export default {
           count: null,
         },
       ],
-      // @TODO: remove isShowSearchBar varible when search feature is develop
-      isShowSearchBar: false,
       documents: [],
       documentDetail: {},
       currentTab: 'ALL',
@@ -245,6 +272,17 @@ export default {
         title: '',
         body: '',
       },
+      isSearched: false,
+      isFiltered: false,
+      dataNotFoundState: DATA_NOT_FOUND_STATE,
+      documentsEmptyState: {
+        image: require('@/assets/icons/empty-state.svg'),
+        alternateImage: 'gambar data dokumen belum ada',
+        width: 140,
+        height: 140,
+        title: 'Anda belum memiliki data !',
+        description: 'Kamu belum memiliki Arsip dan Dokumen , Kamu dapat menambahkan Arsip dan Dokumen dengan mengklik tombol Tambah Arsip dan Dokumen dibawah',
+      },
     };
   },
   computed: {
@@ -253,6 +291,15 @@ export default {
         || this.modalState === 'ARCHIVE_CONFIRMATION'
         || this.modalState === 'PUBLISH_CONFIRMATION'
         || this.modalState === 'UNCOMPLETE_ALERT';
+    },
+    emptyStateData() {
+      return this.isSearched || this.isFiltered ? this.dataNotFoundState : this.documentsEmptyState;
+    },
+    showAddDocumentButtonOnTop() {
+      return (this.documents.length === 0 && (this.isSearched || this.isFiltered)) || this.documents.length;
+    },
+    showAddDocumentButtonOnBottom() {
+      return this.documents.length === 0 && (this.isSearched || this.isFiltered) ? !this.dataNotFoundState : !!this.documentsEmptyState;
     },
   },
   mounted() {
@@ -467,6 +514,7 @@ export default {
      * @param {string} query - search-bar emit values
      */
     onSearch(query) {
+      this.isSearched = !!query;
       this.setParams({ q: query });
       this.fetchDocument();
     },
@@ -477,6 +525,7 @@ export default {
      * @property {Array} cat - news category params
      */
     onFilter(data) {
+      this.isFiltered = !!data.cat.length;
       this.setParams(data);
       this.fetchDocument();
     },

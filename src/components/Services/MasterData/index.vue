@@ -204,7 +204,7 @@ export default {
   data() {
     return {
       masterDataEmptyState: {
-        image: require('@/assets/images/empty-state.svg'),
+        image: require('@/assets/icons/empty-state.svg'),
         alternateImage: 'gambar data layanan belum ada',
         width: 140,
         height: 140,
