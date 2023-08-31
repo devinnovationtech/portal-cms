@@ -365,6 +365,16 @@ export default [
     beforeEnter: userHasPermission,
   },
   {
+    path: '/profil-jawa-barat/arsip-dan-dokumen/detail/:id',
+    name: 'Detail Arsip dan Dokumen',
+    component: () => import('@/pages/Profiles/DocumentDetail.vue'),
+    meta: {
+      layout: 'AppLayoutPrivate',
+      permission: 'profile-west-java.manage',
+    },
+    beforeEnter: userHasPermission,
+  },
+  {
     path: '/pengaturan',
     name: 'Pengaturan',
     component: () => import('@/pages/Settings'),

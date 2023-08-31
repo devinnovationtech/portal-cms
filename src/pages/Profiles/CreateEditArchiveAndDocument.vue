@@ -588,7 +588,7 @@ export default {
     },
     handleCancel() {
       this.submitStatus = FORM_SUBMIT_STATUS.NONE;
-      this.$router.back();
+      this.$router.push('/profil-jawa-barat/arsip-dan-dokumen');
     },
     handleDraft() {
       if (this.mode === 'create') {
