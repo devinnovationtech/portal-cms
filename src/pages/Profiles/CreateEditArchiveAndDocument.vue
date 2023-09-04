@@ -12,6 +12,25 @@
         <section class="h-[66px] -mt-[14px] z-40 flex items-center sticky top-[72px] bg-gray-100">
           <div class="flex items-center">
             <BaseButton
+              v-if="isEditMode"
+              type="button"
+              class="bg-transparent font-lato text-sm text-green-700 border border-green-700"
+              data-cy="archive-document-form__button-back"
+              @click="onBackArchiveAndDocument(changed)"
+            >
+              <template #icon-left>
+                <JdsIcon
+                  name="arrow-left"
+                  size="16px"
+                  class="h-4 w-4 fill-green-700"
+                />
+              </template>
+              <p>
+                Kembali
+              </p>
+            </BaseButton>
+            <BaseButton
+              v-else
               type="button"
               class="bg-red-500 hover:bg-red-400 font-lato text-sm text-white"
               data-cy="archive-document-form__button-cancel"
@@ -37,6 +56,7 @@
                 type="submit"
                 class="bg-transparent font-lato text-sm text-green-700 border border-green-700"
                 data-cy="archive-document-form__button-draft"
+                :disabled="isEditMode ? (invalid || !changed) : false"
                 @click="onDraftDocument"
               >
                 <p>
@@ -61,7 +81,7 @@
                 type="submit"
                 class="bg-green-700 hover:bg-green-600 font-lato text-sm text-white disabled:bg-gray-500 disabled:text-white"
                 data-cy="archive-document-form__button-publish"
-                :disabled="invalid"
+                :disabled="isEditMode ? (invalid || !changed) : invalid"
                 @click="onPublishDocument"
               >
                 <PublishIcon />
@@ -481,6 +501,13 @@ export default {
         this.form.document.fileName = data.source.substring(data.source.lastIndexOf('/') + 1);
         this.document = new File([''], this.form.document.fileName, { type: data.mimetype });
         this.documentUploadStatus = DOCUMENT_UPLOAD_STATUS.SUCCESS;
+      }
+    },
+    onBackArchiveAndDocument(changed) {
+      if (changed) {
+        this.onCancelArchiveAndDocument();
+      } else {
+        this.handleCancel();
       }
     },
     onCancelArchiveAndDocument() {
