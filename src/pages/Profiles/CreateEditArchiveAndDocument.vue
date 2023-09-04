@@ -56,6 +56,7 @@
                 type="submit"
                 class="bg-transparent font-lato text-sm text-green-700 border border-green-700"
                 data-cy="archive-document-form__button-draft"
+                :disabled="isEditMode ? (invalid || !changed) : false"
                 @click="onDraftDocument"
               >
                 <p>
@@ -80,7 +81,7 @@
                 type="submit"
                 class="bg-green-700 hover:bg-green-600 font-lato text-sm text-white disabled:bg-gray-500 disabled:text-white"
                 data-cy="archive-document-form__button-publish"
-                :disabled="invalid"
+                :disabled="isEditMode ? (invalid || !changed) : invalid"
                 @click="onPublishDocument"
               >
                 <PublishIcon />
