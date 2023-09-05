@@ -50,7 +50,7 @@
       </tr>
       <tr>
         <td class="min-w-[228px] font-lato text-blue-gray-500 font-bold text-sm">
-          Deskirpsi
+          Deskripsi
         </td>
         <td class="w-full font-lato text-blue-gray-500 text-sm">
           <div
