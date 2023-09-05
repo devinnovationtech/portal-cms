@@ -5,6 +5,7 @@
         <BaseButton
           :disabled="!isFormValid"
           class="border-green-700 hover:bg-green-50 font-lato text-sm text-green-700"
+          data-cy="agenda-form__preview-button"
           @click="togglePreviewModal"
         >
           <template #icon-left>
@@ -22,6 +23,7 @@
         <BaseButton
           :disabled="!isFormValid"
           class="bg-green-700 hover:bg-green-600 font-lato text-sm text-white"
+          data-cy="agenda-form__submit-button"
           @click="onSubmit"
         >
           <SaveIcon
@@ -44,6 +46,7 @@
             <JdsInputText
               v-model.trim="form.title"
               placeholder="Masukkan judul agenda/event"
+              data-cy="agenda-form__agenda-title"
             />
           </div>
         </div>
@@ -57,6 +60,7 @@
               placeholder-key="label"
               name="radio-button-group"
               orientation="horizontal"
+              data-cy="agenda-form__type-radio-group"
               :value="form.type"
               @change="setType"
             />
@@ -73,6 +77,7 @@
             <JdsTextArea
               v-model.trim="form.address"
               placeholder="Masukkan tempat pelaksanaan atau alamat lengkap tempat pelaksanaan"
+              data-cy="agenda-form__location"
             />
           </div>
           <div
@@ -86,6 +91,7 @@
               <JdsInputText
                 v-model.trim="form.url"
                 placeholder="Masukkan link kegiatan"
+                data-cy="agenda-form__agenda-link"
               >
                 <template #prefix-icon>
                   <LinkIcon class="w-4 h-4 fill-gray-600" />
@@ -95,6 +101,7 @@
               <p
                 v-show="!isUrlValid"
                 class="text-sm text-red-600"
+                data-cy="agenda-form__alert--invalid-link"
               >
                 Link kegiatan tidak valid
               </p>
@@ -113,11 +120,13 @@
                 <JdsDateInput
                   v-model="form.date"
                   label="Pilih Tanggal"
+                  data-cy="agenda-form__agenda-date"
                 />
                 <JdsCheckbox
                   v-model="isTodayChecked"
                   class="self-end py-[10px]"
                   text="Hari ini"
+                  data-cy="agenda-form__today-checkbox"
                 />
                 <!-- Currently backdate is enabled. note: uncomment this when backdate is disabled  -->
                 <!-- <p
@@ -138,6 +147,7 @@
                   <input
                     id="start-time"
                     v-model="form.start_hour"
+                    data-cy="agenda-form__start-time"
                     type="time"
                     class="border border-gray-500 rounded-lg px-2 py-1 bg-gray-50 hover:bg-white hover:border-green-600 focus:outline-none focus:border-green-500 focus:outline-1 focus:outline-offset-[-2px] focus:outline-yellow-500"
                   >
@@ -152,6 +162,7 @@
                   <input
                     id="end-time"
                     v-model="form.end_hour"
+                    data-cy="agenda-form__end-time"
                     type="time"
                     :disabled="!hasStartHour"
                     class="border border-gray-500 rounded-lg px-2 py-1 bg-gray-50 hover:bg-white hover:border-green-600 focus:outline-none focus:border-green-500 focus:outline-1 focus:outline-offset-[-2px] focus:outline-yellow-500"
@@ -161,6 +172,7 @@
                 <p
                   v-show="isTimeHasPassed"
                   class="text-sm text-red-600 col-span-2"
+                  data-cy="agenda-form__alert--time-invalid"
                 >
                   Waktu pelaksanaan tidak valid
                 </p>
@@ -178,6 +190,7 @@
                 v-model="form.category"
                 label="Kategori Agenda"
                 placeholder="Pilih kategori"
+                data-cy="agenda-form__agenda-category"
                 :options="categories"
               />
               <div class="flex flex-col gap-2 relative">
@@ -190,6 +203,7 @@
                 <input
                   id="tag"
                   v-model.trim="tag"
+                  data-cy="agenda-form__tag-input"
                   class="border border-gray-500 rounded-lg px-2 py-1 placeholder:text-gray-600 text-gray-600 bg-gray-50 hover:bg-white hover:border-green-600 focus:outline-none focus:border-green-500 focus:outline-1 focus:outline-offset-[-2px] focus:outline-yellow-500"
                   placeholder="Ketikkan tag disini lalu tekan enter"
                   @keyup.enter="onTagInputEnter()"
@@ -200,11 +214,15 @@
                 >
                   <JdsOptions
                     class="w-full"
+                    data-cy="agenda-form__tag-suggestions"
                     :options="tagSuggestions"
                     @click:option="onTagSuggestionsClick"
                   />
                 </div>
-                <div class="border border-gray-500 overflow-y-auto rounded-lg p-2 h-[88px] text-gray-600 bg-gray-50 hover:bg-white hover:border-green-600 focus:outline-none focus:border-green-500 focus:outline-1 focus:outline-offset-[-2px] focus:outline-yellow-500">
+                <div
+                  class="border border-gray-500 overflow-y-auto rounded-lg p-2 h-[88px] text-gray-600 bg-gray-50 hover:bg-white hover:border-green-600 focus:outline-none focus:border-green-500 focus:outline-1 focus:outline-offset-[-2px] focus:outline-yellow-500"
+                  data-cy="agenda-form__tags-container"
+                >
                   <div
                     v-if="hasTags"
                     class="flex gap-1 flex-wrap"
@@ -213,12 +231,14 @@
                       v-for="(tag, index) in form.tags"
                       :key="index"
                       class="bg-gray-200 text-gray-700 text-sm rounded-3xl px-[10px] py-[6px] flex items-center justify-center gap-1"
+                      :data-cy="`agenda-form__tag-item-${index + 1}`"
                     >
                       {{ tag.tag_name }}
                       <JdsIcon
                         name="times"
                         size="12px"
                         class="pt-[2px] cursor-pointer"
+                        :data-cy="`agenda-form__tag-item-${index + 1}-delete-button`"
                         @click="removeTag(index)"
                       />
                     </div>
