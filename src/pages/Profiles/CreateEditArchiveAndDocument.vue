@@ -12,7 +12,6 @@
         <section class="h-[66px] -mt-[14px] z-40 flex items-center sticky top-[72px] bg-gray-100">
           <div class="flex items-center">
             <BaseButton
-              v-if="isEditMode"
               type="button"
               class="bg-transparent font-lato text-sm text-green-700 border border-green-700"
               data-cy="archive-document-form__button-back"
@@ -29,25 +28,6 @@
                 Kembali
               </p>
             </BaseButton>
-            <BaseButton
-              v-else
-              type="button"
-              class="bg-red-500 hover:bg-red-400 font-lato text-sm text-white"
-              data-cy="archive-document-form__button-cancel"
-              @click="onCancelArchiveAndDocument"
-            >
-              <template #icon-left>
-                <JdsIcon
-                  name="arrow-left"
-                  size="16px"
-                  fill="#fff"
-                  class="h-4 w-4"
-                />
-              </template>
-              <p>
-                Batalkan
-              </p>
-            </BaseButton>
           </div>
           <div class="ml-auto">
             <div class="flex gap-4">
@@ -56,7 +36,7 @@
                 type="submit"
                 class="bg-transparent font-lato text-sm text-green-700 border border-green-700"
                 data-cy="archive-document-form__button-draft"
-                :disabled="isEditMode ? (invalid || !changed) : false"
+                :disabled="isEditMode ? (invalid || (!changed && !isDocumentChanged)) : false"
                 @click="onDraftDocument"
               >
                 <p>
@@ -68,7 +48,7 @@
                 type="submit"
                 class="bg-green-700 hover:bg-green-600 font-lato text-sm text-white disabled:bg-gray-500 disabled:text-white"
                 data-cy="archive-document-form__button-update"
-                :disabled="invalid || !changed"
+                :disabled="invalid || (!changed && !isDocumentChanged)"
                 @click="onUpdateDocument"
               >
                 <SaveIcon class="fill-white" />
@@ -446,6 +426,7 @@ export default {
       },
       submitStatus: FORM_SUBMIT_STATUS.NONE,
       submitProgress: 0,
+      isDocumentChanged: false,
     };
   },
   computed: {
@@ -551,6 +532,9 @@ export default {
         });
 
         this.documentUploadStatus = DOCUMENT_UPLOAD_STATUS.SUCCESS;
+        if (this.isEditMode) {
+          this.isDocumentChanged = true;
+        }
 
         if (response.status === 201) {
           const { data } = response;
@@ -572,6 +556,9 @@ export default {
     async handleDeleteUpload() {
       try {
         await this.deleteUploadedDocument(this.form.document.fileName);
+        if (this.isEditMode) {
+          this.isDocumentChanged = true;
+        }
         this.resetDocumentState();
 
         this.$toast({
