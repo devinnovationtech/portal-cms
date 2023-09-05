@@ -515,7 +515,7 @@ export default {
      */
     onSearch(query) {
       this.isSearched = !!query;
-      this.setParams({ q: query });
+      this.setParams({ q: query, page: 1 });
       this.fetchDocument();
     },
     /**
@@ -526,7 +526,7 @@ export default {
      */
     onFilter(data) {
       this.isFiltered = !!data.cat.length;
-      this.setParams(data);
+      this.setParams({ ...data, page: 1 });
       this.fetchDocument();
     },
   },

@@ -59,6 +59,7 @@
         <DocumentsDetailTable
           :document="document"
           :loading="loading"
+          @download="onDownload"
         />
       </div>
 
@@ -153,14 +154,15 @@
 </template>
 
 <script>
+import { STATUS_MODAL } from '@/common/constants/index';
+import { RepositoryFactory } from '@/repositories/RepositoryFactory';
+import { downloadFile } from '@/common/helpers/download';
 import HeaderMenu from '@/common/components/HeaderMenu';
 import BaseButton from '@/common/components/BaseButton';
 import LinkButton from '@/common/components/LinkButton';
 import BaseModal from '@/common/components/BaseModal';
 import ProgressModal from '@/common/components/ProgressModal';
-import { STATUS_MODAL } from '@/common/constants/index';
 import DocumentsDetailTable from '@/components/Profiles/Documents/DocumentsDetailTable';
-import { RepositoryFactory } from '@/repositories/RepositoryFactory';
 
 const documentRepository = RepositoryFactory.get('documents');
 
@@ -272,6 +274,18 @@ export default {
         this.$router.push('/profil-jawa-barat/arsip-dan-dokumen');
       } else {
         this.resetDeleteState();
+      }
+    },
+    async onDownload(url) {
+      try {
+        // TODO: add progress loading modal
+        await downloadFile(url);
+      } catch (error) {
+        this.errorMessage = {
+          title: 'Unduh Dokumen Gagal',
+          body: `Dokumen ${this.document.title} gagal diunduh.`,
+        };
+        this.modalStatus = STATUS_MODAL.ERROR;
       }
     },
   },

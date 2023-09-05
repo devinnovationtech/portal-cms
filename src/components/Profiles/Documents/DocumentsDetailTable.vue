@@ -18,17 +18,23 @@
         <td class="min-w-[228px] font-lato text-blue-gray-500 font-bold text-sm">
           Arsip Dokumen
         </td>
-        <td class="w-full font-lato text-blue-gray-500 font-bold underline text-sm">
+        <td
+          :class="{
+            'w-full font-lato text-blue-gray-500 font-bold  text-sm': true,
+            'underline hover:cursor-pointer': isHasFile,
+          }"
+        >
           <div
             v-if="loading"
             class="h-4 w-1/4 rounded-lg animate-pulse bg-gray-200"
           />
-          <p
+          <a
             v-else
             data-cy="documents-detail__file-name"
+            @click="$emit('download', document.source)"
           >
             {{ getDocumentName() }}
-          </p>
+          </a>
         </td>
       </tr>
       <tr>
@@ -50,7 +56,7 @@
       </tr>
       <tr>
         <td class="min-w-[228px] font-lato text-blue-gray-500 font-bold text-sm">
-          Deskirpsi
+          Deskripsi
         </td>
         <td class="w-full font-lato text-blue-gray-500 text-sm">
           <div
@@ -127,10 +133,13 @@ export default {
       }
       return '-';
     },
+    isHasFile() {
+      return this.document?.source && this.document?.mimetype;
+    },
   },
   methods: {
     getDocumentName() {
-      if (this.document?.source && this.document?.mimetype) {
+      if (this.isHasFile) {
         const documentName = this.document?.source.substring(this.document?.source.lastIndexOf('/') + 1);
 
         return documentName;
