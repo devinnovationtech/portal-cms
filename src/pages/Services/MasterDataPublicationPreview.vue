@@ -70,8 +70,10 @@ export default {
     },
     loadPreviewData() {
       const iframe = document.getElementById('publication-preview-iframe');
-      if (iframe) {
-        iframe.contentWindow.postMessage(this.previewData, '*');
+      const recieverOrigin = process.env.VUE_APP_PORTAL_JABAR_URL;
+
+      if (iframe && recieverOrigin) {
+        iframe.contentWindow.postMessage(this.previewData, `${recieverOrigin}`);
       }
     },
   },
