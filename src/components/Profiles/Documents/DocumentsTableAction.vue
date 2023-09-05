@@ -110,11 +110,11 @@ export default {
       return DOCUMENT_STATUS_ADDITIONAL_BUTTON[status] ?? '-';
     },
     onAdditionalButtonClick(item) {
-      const { status } = item;
+      const { id, status } = item;
       if (status === 'PUBLISHED') {
-        this.$emit('archive', item.id);
+        this.$emit('archive', { id, status });
       } else {
-        this.$emit('publish', item.id);
+        this.$emit('publish', { id, status });
       }
     },
   },

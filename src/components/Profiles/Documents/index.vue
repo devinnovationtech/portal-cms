@@ -372,15 +372,15 @@ export default {
         this.fetchStatusCounter();
       }
     },
-    async updateStatusDocumentById(id, status) {
+    async updateStatusDocumentById(id, status, statusBefore) {
       try {
         this.modalState = MODAL_STATE.LOADING;
         if (status === 'ARCHIVED') {
           this.loadingMessage.title = 'Mengarsipkan Dokumen';
           this.loadingMessage.body = 'Mohon tunggu, pengarsipan dokumen sedang diproses.';
         } else {
-          this.loadingMessage.title = 'Menerbitkan Dokumen';
-          this.loadingMessage.body = 'Mohon tunggu, penerbitan dokumen sedang diproses.';
+          this.loadingMessage.title = `${statusBefore === 'DRAFT' ? 'Menerbitkan' : 'Memulihkan'} Dokumen`;
+          this.loadingMessage.body = `Mohon tunggu, ${statusBefore === 'DRAFT' ? 'penerbitan' : 'pemulihan'} dokumen sedang diproses.`;
         }
         const body = { status };
         const response = await documentsRepository.updateStatusDocument(body, id);
@@ -389,10 +389,17 @@ export default {
           setTimeout(() => {
             this.progressValue = 75;
             setTimeout(() => {
-              this.setModalMessage({
-                title: `Berhasil ${status === 'PUBLISHED' ? 'diterbitkan' : 'diarsipkan'}!`,
-                message: `Anda berhasil ${status === 'PUBLISHED' ? 'menerbitkan' : 'mengarsipkan'} dokumen.`,
-              });
+              if (status === 'ARCHIVED') {
+                this.setModalMessage({
+                  title: 'Berhasil diarsipkan',
+                  message: 'Anda berhasil mengarsipkan dokumen',
+                });
+              } else {
+                this.setModalMessage({
+                  title: `Berhasil ${statusBefore === 'DRAFT' ? 'diterbitkan' : 'dipulihkan'}!`,
+                  message: `Anda berhasil ${statusBefore === 'DRAFT' ? 'menerbitkan' : 'memulihkan'} dokumen.`,
+                });
+              }
               this.modalState = MODAL_STATE.SUCCESS;
             }, 150);
           }, 150);
@@ -458,24 +465,25 @@ export default {
         action: () => this.deleteDocumentById(id),
       });
     },
-    async handleArchiveDocument(id) {
-      this.findDocumentById(id);
+    async handleArchiveDocument(item) {
+      this.findDocumentById(item.id);
       this.modalState = MODAL_STATE.ARCHIVE_CONFIRMATION;
 
       this.setModalMessage({
         title: 'Arsipkan Dokumen',
         message: 'Apakah Anda yakin ingin mengarsipkan Dokumen ini?',
-        action: () => this.updateStatusDocumentById(id, 'ARCHIVED'),
+        action: () => this.updateStatusDocumentById(item.id, 'ARCHIVED'),
       });
     },
-    async handlePublishDocument(id) {
+    async handlePublishDocument(item) {
+      const { id, status } = item;
       this.findDocumentById(id);
       if (this.documentDetail.is_completed) {
         this.modalState = MODAL_STATE.PUBLISH_CONFIRMATION;
         this.setModalMessage({
-          title: 'Terbitkan Dokumen',
-          message: 'Apakah Anda yakin ingin menerbitkan Dokumen ini?',
-          action: () => this.updateStatusDocumentById(id, 'PUBLISHED'),
+          title: `${status === 'DRAFT' ? 'Terbitkan' : 'Pulihkan'} Dokumen`,
+          message: `Apakah Anda yakin ingin ${status === 'DRAFT' ? 'menerbitkan' : 'memulihkan'} Dokumen ini?`,
+          action: () => this.updateStatusDocumentById(id, 'PUBLISHED', status),
         });
       } else {
         this.modalState = MODAL_STATE.UNCOMPLETE_ALERT;
