@@ -21,7 +21,7 @@
         <td
           :class="{
             'w-full font-lato text-blue-gray-500 font-bold  text-sm': true,
-            'underline hover:cursor-pointer': getDocumentName() !== '-',
+            'underline hover:cursor-pointer': isHasFile,
           }"
         >
           <div
@@ -133,10 +133,13 @@ export default {
       }
       return '-';
     },
+    isHasFile() {
+      return this.document?.source && this.document?.mimetype;
+    },
   },
   methods: {
     getDocumentName() {
-      if (this.document?.source && this.document?.mimetype) {
+      if (this.isHasFile) {
         const documentName = this.document?.source.substring(this.document?.source.lastIndexOf('/') + 1);
 
         return documentName;
