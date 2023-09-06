@@ -5,6 +5,7 @@
         <!-- Delete Button -->
         <BaseButton
           class="border-red-500 hover:bg-red-50 font-lato text-sm text-red-500"
+          data-cy="agenda-detail__button--delete"
           @click="toggleDeletePrompt"
         >
           Hapus
@@ -14,6 +15,7 @@
         <LinkButton
           :href="`/agenda/detail/${$route.params.id}/ubah`"
           variant="secondary"
+          data-cy="agenda-detail__button--update"
           class="hover:bg-green-50"
         >
           <template #icon-left>
@@ -30,6 +32,7 @@
         <!-- Preview Button -->
         <BaseButton
           class="border-green-700 hover:bg-green-50 font-lato text-sm text-green-700"
+          data-cy="agenda-detail__button--preview"
           @click="togglePreviewModal"
         >
           <template #icon-left>
@@ -46,12 +49,18 @@
       </div>
     </HeaderMenu>
     <section class="px-6 py-4 rounded-lg bg-white mb-4">
-      <h1 class="font-roboto font-medium text-[21px] leading-[34px] text-green-700 mb-3">
+      <h1
+        data-cy="agenda-detail__title"
+        class="font-roboto font-medium text-[21px] leading-[34px] text-green-700 mb-3"
+      >
         Detail Agenda Jawa Barat
       </h1>
 
       <div class="flex flex-col gap-4">
-        <div class="rounded-lg overflow-hidden border border-gray-200">
+        <div
+          data-cy="agenda-detail__section-event"
+          class="rounded-lg overflow-hidden border border-gray-200"
+        >
           <JdsSimpleTable class="!table-auto">
             <thead>
               <tr>
@@ -110,7 +119,10 @@
           </JdsSimpleTable>
         </div>
 
-        <div class="rounded-lg overflow-hidden border border-gray-200">
+        <div
+          data-cy="agenda-detail__section-date"
+          class="rounded-lg overflow-hidden border border-gray-200"
+        >
           <JdsSimpleTable class="!table-auto">
             <thead>
               <tr>
@@ -155,7 +167,10 @@
           </JdsSimpleTable>
         </div>
 
-        <div class="rounded-lg overflow-hidden border border-gray-200">
+        <div
+          data-cy="agenda-detail__section-place"
+          class="rounded-lg overflow-hidden border border-gray-200"
+        >
           <JdsSimpleTable class="!table-auto">
             <thead>
               <tr>
@@ -237,6 +252,7 @@
     <!-- Delete Action Prompt -->
     <BaseModal
       :open="isDeletePromptOpen"
+      data-cy="agenda-detail__modal"
       @close="toggleDeletePrompt"
     >
       <div class="w-full h-full">
@@ -246,7 +262,10 @@
         <p class="font-lato text-sm text-gray-800 mb-2">
           Apakah Anda yakin akan menghapus agenda ini?
         </p>
-        <h2 class="font-lato text-md font-bold text-gray-800">
+        <h2
+          data-cy="agenda-detail__modal-title"
+          class="font-lato text-md font-bold text-gray-800"
+        >
           {{ event.title }}
         </h2>
       </div>
@@ -254,6 +273,7 @@
         <div class="flex gap-4 justify-end">
           <BaseButton
             class="border-green-700 hover:bg-green-50 text-sm text-green-700"
+            data-cy="agenda-detail__modal-button--cancel"
             @click="toggleDeletePrompt"
           >
             Batal
@@ -261,6 +281,7 @@
           <BaseButton
             class="bg-red-500 hover:bg-red-400 text-sm text-white"
             :disabled="deleteLoading"
+            data-cy="agenda-detail__modal-button--delete"
             @click="deleteEvent(event.id)"
           >
             <p v-if="!deleteLoading">
