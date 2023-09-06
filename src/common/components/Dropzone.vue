@@ -2,13 +2,13 @@
   <div
     ref="dropzone"
     :class="{
-      'w-full min-h-[250px] p-6 border border-dashed bg-gray-50 flex flex-col items-center rounded-lg': true,
+      'w-full min-h-[250px] p-6 border border-dashed bg-gray-50 flex flex-col justify-center items-center rounded-lg': true,
       'border-red-500': isError
     }"
     @drop.prevent="onDropFile"
   >
     <span class="font-lato font-medium text-sm text-center leading-6 text-blue-gray-800 mb-3">
-      drag and drop gambar di sini atau
+      {{ guide }}
     </span>
     <div class="flex flex-row gap-x-4">
       <div class="flex flex-col gap-3 items-center">
@@ -27,9 +27,27 @@
             hidden
             :accept="accept"
             :disabled="disabled"
+            :data-cy="dataCy ? `${dataCy}-dropzone__input-file` : 'dropzone__input-file'"
             @change="onChooseFile"
           >
         </label>
+      </div>
+      <div
+        v-if="isLinkField"
+        class="flex flex-col gap-3 items-center"
+      >
+        <LinkIcon :class="{'opacity-50': disabled}" />
+        <button
+          :class="{
+            'text-green-500': true,
+            'opacity-50': disabled
+          }"
+          :disabled="disabled"
+          :data-cy="dataCy ? `${dataCy}-dropzone__button-link` : 'dropzone__button-link'"
+          @click="onClick"
+        >
+          <span class="text-sm">Link Document</span>
+        </button>
       </div>
       <div
         v-if="isYoutubeField"
@@ -55,6 +73,7 @@
 <script>
 import SearchFolderIcon from '@/assets/icons/search-folder.svg?inline';
 import YoutubeIcon from '@/assets/icons/youtube.svg?inline';
+import LinkIcon from '@/assets/icons/link-circle.svg?inline';
 
 const events = ['dragenter', 'dragover', 'dragleave', 'drop'];
 
@@ -63,8 +82,13 @@ export default {
   components: {
     SearchFolderIcon,
     YoutubeIcon,
+    LinkIcon,
   },
   props: {
+    guide: {
+      type: String,
+      default: 'drag and drop gambar di sini atau',
+    },
     disabled: {
       type: Boolean,
       default: false,
@@ -84,6 +108,14 @@ export default {
     isYoutubeField: {
       type: Boolean,
       default: false,
+    },
+    isLinkField: {
+      type: Boolean,
+      default: false,
+    },
+    dataCy: {
+      type: String,
+      default: null,
     },
   },
   mounted() {

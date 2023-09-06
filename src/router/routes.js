@@ -317,6 +317,72 @@ export default [
     },
   },
   {
+    path: '/profil-jawa-barat',
+    name: 'Profil Jawa Barat',
+    component: () => import('@/pages/Profiles'),
+    meta: {
+      layout: 'AppLayoutPrivate',
+    },
+    children: [
+      {
+        path: '',
+        redirect: 'arsip-dan-dokumen', // Default children to navigate
+      },
+      {
+        path: 'arsip-dan-dokumen',
+        name: 'Profil Jawa Barat',
+        component: () => import('@/components/Profiles/Documents'),
+        meta: {
+          layout: 'AppLayoutPrivate',
+          permission: 'profile-west-java.manage',
+        },
+        beforeEnter: userHasPermission,
+      },
+      {
+        path: 'tentang-jawa-barat',
+        name: 'Profil Jawa Barat',
+        component: () => import('@/common/components/Maintenance'),
+        meta: {
+          layout: 'AppLayoutPrivate',
+          permission: 'profile-west-java.manage',
+        },
+        beforeEnter: userHasPermission,
+      },
+    ],
+  },
+  {
+    path: '/profil-jawa-barat/arsip-dan-dokumen/tambah',
+    name: 'Tambah Arsip dan Dokumen',
+    component: () => import('@/pages/Profiles/CreateEditArchiveAndDocument.vue'),
+    meta: {
+      mode: 'create',
+      layout: 'AppLayoutPrivate',
+      permission: 'profile-west-java.manage',
+    },
+    beforeEnter: userHasPermission,
+  },
+  {
+    path: '/profil-jawa-barat/arsip-dan-dokumen/:id/ubah',
+    name: 'Ubah Arsip dan Dokumen',
+    component: () => import('@/pages/Profiles/CreateEditArchiveAndDocument.vue'),
+    meta: {
+      mode: 'edit',
+      layout: 'AppLayoutPrivate',
+      permission: 'profile-west-java.manage',
+    },
+    beforeEnter: userHasPermission,
+  },
+  {
+    path: '/profil-jawa-barat/arsip-dan-dokumen/detail/:id',
+    name: 'Detail Arsip dan Dokumen',
+    component: () => import('@/pages/Profiles/DocumentDetail.vue'),
+    meta: {
+      layout: 'AppLayoutPrivate',
+      permission: 'profile-west-java.manage',
+    },
+    beforeEnter: userHasPermission,
+  },
+  {
     path: '/pengaturan',
     name: 'Pengaturan',
     component: () => import('@/pages/Settings'),

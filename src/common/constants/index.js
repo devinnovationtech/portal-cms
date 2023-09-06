@@ -32,6 +32,13 @@ export const NAVIGATION_MENU = [
     arrow: true,
     permission: null,
   },
+  {
+    link: '/profil-jawa-barat',
+    label: 'Profil Jawa Barat',
+    icon: 'GedungSateIcon',
+    arrow: true,
+    permission: 'profile-west-java.manage',
+  },
 ];
 
 export const AGENDA_TABLE_HEADER = [
@@ -439,6 +446,69 @@ export const QUICK_LINK_TABLE_HEADER = [
   {
     key: 'action',
     text: 'Aksi',
+  },
+];
+
+export const DOCUMENT_TABLE_HEADER = [
+  {
+    key: 'title',
+    text: 'Judul Dokumen',
+    sortable: false,
+  },
+  {
+    key: 'category',
+    text: 'Kategori',
+    sortable: false,
+  },
+  {
+    key: 'status',
+    text: 'Status',
+    sortable: false,
+  },
+  {
+    key: 'updated',
+    text: 'Terakhir Diupdate',
+    sortable: false,
+  },
+  {
+    key: 'action',
+    text: 'Aksi',
+    sortable: false,
+  },
+];
+
+export const DOCUMENT_STATUS_MAP = {
+  DRAFT: 'Draf',
+  ARCHIVED: 'Diarsipkan',
+  PUBLISHED: 'Terbit',
+};
+
+export const DOCUMENT_STATUS_ADDITIONAL_BUTTON = {
+  DRAFT: 'Terbitkan',
+  ARCHIVED: 'Pulihkan',
+  PUBLISHED: 'Arsipkan',
+};
+
+export const DOCUMENT_CATEGORIES = [
+  {
+    value: 'Dokumen Perencanaan',
+    label: 'Dokumen Perencanaan',
+  },
+  {
+    value: 'Laporan Pertanggungjawaban',
+    label: 'Laporan Pertanggungjawaban',
+  },
+  {
+    value: 'Produk Hukum',
+    label: 'Produk Hukum',
+  },
+  {
+    value: 'Transparansi Kepegawaian',
+    label: 'Transparansi Kepegawaian',
+  },
+  {
+    value: 'Transparansi Pengelolaan Keuangan Daerah',
+    label: 'Transparansi Pengelolaan Keuangan Daerah',
   },
 ];
 

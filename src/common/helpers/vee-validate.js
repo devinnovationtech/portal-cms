@@ -1,5 +1,5 @@
 import { extend } from 'vee-validate';
-import { required, numeric, image, size, max, email } from 'vee-validate/dist/rules';
+import { required, numeric, image, size, max, email, ext } from 'vee-validate/dist/rules';
 import { isAfter, isToday, differenceInMinutes } from 'date-fns';
 
 extend('required', {
@@ -138,4 +138,19 @@ extend('numbergreaterthan', {
     return +value > +target;
   },
   message: 'Angka tidak boleh sama atau kurang dari {target}',
+});
+
+extend('document', {
+  ...ext,
+  message: (_, values) => {
+    const extensions = [];
+
+    Object.keys(values).forEach((key) => {
+      if (!Number.isNaN(parseInt(key, 10))) {
+        extensions.push(values[key]);
+      }
+    });
+
+    return `Format file tidak didukung, format yang didukung hanya ${extensions.join(', ')}`;
+  },
 });
