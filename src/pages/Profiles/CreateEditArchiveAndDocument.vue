@@ -587,6 +587,7 @@ export default {
       this.form.document.url = '';
       this.form.document.fileName = '';
       this.form.document.size = 0;
+      this.form.document.type = '';
       this.document = null;
       this.documentUploadStatus = DOCUMENT_UPLOAD_STATUS.NONE;
     },
