@@ -2,7 +2,7 @@
   <main class="pb-14">
     <ValidationObserver
       ref="form"
-      v-slot="{ invalid, changed }"
+      v-slot="{ invalid, changed, dirty }"
     >
       <div
         class="archive-document-form"
@@ -36,7 +36,7 @@
                 type="submit"
                 class="bg-transparent font-lato text-sm text-green-700 border border-green-700"
                 data-cy="archive-document-form__button-draft"
-                :disabled="isEditMode ? (invalid || (!changed && !isDocumentChanged)) : false"
+                :disabled="isEditMode ? (!dirty && !isDocumentChanged) : false"
                 @click="onDraftDocument"
               >
                 <p>
@@ -61,7 +61,7 @@
                 type="submit"
                 class="bg-green-700 hover:bg-green-600 font-lato text-sm text-white disabled:bg-gray-500 disabled:text-white"
                 data-cy="archive-document-form__button-publish"
-                :disabled="isEditMode ? (invalid || !changed) : invalid"
+                :disabled="isEditMode ? (invalid || (!changed && !isDocumentChanged)) : invalid"
                 @click="onPublishDocument"
               >
                 <PublishIcon />
