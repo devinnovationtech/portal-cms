@@ -35,8 +35,8 @@
     >
       <iframe
         id="publication-preview-iframe"
+        title="Preview halaman layanan publikasi"
         :src="publicationPreviewURL"
-        frameborder="0"
         width="100%"
         height="100%"
         @load="loadPreviewData"
