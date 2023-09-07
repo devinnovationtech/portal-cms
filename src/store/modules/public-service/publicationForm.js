@@ -1041,7 +1041,7 @@ export default {
     resetFormData({ commit }) {
       commit('RESET_FORM_DATA');
     },
-    async setInitialFormData({ commit }, id) {
+    async setInitialFormData({ commit, dispatch }, id) {
       try {
         const response = await masterDataServiceRepository.getMasterDataById(id);
         const { data } = response.data;
@@ -1049,11 +1049,11 @@ export default {
         if (response.status === 200) {
           commit('SET_INITIAL_FORM_DATA', data);
         }
-      } catch (error) {
-        console.log(error);
+      } catch {
+        dispatch('alert/showAlert', { type: 'error', message: 'Gagal mendapatkan master data!' }, { root: true });
       }
     },
-    async setEditInitialFormData({ commit }, id) {
+    async setEditInitialFormData({ commit, dispatch }, id) {
       try {
         const response = await masterDataPublicationRepository.getPublicationById(id);
         const { data } = response.data;
@@ -1066,7 +1066,7 @@ export default {
         if (error.response?.status === 403) {
           EventBus.$emit('error:forbidden');
         }
-        console.log(error);
+        dispatch('alert/showAlert', { type: 'error', message: 'Gagal mendapatkan data!' }, { root: true });
       }
     },
     generateFormData({ state }, status) {
@@ -1182,7 +1182,7 @@ export default {
         commit('SET_MASTER_DATA_OPTIONS', []);
       }
     },
-    async handleUploadServiceLogo({ commit }, file) {
+    async handleUploadServiceLogo({ commit, dispatch }, file) {
       const formData = new FormData();
       formData.append('file', file, file.name);
 
@@ -1193,8 +1193,8 @@ export default {
           const { data } = response;
           commit('SET_STEP_ONE_SERVICE_LOGO', data);
         }
-      } catch (error) {
-        console.log(error);
+      } catch {
+        dispatch('alert/showAlert', { type: 'error', message: 'Gagal mengupload logo!' }, { root: true });
       }
     },
     async handleDeleteServiceLogo({ commit, state, dispatch }) {
@@ -1204,7 +1204,7 @@ export default {
 
         commit('RESET_STEP_ONE_SERVICE_LOGO');
       } catch (error) {
-        console.log(error);
+        dispatch('alert/showAlert', { type: 'error', message: 'Gagal menghapus logo!' }, { root: true });
       }
     },
     async handleUploadBenefitImage({ commit }, { file, index }) {
@@ -1238,8 +1238,8 @@ export default {
       try {
         await dispatch('deleteUploadedImage', fileName);
         commit('RESET_STEP_ONE_BENEFIT_IMAGE', index);
-      } catch (error) {
-        console.log(error);
+      } catch {
+        dispatch('alert/showAlert', { type: 'error', message: 'Gagal menghapus gambar!' }, { root: true });
       }
     },
     async handleUploadFacilityImage({ commit }, { file, index }) {
@@ -1273,8 +1273,8 @@ export default {
       try {
         await dispatch('deleteUploadedImage', fileName);
         commit('RESET_STEP_ONE_FACILITY_IMAGE', index);
-      } catch (error) {
-        console.log(error);
+      } catch {
+        dispatch('alert/showAlert', { type: 'error', message: 'Gagal menghapus gambar!' }, { root: true });
       }
     },
 
@@ -1435,40 +1435,40 @@ export default {
       try {
         await dispatch('deleteUploadedImage', { fileName, index });
         commit('RESET_FORM_IMAGE_STATE', index);
-      } catch (error) {
-        console.log(error);
+      } catch {
+        dispatch('alert/showAlert', { type: 'error', message: 'Gagal menghapus gambar!' }, { root: true });
       }
     },
     async handleDeleteCoverImage({ commit, dispatch }, fileName) {
       try {
         await dispatch('deleteUploadedImage', fileName);
         commit('RESET_FORM_COVER_IMAGE_STATE');
-      } catch (error) {
-        console.log(error);
+      } catch {
+        dispatch('alert/showAlert', { type: 'error', message: 'Gagal menghapus gambar!' }, { root: true });
       }
     },
     async handleDeleteTermAndConditionImage({ commit, dispatch }, fileName) {
       try {
         await dispatch('deleteUploadedImage', fileName);
         commit('RESET_FORM_TERM_AND_CONDITION_COVER_IMAGE_STATE');
-      } catch (error) {
-        console.log(error);
+      } catch {
+        dispatch('alert/showAlert', { type: 'error', message: 'Gagal menghapus gambar!' }, { root: true });
       }
     },
     async handleDeleteProcedureImage({ commit, dispatch }, fileName) {
       try {
         await dispatch('deleteUploadedImage', fileName);
         commit('RESET_FORM_PROCEDURES_COVER_IMAGE_STATE');
-      } catch (error) {
-        console.log(error);
+      } catch {
+        dispatch('alert/showAlert', { type: 'error', message: 'Gagal menghapus gambar!' }, { root: true });
       }
     },
     async handleDeleteInfographicImage({ commit, dispatch }, { fileName, index }) {
       try {
         await dispatch('deleteUploadedImage', fileName);
         commit('RESET_FORM_INFOGRAPHIC_IMAGE_STATE', index);
-      } catch (error) {
-        console.log(error);
+      } catch {
+        dispatch('alert/showAlert', { type: 'error', message: 'Gagal menghapus gambar!' }, { root: true });
       }
     },
   },
