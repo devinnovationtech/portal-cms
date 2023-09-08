@@ -373,6 +373,7 @@ import BaseModal from '@/common/components/BaseModal';
 import ProgressModal from '@/common/components/ProgressModal';
 
 import { formatDate, addDay } from '@/common/helpers/date.js';
+import { compressImage } from '@/common/helpers/image-compressor';
 import '@/common/helpers/vee-validate.js';
 import { ValidationProvider, ValidationObserver } from 'vee-validate';
 import { POPUP_BANNER_SCHEDULE_OPTIONS } from '@/common/constants';
@@ -576,17 +577,28 @@ export default {
       }
     },
     async uploadDesktopImage(file) {
-      const formData = new FormData();
-      formData.append('file', file, file.name);
+      let compressedImage;
+      let formData;
 
       try {
-        this.imageDesktopFile = file;
+        compressedImage = await compressImage(file);
+        formData = new FormData();
+        formData.append('file', compressedImage, compressedImage.name);
+      } catch (error) {
+        this.$toast({
+          type: 'error',
+          message: 'Gagal melakukan kompresi gambar!',
+        });
+      }
+
+      try {
+        this.imageDesktopFile = compressedImage;
         this.imageDesktopUploadProgress = 0;
         this.imageDesktopUploadStatus = IMAGE_UPLOAD_STATUS.UPLOADING;
 
         const response = await mediaRepository.uploadMediaWithProgress(formData, (progress) => {
           this.imageDesktopUploadProgress = progress;
-        });
+        }, { domain: 'pop-up-banners' });
 
         this.imageDesktopUploadStatus = IMAGE_UPLOAD_STATUS.SUCCESS;
 
@@ -604,17 +616,28 @@ export default {
       }
     },
     async uploadMobileImage(file) {
-      const formData = new FormData();
-      formData.append('file', file, file.name);
+      let compressedImage;
+      let formData;
 
       try {
-        this.imageMobileFile = file;
+        compressedImage = await compressImage(file);
+        formData = new FormData();
+        formData.append('file', compressedImage, compressedImage.name);
+      } catch (error) {
+        this.$toast({
+          type: 'error',
+          message: 'Gagal melakukan kompresi gambar!',
+        });
+      }
+
+      try {
+        this.imageMobileFile = compressedImage;
         this.imageMobileUploadProgress = 0;
         this.imageMobileUploadStatus = IMAGE_UPLOAD_STATUS.UPLOADING;
 
         const response = await mediaRepository.uploadMediaWithProgress(formData, (progress) => {
           this.imageMobileUploadProgress = progress;
-        });
+        }, { domain: 'pop-up-banners' });
 
         this.imageMobileUploadStatus = IMAGE_UPLOAD_STATUS.SUCCESS;
 

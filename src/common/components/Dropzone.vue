@@ -91,7 +91,7 @@ export default {
       this.$refs.dropzone.addEventListener(eventName, this.preventDefaults);
     });
   },
-  destroyed() {
+  beforeDestroy() {
     events.forEach((eventName) => {
       this.$refs.dropzone.removeEventListener(eventName, this.preventDefaults);
     });

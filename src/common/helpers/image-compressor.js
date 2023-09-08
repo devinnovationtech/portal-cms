@@ -10,7 +10,7 @@ import Compressor from 'compressorjs';
  * @param {Object} config
  * @returns {Promise}
  */
-export const compressImage = function (file, config) {
+export const compressImage = function (file, config = {}) {
   return new Promise((resolve, reject) => {
     new Compressor(file, {
       quality: 0.6,
