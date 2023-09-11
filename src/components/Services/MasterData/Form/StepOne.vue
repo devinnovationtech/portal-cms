@@ -914,8 +914,6 @@ export default {
   },
   data() {
     return {
-      // @TODO: remove isChecked and serviceMaxFee variable when the data ready in publication store
-      isChecked: false,
       serviceFormOptions: [
         {
           value: 'ADMINISTRATIF',

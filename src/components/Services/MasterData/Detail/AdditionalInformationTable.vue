@@ -5,6 +5,7 @@
         <thead>
           <tr>
             <th
+              id="responsible"
               colspan="2"
               class="!font-roboto !text-sm"
             >
@@ -14,26 +15,44 @@
         </thead>
         <tbody>
           <tr>
-            <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
+            <td
+              headers="responsible"
+              class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm"
+            >
               Nama Pejabat Penanggung Jawab
             </td>
-            <td class="w-full font-lato text-blue-gray-500 text-sm">
+            <td
+              headers="responsible"
+              class="w-full font-lato text-blue-gray-500 text-sm"
+            >
               {{ additionalInformation.responsible_name || '-' }}
             </td>
           </tr>
           <tr>
-            <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
+            <td
+              headers="responsible"
+              class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm"
+            >
               Nomor HP
             </td>
-            <td class="w-full font-lato text-blue-gray-500 text-sm">
+            <td
+              headers="responsible"
+              class="w-full font-lato text-blue-gray-500 text-sm"
+            >
               {{ additionalInformation.phone_number || '-' }}
             </td>
           </tr>
           <tr>
-            <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
+            <td
+              headers="responsible"
+              class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm"
+            >
               Alamat Email
             </td>
-            <td class="w-full font-lato text-blue-gray-500 text-sm">
+            <td
+              headers="responsible"
+              class="w-full font-lato text-blue-gray-500 text-sm"
+            >
               {{ additionalInformation.email || '-' }}
             </td>
           </tr>
@@ -48,6 +67,7 @@
         <thead>
           <tr>
             <th
+              id="socialMedia"
               colspan="2"
               class="!font-roboto !text-sm"
             >
@@ -61,18 +81,30 @@
             :key="`social-media-${index}`"
           >
             <tr>
-              <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
+              <td
+                headers="socialMedia"
+                class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm"
+              >
                 Nama Sosial Media
               </td>
-              <td class="w-full font-lato text-blue-gray-500 text-sm">
+              <td
+                headers="socialMedia"
+                class="w-full font-lato text-blue-gray-500 text-sm"
+              >
                 {{ socialMedia.name || '-' }}
               </td>
             </tr>
             <tr>
-              <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm capitalize">
+              <td
+                headers="socialMedia"
+                class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm capitalize"
+              >
                 {{ socialMedia.type.toLowerCase() || '-' }}
               </td>
-              <td class="w-full font-lato font-bold text-blue-gray-500 text-sm">
+              <td
+                headers="socialMedia"
+                class="w-full font-lato font-bold text-blue-gray-500 text-sm"
+              >
                 <template v-if="!!socialMedia.link">
                   <a
                     :href="socialMedia.link"
