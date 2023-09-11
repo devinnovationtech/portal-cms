@@ -40,11 +40,13 @@
           <img
             v-else-if="status === 'HASDEFAULT'"
             :src="imageUrl"
+            alt="preview gambar yang diupload"
             class="w-full h-full object-cover"
           >
           <img
             v-else
             :src="image"
+            alt="preview gambar yang diupload"
             class="w-full h-full object-cover"
           >
           <transition name="fade">

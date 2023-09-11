@@ -78,7 +78,10 @@
                 class="rounded-md aspect-w-16 aspect-h-9"
               >
                 <div class="grid place-content-center">
-                  <img :src="imagePreview">
+                  <img
+                    :src="imagePreview"
+                    alt="preview hero banner"
+                  >
                 </div>
               </div>
               <div

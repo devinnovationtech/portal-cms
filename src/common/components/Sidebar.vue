@@ -33,77 +33,80 @@
         </h1>
       </div>
     </section>
-    <nav
-      ref="sidebar-navigation"
-      data-cy="sidebar__navigation"
-      class="w-full mt-10"
-    >
-      <router-link
-        v-for="navigation in navigationMenu"
-        :key="navigation.label"
-        v-slot="{ href, navigate, isActive }"
-        :to="navigation.link"
-        :exact="navigation.link === '/'"
-        custom
+    <nav>
+      <ul
+        ref="sidebar-navigation"
+        data-cy="sidebar__navigation"
+        class="w-full mt-10"
       >
-        <li
-          v-if="isAllowedToAccess(navigation.permission)"
-          class="w-full min-h-[50px] p-[15px] flex items-center rounded-lg font-lato
-          font-bold text-sm text-white hover:bg-green-700 mb-2"
-          :class="{'bg-green-700' : isActive}"
+        <router-link
+          v-for="navigation in navigationMenu"
+          :key="navigation.label"
+          v-slot="{ href, navigate, isActive }"
+          :to="navigation.link"
+          :exact="navigation.link === '/'"
+          custom
         >
-          <a
-            :href="href"
-            :title="navigation.label"
-            class="w-full flex items-center gap-3 whitespace-nowrap"
-            @click="navigate"
+          <li
+            v-if="isAllowedToAccess(navigation.permission)"
+            class="w-full min-h-[50px] p-[15px] flex items-center rounded-lg font-lato
+          font-bold text-sm text-white hover:bg-green-700 mb-2"
+            :class="{'bg-green-700' : isActive}"
           >
-            <!-- Menu Icon -->
-            <component
-              :is="navigation.icon"
-              class="w-5 h-5 fill-white"
-            />
-            {{ navigation.label }}
-            <span
-              v-show="navigation.arrow"
-              class="ml-auto"
+            <a
+              :href="href"
+              :title="navigation.label"
+              class="w-full flex items-center gap-3 whitespace-nowrap"
+              @click="navigate"
             >
-              <JdsIcon
-                fill="#fff"
-                name="chevron-right"
-                size="16px"
+              <!-- Menu Icon -->
+              <component
+                :is="navigation.icon"
+                class="w-5 h-5 fill-white"
               />
-            </span>
-          </a>
-        </li>
-      </router-link>
+              {{ navigation.label }}
+              <span
+                v-show="navigation.arrow"
+                class="ml-auto"
+              >
+                <JdsIcon
+                  fill="#fff"
+                  name="chevron-right"
+                  size="16px"
+                />
+              </span>
+            </a>
+          </li>
+        </router-link>
+      </ul>
     </nav>
-    <section
-      ref="sidebar-bottom-nav"
-      data-cy="sidebar__bottom-nav"
-      class="mt-auto"
-    >
-      <router-link
-        v-slot="{ href, navigate, isActive }"
-        to="/pengaturan"
-        custom
+    <section class="mt-auto">
+      <ul
+        ref="sidebar-bottom-nav"
+        data-cy="sidebar__bottom-nav"
       >
-        <li
-          class="w-full min-h-[50px] p-[15px] flex items-center rounded-lg font-lato
-          font-bold text-sm text-white hover:bg-green-700 mb-2"
-          :class="{'bg-green-700' : isActive}"
+        <router-link
+          v-slot="{ href, navigate, isActive }"
+          to="/pengaturan"
+          custom
         >
-          <a
-            :href="href"
-            title="Pengaturan Akun"
-            class="w-full flex items-center gap-3 whitespace-nowrap"
-            @click="navigate"
+          <li
+            class="w-full min-h-[50px] p-[15px] flex items-center rounded-lg font-lato
+          font-bold text-sm text-white hover:bg-green-700 mb-2"
+            :class="{'bg-green-700' : isActive}"
           >
-            <SettingIcon class="w-5 h-5 fill-white" />
-            Pengaturan Akun
-          </a>
-        </li>
-      </router-link>
+            <a
+              :href="href"
+              title="Pengaturan Akun"
+              class="w-full flex items-center gap-3 whitespace-nowrap"
+              @click="navigate"
+            >
+              <SettingIcon class="w-5 h-5 fill-white" />
+              Pengaturan Akun
+            </a>
+          </li>
+        </router-link>
+      </ul>
     </section>
   </aside>
 </template>

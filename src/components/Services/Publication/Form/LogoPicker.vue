@@ -3,6 +3,7 @@
     <div class="w-[124px] h-[124px] flex items-center justify-center border border-dashed border-gray-500 bg-gray-50 rounded-md p-4">
       <img
         :src="logoPreview || require('@/assets/icons/image-placeholder.svg')"
+        alt="logo preview"
         width="108"
         height="108"
         :class="{

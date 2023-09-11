@@ -4,9 +4,9 @@
       v-if="isSelected === 'Desktop'"
       class="w-full h-[397px] object-contain"
       :src="imageDesktop"
+      alt="image preview dekstop"
       width="1082"
       height="576"
-      alt=""
     >
     <div
       v-else
@@ -16,6 +16,7 @@
         <div class="mobile-notch z-20 relative top-0 left-[130px] w-[126px] h-[20px] bg-black rounded-[0px_0px_10px_10px]" />
         <img
           :src="imageMobile"
+          alt="image preview mobile"
           class="mobile-image relative top-[80px] w-[360px] h-[120px] rounded-[8px] mx-auto"
         >
         <div class="mobile-container-content flex flex-row mx-auto">

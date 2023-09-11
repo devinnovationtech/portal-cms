@@ -401,6 +401,7 @@
                 >
                   <img
                     :src="getServiceLinkIcon(link.type)"
+                    alt="icon tautan layanan"
                     width="36"
                     height="23"
                     class="w-full h-full object-contain object-center mr-2"
