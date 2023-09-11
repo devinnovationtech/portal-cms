@@ -14,6 +14,7 @@
         v-model.trim="value"
         type="text"
         :placeholder="placeholder"
+        :data-cy="dataCySuffix ? `search-bar__input__${dataCySuffix}` : 'search-bar__input'"
         class="w-[150px] h-full font-lato text-sm text-blue-gray-800
       placeholder:text-blue-gray-200 focus:outline-none"
       >
@@ -22,6 +23,7 @@
       <button
         v-show="hasValue"
         ref="search-bar-clear-button"
+        :data-cy="dataCySuffix ? `search-bar__clear-button__${dataCySuffix}` : 'search-bar__clear-button'"
         @click="clearValue"
       >
         <JdsIcon
@@ -43,6 +45,10 @@ export default {
     placeholder: {
       type: [String, Number],
       default: 'default placeholder',
+    },
+    dataCySuffix: {
+      type: String,
+      default: '',
     },
   },
   data() {

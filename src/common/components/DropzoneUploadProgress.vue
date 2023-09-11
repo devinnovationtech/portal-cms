@@ -7,6 +7,7 @@
         'border-gray-300' : disabled,
         'border-red-600': status === 'ERROR',
       }"
+      :data-cy="dataCy ? `${dataCy}-dropzone-upload-progress` : 'dropzone-upload-progress'"
     >
       <div
         :class="{
@@ -15,9 +16,29 @@
         }"
       >
         <div class="relative w-[86px] h-[75px] overflow-hidden rounded-md">
+          <!-- Display image using file type -->
+          <div
+            v-if="fileType === 'xlsx' || fileType === 'xls'"
+            class="w-full h-full flex justify-center items-center bg-gray-200"
+          >
+            <ExcelIcon />
+          </div>
+          <div
+            v-if="fileType === 'docx' || fileType === 'doc'"
+            class="w-full h-full flex justify-center items-center bg-gray-200"
+          >
+            <WordIcon />
+          </div>
+          <div
+            v-if="fileType === 'pdf'"
+            class="w-full h-full flex justify-center items-center bg-gray-200"
+          >
+            <PdfIcon />
+          </div>
+
           <!-- Display image using url if has an url (for edit mode) -->
           <img
-            v-if="status === 'HASDEFAULT'"
+            v-else-if="status === 'HASDEFAULT'"
             :src="imageUrl"
             class="w-full h-full object-cover"
           >
@@ -36,13 +57,14 @@
           <!-- Preview Button -->
           <transition name="fade">
             <button
-              v-if="status === 'SUCCESS' || status === 'HASDEFAULT'"
+              v-if="(status === 'SUCCESS' || status === 'HASDEFAULT') && isShowPreview"
               type="button"
               :class="{
                 'absolute inset-0 w-full h-full flex items-center justify-center transition-all ease-in group' : true,
                 'hover:bg-black hover:opacity-60' : !disabled,
               }"
               :disabled="disabled"
+              :data-cy="dataCy ? `${dataCy}-dropzone-upload-progress__button-preview` : 'dropzone-upload-progress__button-preview'"
               @click="toggleImagePreview"
             >
               <div
@@ -84,7 +106,7 @@
               v-show="status === 'SUCCESS'"
               class="col-span-3 w-full font-lato text-sm text-gray-800"
             >
-              Gambar berhasil diupload
+              {{ fileType === 'jpg' || fileType === 'jpeg' || fileType === 'png' ? 'Gambar' : 'Dokumen' }} berhasil diupload
             </p>
             <!-- ERROR -->
             <p
@@ -109,6 +131,7 @@
             type="button"
             class="w-7 h-7 flex items-center justify-center bg-red-50 rounded-full"
             :disabled="disabled"
+            :data-cy="dataCy ? `${dataCy}-dropzone-upload-progress__button-delete` : 'dropzone-upload-progress__button-delete'"
             @click="$emit('delete')"
           >
             <JdsIcon
@@ -124,6 +147,7 @@
             type="button"
             class="w-7 h-7 flex items-center justify-center bg-blue-gray-50 rounded-full"
             :disabled="disabled"
+            :data-cy="dataCy ? `${dataCy}-dropzone-upload-progress__button-retry` : 'dropzone-upload-progress__button-retry'"
             @click="$emit('retry')"
           >
             <RetryIcon />
@@ -155,12 +179,21 @@ import RetryIcon from '@/assets/icons/retry.svg?inline';
 import EyeIcon from '@/assets/icons/eye.svg?inline';
 import ImagePreview from '@/common/components/ImagePreview.vue';
 
+import ExcelIcon from '@/assets/icons/excel.svg?inline';
+import WordIcon from '@/assets/icons/word.svg?inline';
+import PdfIcon from '@/assets/icons/pdf.svg?inline';
+
+import mime from 'mime-types';
+
 export default {
   name: 'DropzoneUploadProgress',
   components: {
     RetryIcon,
     EyeIcon,
     ImagePreview,
+    ExcelIcon,
+    WordIcon,
+    PdfIcon,
   },
   props: {
     disabled: {
@@ -191,6 +224,14 @@ export default {
       },
       default: 'NONE',
     },
+    dataCy: {
+      type: String,
+      default: null,
+    },
+    isShowPreview: {
+      type: Boolean,
+      default: true,
+    },
   },
   data() {
     return {
@@ -216,6 +257,9 @@ export default {
       }
 
       return this.image;
+    },
+    fileType() {
+      return this.file && this.file.type ? mime.extension(this.file.type) : '';
     },
   },
   watch: {

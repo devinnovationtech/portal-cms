@@ -24,6 +24,7 @@
     "lodash.clonedeep": "^4.5.0",
     "lodash.debounce": "^4.0.8",
     "lodash.isequal": "^4.5.0",
+    "mime-types": "^2.1.35",
     "portal-vue": "^2.1.7",
     "vee-validate": "^3.4.14",
     "vue": "^2.6.11",
