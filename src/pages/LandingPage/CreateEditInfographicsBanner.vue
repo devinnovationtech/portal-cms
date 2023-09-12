@@ -274,6 +274,7 @@ import BaseModal from '@/common/components/BaseModal';
 import ProgressModal from '@/common/components/ProgressModal';
 
 import '@/common/helpers/vee-validate.js';
+import { compressImage } from '@/common/helpers/image-compressor';
 import { ValidationProvider, ValidationObserver } from 'vee-validate';
 import { RepositoryFactory } from '@/repositories/RepositoryFactory';
 
@@ -428,17 +429,28 @@ export default {
       }
     },
     async uploadDesktopImage(file) {
-      const formData = new FormData();
-      formData.append('file', file, file.name);
+      let compressedImage;
+      let formData;
 
       try {
-        this.imageDesktopFile = file;
+        compressedImage = await compressImage(file);
+        formData = new FormData();
+        formData.append('file', compressedImage, compressedImage.name);
+      } catch {
+        this.$toast({
+          type: 'error',
+          message: 'Gagal melakukan kompresi gambar!',
+        });
+      }
+
+      try {
+        this.imageDesktopFile = compressedImage;
         this.imageDesktopUploadProgress = 0;
         this.imageDesktopUploadStatus = IMAGE_UPLOAD_STATUS.UPLOADING;
 
         const response = await mediaRepository.uploadMediaWithProgress(formData, (progress) => {
           this.imageDesktopUploadProgress = progress;
-        });
+        }, { domain: 'infographic-banners' });
 
         this.imageDesktopUploadStatus = IMAGE_UPLOAD_STATUS.SUCCESS;
 
@@ -456,17 +468,28 @@ export default {
       }
     },
     async uploadMobileImage(file) {
-      const formData = new FormData();
-      formData.append('file', file, file.name);
+      let compressedImage;
+      let formData;
 
       try {
-        this.imageMobileFile = file;
+        compressedImage = await compressImage(file);
+        formData = new FormData();
+        formData.append('file', compressedImage, compressedImage.name);
+      } catch {
+        this.$toast({
+          type: 'error',
+          message: 'Gagal melakukan kompresi gambar!',
+        });
+      }
+
+      try {
+        this.imageMobileFile = compressedImage;
         this.imageMobileUploadProgress = 0;
         this.imageMobileUploadStatus = IMAGE_UPLOAD_STATUS.UPLOADING;
 
         const response = await mediaRepository.uploadMediaWithProgress(formData, (progress) => {
           this.imageMobileUploadProgress = progress;
-        });
+        }, { domain: 'infographic-banners' });
 
         this.imageMobileUploadStatus = IMAGE_UPLOAD_STATUS.SUCCESS;
 
