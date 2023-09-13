@@ -378,9 +378,12 @@ export default {
         if (status === 'ARCHIVED') {
           this.loadingMessage.title = 'Mengarsipkan Dokumen';
           this.loadingMessage.body = 'Mohon tunggu, pengarsipan dokumen sedang diproses.';
+        } else if (statusBefore === 'DRAFT') {
+          this.loadingMessage.title = 'Menerbitkan Dokumen';
+          this.loadingMessage.body = 'Mohon tunggu, penerbitan dokumen sedang diproses.';
         } else {
-          this.loadingMessage.title = `${statusBefore === 'DRAFT' ? 'Menerbitkan' : 'Memulihkan'} Dokumen`;
-          this.loadingMessage.body = `Mohon tunggu, ${statusBefore === 'DRAFT' ? 'penerbitan' : 'pemulihan'} dokumen sedang diproses.`;
+          this.loadingMessage.title = 'Memulihkan Dokumen';
+          this.loadingMessage.body = 'Mohon tunggu, pemulihan dokumen sedang diproses.';
         }
         const body = { status };
         const response = await documentsRepository.updateStatusDocument(body, id);
@@ -391,13 +394,18 @@ export default {
             setTimeout(() => {
               if (status === 'ARCHIVED') {
                 this.setModalMessage({
-                  title: 'Berhasil diarsipkan',
+                  title: 'Berhasil diarsipkan !',
                   message: 'Anda berhasil mengarsipkan dokumen',
+                });
+              } else if (statusBefore === 'DRAFT') {
+                this.setModalMessage({
+                  title: 'Berhasil diterbitkan !',
+                  message: 'Anda berhasil menerbitkan dokumen.',
                 });
               } else {
                 this.setModalMessage({
-                  title: `Berhasil ${statusBefore === 'DRAFT' ? 'diterbitkan' : 'dipulihkan'}!`,
-                  message: `Anda berhasil ${statusBefore === 'DRAFT' ? 'menerbitkan' : 'memulihkan'} dokumen.`,
+                  title: 'Berhasil dipulihkan !',
+                  message: 'Anda berhasil memulihkan dokumen.',
                 });
               }
               this.modalState = MODAL_STATE.SUCCESS;
@@ -405,13 +413,9 @@ export default {
           }, 150);
         }
       } catch {
-        this.$toast({
-          type: 'error',
-          message: 'Gagal memperbaharui status Dokumen, silakan coba beberapa saat lagi',
-        });
         this.setModalMessage({
-          title: 'Arsipkan Dokumen Gagal',
-          message: 'Dokumen Anda gagal diarsipkan.',
+          title: 'Update Status Dokumen Gagal !',
+          message: 'Gagal memperbarui status Dokumen, silakan coba beberapa saat lagi',
         });
         this.modalState = MODAL_STATE.ERROR;
       } finally {
