@@ -581,11 +581,10 @@ export default {
     },
     async deleteUploadedDocument(fileName) {
       try {
-        const response = await mediaRepository.deleteMedia({
+        return await mediaRepository.deleteMedia({
           key: fileName,
           domain: 'archives',
         });
-        return response;
       } catch (error) {
         return new Error(error);
       }
