@@ -6,6 +6,7 @@
     <thead>
       <tr>
         <th
+          id="infographics-banner-info-detail"
           colspan="2"
           class="!font-roboto !text-sm"
         >
@@ -15,10 +16,16 @@
     </thead>
     <tbody>
       <tr>
-        <td class="min-w-[228px] font-lato text-blue-gray-500 font-bold text-sm">
+        <td
+          headers="infographics-banner-info-detail"
+          class="min-w-[228px] font-lato text-blue-gray-500 font-bold text-sm"
+        >
           Judul
         </td>
-        <td class="w-full font-lato text-blue-gray-500 text-sm">
+        <td
+          headers="infographics-banner-info-detail"
+          class="w-full font-lato text-blue-gray-500 text-sm"
+        >
           <div
             v-if="loading"
             class="h-4 w-1/4 rounded-lg animate-pulse bg-gray-200"
@@ -32,10 +39,16 @@
         </td>
       </tr>
       <tr>
-        <td class="min-w-[228px] font-lato text-blue-gray-500 font-bold text-sm">
+        <td
+          headers="infographics-banner-info-detail"
+          class="min-w-[228px] font-lato text-blue-gray-500 font-bold text-sm"
+        >
           Urutan
         </td>
-        <td class="w-full font-lato text-blue-gray-500 text-sm">
+        <td
+          headers="infographics-banner-info-detail"
+          class="w-full font-lato text-blue-gray-500 text-sm"
+        >
           <div
             v-if="loading"
             class="h-4 w-1/4 rounded-lg animate-pulse bg-gray-200"
@@ -49,10 +62,16 @@
         </td>
       </tr>
       <tr>
-        <td class="min-w-[228px] font-lato text-blue-gray-500 font-bold text-sm">
+        <td
+          headers="infographics-banner-info-detail"
+          class="min-w-[228px] font-lato text-blue-gray-500 font-bold text-sm"
+        >
           Link Redirect
         </td>
-        <td class="w-full font-lato text-blue-gray-500 text-sm">
+        <td
+          headers="infographics-banner-info-detail"
+          class="w-full font-lato text-blue-gray-500 text-sm"
+        >
           <div
             v-if="loading"
             class="h-4 w-1/4 rounded-lg animate-pulse bg-gray-200"
@@ -76,10 +95,16 @@
         </td>
       </tr>
       <tr>
-        <td class="min-w-[228px] font-lato text-blue-gray-500 font-bold text-[12px] leading-[23px]">
+        <td
+          headers="infographics-banner-info-detail"
+          class="min-w-[228px] font-lato text-blue-gray-500 font-bold text-[12px] leading-[23px]"
+        >
           Status
         </td>
-        <td class="w-full">
+        <td
+          headers="infographics-banner-info-detail"
+          class="w-full"
+        >
           <div
             v-if="loading"
             class="h-4 w-1/4 rounded-lg animate-pulse bg-gray-200"
@@ -98,10 +123,16 @@
         </td>
       </tr>
       <tr>
-        <td class="font-lato text-blue-gray-500 font-bold text-sm">
+        <td
+          headers="infographics-banner-info-detail"
+          class="font-lato text-blue-gray-500 font-bold text-sm"
+        >
           Update Terakhir
         </td>
-        <td class="font-lato text-blue-gray-500 text-sm">
+        <td
+          headers="infographics-banner-info-detail"
+          class="font-lato text-blue-gray-500 text-sm"
+        >
           <div
             v-if="loading"
             class="h-4 w-1/4 rounded-lg animate-pulse bg-gray-200"
