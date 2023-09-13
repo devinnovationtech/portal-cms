@@ -6,6 +6,7 @@
     <thead>
       <tr>
         <th
+          id="documents-info-detail"
           colspan="2"
           class="!font-roboto !text-sm"
         >
