@@ -6,6 +6,7 @@
     <thead>
       <tr>
         <th
+          id="documents-info-detail"
           colspan="2"
           class="!font-roboto !text-sm"
         >
@@ -140,9 +141,7 @@ export default {
   methods: {
     getDocumentName() {
       if (this.isHasFile) {
-        const documentName = this.document?.source.substring(this.document?.source.lastIndexOf('/') + 1);
-
-        return documentName;
+        return this.document?.source.substring(this.document?.source.lastIndexOf('/') + 1);
       }
 
       return '-';
