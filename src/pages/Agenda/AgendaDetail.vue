@@ -11,7 +11,6 @@
           Hapus
         </BaseButton>
         <!-- Edit Button -->
-        <!-- TODO: Add edit action on button click -->
         <LinkButton
           :href="`/agenda/detail/${$route.params.id}/ubah`"
           variant="secondary"

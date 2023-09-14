@@ -75,11 +75,7 @@ extend('nobackdate', {
     const today = new Date();
     const selectedDate = normalizeDate(value);
 
-    return new Promise((resolve) => {
-      resolve({
-        valid: isToday(selectedDate) || isAfter(selectedDate, today),
-      });
-    });
+    return Promise.resolve({ valid: isToday(selectedDate) || isAfter(selectedDate, today) });
   },
   message: 'Tanggal yang anda pilih sudah lewat!',
 });

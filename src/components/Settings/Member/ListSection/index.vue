@@ -4,7 +4,6 @@
       Anggota Tim Anda
     </h2>
     <div class="w-full overflow-auto">
-      <!-- TODO: Get table data from API -->
       <MemberTable
         :items="items"
         :loading="loading"
@@ -48,12 +47,10 @@ export default {
   computed: {
     items() {
       if (Array.isArray(this.members) && !!this.members.length) {
-        const items = this.members.map((member) => ({
+        return this.members.map((member) => ({
           ...member,
           last_active: member.last_active ? formatDate(member.last_active, 'dd/MM/yyyy - HH:mm') : null,
         }));
-
-        return items;
       }
 
       return [];

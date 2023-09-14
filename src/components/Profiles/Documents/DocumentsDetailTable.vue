@@ -140,9 +140,7 @@ export default {
   methods: {
     getDocumentName() {
       if (this.isHasFile) {
-        const documentName = this.document?.source.substring(this.document?.source.lastIndexOf('/') + 1);
-
-        return documentName;
+        return this.document?.source.substring(this.document?.source.lastIndexOf('/') + 1);
       }
 
       return '-';

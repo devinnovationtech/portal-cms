@@ -190,7 +190,7 @@ export default {
   computed: {
     items() {
       if (Array.isArray(this.news) && !!this.news.length) {
-        const items = this.news.map((news) => ({
+        return this.news.map((news) => ({
           id: news.id,
           title: news.title,
           category: news.category,
@@ -198,8 +198,6 @@ export default {
           updated_at: formatDate(news.updated_at, 'dd/MM/yyyy'),
           status: news.status,
         }));
-
-        return items;
       }
 
       return [];

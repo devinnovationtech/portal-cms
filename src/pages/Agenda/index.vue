@@ -160,7 +160,7 @@ export default {
   computed: {
     items() {
       if (Array.isArray(this.events) && !!this.events.length) {
-        const items = this.events.map((event) => ({
+        return this.events.map((event) => ({
           id: event.id,
           title: event.title,
           category: event.category,
@@ -169,8 +169,6 @@ export default {
           status: this.getEventStatus(event.status),
           type: event.type,
         }));
-
-        return items;
       }
 
       return [];
@@ -303,8 +301,7 @@ export default {
      * @returns {Object}
      */
     filterEventsById(id) {
-      const eventDetail = this.events.filter((event) => event.id === id)[0];
-      return eventDetail;
+      return this.events.filter((event) => event.id === id)[0];
     },
 
     /**
