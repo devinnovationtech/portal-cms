@@ -65,6 +65,7 @@
             <thead>
               <tr>
                 <th
+                  id="about-agenda"
                   colspan="2"
                   class="!font-roboto !text-sm"
                 >
@@ -74,10 +75,16 @@
             </thead>
             <tbody>
               <tr>
-                <td class="min-w-[228px] font-lato text-blue-gray-500 font-bold text-sm">
+                <td
+                  headers="about-agenda"
+                  class="min-w-[228px] font-lato text-blue-gray-500 font-bold text-sm"
+                >
                   Judul Agenda/Event
                 </td>
-                <td class="w-full font-lato text-blue-gray-500 text-sm">
+                <td
+                  headers="about-agenda"
+                  class="w-full font-lato text-blue-gray-500 text-sm"
+                >
                   <div
                     v-if="loading"
                     class="h-4 w-1/4 rounded-lg animate-pulse bg-gray-200"
@@ -88,10 +95,16 @@
                 </td>
               </tr>
               <tr>
-                <td class="min-w-[228px] font-lato text-blue-gray-500 font-bold text-sm">
+                <td
+                  headers="about-agenda"
+                  class="min-w-[228px] font-lato text-blue-gray-500 font-bold text-sm"
+                >
                   Tipe Kategori
                 </td>
-                <td class="w-full font-lato text-blue-gray-500 text-sm">
+                <td
+                  headers="about-agenda"
+                  class="w-full font-lato text-blue-gray-500 text-sm"
+                >
                   <div
                     v-if="loading"
                     class="h-4 w-1/5 rounded-lg animate-pulse bg-gray-200"
@@ -102,10 +115,16 @@
                 </td>
               </tr>
               <tr>
-                <td class="font-lato text-blue-gray-500 font-bold text-sm">
+                <td
+                  headers="about-agenda"
+                  class="font-lato text-blue-gray-500 font-bold text-sm"
+                >
                   Kategori
                 </td>
-                <td class="font-lato text-blue-gray-500 text-sm">
+                <td
+                  headers="about-agenda"
+                  class="font-lato text-blue-gray-500 text-sm"
+                >
                   <div
                     v-if="loading"
                     class="h-4 w-1/4 rounded-lg animate-pulse bg-gray-200"
@@ -127,6 +146,7 @@
             <thead>
               <tr>
                 <th
+                  id="date"
                   colspan="2"
                   class="!font-roboto !text-sm"
                 >
@@ -136,10 +156,16 @@
             </thead>
             <tbody>
               <tr>
-                <td class="min-w-[228px] font-lato text-blue-gray-500 font-bold text-sm">
+                <td
+                  headers="date"
+                  class="min-w-[228px] font-lato text-blue-gray-500 font-bold text-sm"
+                >
                   Tanggal
                 </td>
-                <td class="w-full font-lato text-blue-gray-500 text-sm">
+                <td
+                  headers="date"
+                  class="w-full font-lato text-blue-gray-500 text-sm"
+                >
                   <div
                     v-if="loading"
                     class="h-4 w-1/4 rounded-lg animate-pulse bg-gray-200"
@@ -150,10 +176,16 @@
                 </td>
               </tr>
               <tr>
-                <td class="font-lato text-blue-gray-500 font-bold text-sm">
+                <td
+                  headers="date"
+                  class="font-lato text-blue-gray-500 font-bold text-sm"
+                >
                   Waktu
                 </td>
-                <td class="font-lato text-blue-gray-500 text-sm">
+                <td
+                  headers="date"
+                  class="font-lato text-blue-gray-500 text-sm"
+                >
                   <div
                     v-if="loading"
                     class="h-4 w-1/5 rounded-lg animate-pulse bg-gray-200"
@@ -175,6 +207,7 @@
             <thead>
               <tr>
                 <th
+                  id="location-agenda"
                   colspan="2"
                   class="!font-roboto !text-sm"
                 >
@@ -184,10 +217,16 @@
             </thead>
             <tbody>
               <tr>
-                <td class="min-w-[228px] font-lato text-blue-gray-500 font-bold text-sm">
+                <td
+                  headers="location-agenda"
+                  class="min-w-[228px] font-lato text-blue-gray-500 font-bold text-sm"
+                >
                   Tipe Event
                 </td>
-                <td class="w-full font-lato text-blue-gray-500 text-sm">
+                <td
+                  headers="location-agenda"
+                  class="w-full font-lato text-blue-gray-500 text-sm"
+                >
                   <div
                     v-if="loading"
                     class="h-4 w-1/5 rounded-lg animate-pulse bg-gray-200"
@@ -201,10 +240,16 @@
                 </td>
               </tr>
               <tr v-if="event.type === 'online'">
-                <td class="font-lato text-blue-gray-500 font-bold text-sm">
+                <td
+                  headers="location-agenda"
+                  class="font-lato text-blue-gray-500 font-bold text-sm"
+                >
                   Link Meeting
                 </td>
-                <td class="font-lato text-blue-gray-500 text-sm">
+                <td
+                  headers="location-agenda"
+                  class="font-lato text-blue-gray-500 text-sm"
+                >
                   <div
                     v-if="loading"
                     class="h-4 w-1/3 rounded-lg animate-pulse bg-gray-200"
@@ -222,10 +267,16 @@
                 </td>
               </tr>
               <tr v-else>
-                <td class="font-lato text-blue-gray-500 font-bold text-sm">
+                <td
+                  headers="location-agenda"
+                  class="font-lato text-blue-gray-500 font-bold text-sm"
+                >
                   Alamat
                 </td>
-                <td class="font-lato text-blue-gray-500 text-sm">
+                <td
+                  headers="location-agenda"
+                  class="font-lato text-blue-gray-500 text-sm"
+                >
                   <div
                     v-if="loading"
                     class="h-4 w-1/3 rounded-lg animate-pulse bg-gray-200"

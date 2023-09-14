@@ -5,6 +5,7 @@
         <thead>
           <tr>
             <th
+              id="general-information"
               colspan="2"
               class="!font-roboto !text-sm"
             >
@@ -14,10 +15,16 @@
         </thead>
         <tbody>
           <tr>
-            <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
+            <td
+              headers="general-information"
+              class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm"
+            >
               Logo Layanan
             </td>
-            <td class="w-full font-lato text-blue-gray-500 text-sm">
+            <td
+              headers="general-information"
+              class="w-full font-lato text-blue-gray-500 text-sm"
+            >
               <img
                 v-if="!!defaultInformation.logo.file_download_uri"
                 :src="defaultInformation.logo.file_download_uri"
@@ -29,66 +36,114 @@
             </td>
           </tr>
           <tr>
-            <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
+            <td
+              headers="general-information"
+              class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm"
+            >
               Nama Perangkat Daerah
             </td>
-            <td class="w-full font-lato text-blue-gray-500 text-sm">
+            <td
+              headers="general-information"
+              class="w-full font-lato text-blue-gray-500 text-sm"
+            >
               {{ defaultInformation.opd_name || '-' }}
             </td>
           </tr>
           <tr>
-            <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
+            <td
+              headers="general-information"
+              class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm"
+            >
               Bentuk Layanan
             </td>
-            <td class="w-full font-lato text-blue-gray-500 text-sm">
+            <td
+              headers="general-information"
+              class="w-full font-lato text-blue-gray-500 text-sm"
+            >
               {{ defaultInformation.service_form || '-' }}
             </td>
           </tr>
           <tr>
-            <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
+            <td
+              headers="general-information"
+              class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm"
+            >
               Nama Layanan
             </td>
-            <td class="w-full font-lato text-blue-gray-500 text-sm">
+            <td
+              headers="general-information"
+              class="w-full font-lato text-blue-gray-500 text-sm"
+            >
               {{ defaultInformation.service_name || '-' }}
             </td>
           </tr>
           <tr>
-            <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-[12px] leading-[23px]">
+            <td
+              headers="general-information"
+              class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-[12px] leading-[23px]"
+            >
               Deskripsi Layanan
             </td>
-            <td class="w-full font-lato text-blue-gray-500 text-sm">
+            <td
+              headers="general-information"
+              class="w-full font-lato text-blue-gray-500 text-sm"
+            >
               {{ defaultInformation.description || '-' }}
             </td>
           </tr>
           <tr>
-            <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
+            <td
+              headers="general-information"
+              class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm"
+            >
               Pengguna Layanan
             </td>
-            <td class="w-full font-lato text-blue-gray-500 text-sm">
+            <td
+              headers="general-information"
+              class="w-full font-lato text-blue-gray-500 text-sm"
+            >
               {{ defaultInformation.service_user || '-' }}
             </td>
           </tr>
           <tr>
-            <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
+            <td
+              headers="general-information"
+              class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm"
+            >
               Nama Program Layanan
             </td>
-            <td class="w-full font-lato text-blue-gray-500 text-sm">
+            <td
+              headers="general-information"
+              class="w-full font-lato text-blue-gray-500 text-sm"
+            >
               {{ defaultInformation.program_name || '-' }}
             </td>
           </tr>
           <tr>
-            <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
+            <td
+              headers="general-information"
+              class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm"
+            >
               Kategori Layanan Portal Jabarprovgoid
             </td>
-            <td class="font-lato text-blue-gray-500 text-sm">
+            <td
+              headers="general-information"
+              class="font-lato text-blue-gray-500 text-sm"
+            >
               {{ defaultInformation.portal_category || '-' }}
             </td>
           </tr>
           <tr>
-            <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
+            <td
+              headers="general-information"
+              class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm"
+            >
               Status Operasional
             </td>
-            <td class="font-lato text-blue-gray-500 text-sm">
+            <td
+              headers="general-information"
+              class="font-lato text-blue-gray-500 text-sm"
+            >
               <div
                 class="w-fit font-lato text-[12px] leading-[23px] capitalize"
                 :class="{
@@ -101,10 +156,16 @@
             </td>
           </tr>
           <tr>
-            <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
+            <td
+              headers="general-information"
+              class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm"
+            >
               Teknis Layanan
             </td>
-            <td class="font-lato text-blue-gray-500 text-sm">
+            <td
+              headers="general-information"
+              class="font-lato text-blue-gray-500 text-sm"
+            >
               <div
                 class="w-fit flex items-center font-lato text-[12px] leading-[23px]"
                 :class="{
@@ -126,18 +187,30 @@
           </tr>
           <template v-if="isBenefitActive">
             <tr>
-              <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
+              <td
+                headers="general-information"
+                class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm"
+              >
                 Judul Manfaat Layanan
               </td>
-              <td class="font-lato text-blue-gray-500 text-sm">
+              <td
+                headers="general-information"
+                class="font-lato text-blue-gray-500 text-sm"
+              >
                 <p>{{ defaultInformation.benefits?.title || '-' }}</p>
               </td>
             </tr>
             <tr>
-              <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
+              <td
+                headers="general-information"
+                class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm"
+              >
                 Manfaat Layanan
               </td>
-              <td class="font-lato text-blue-gray-500 text-sm">
+              <td
+                headers="general-information"
+                class="font-lato text-blue-gray-500 text-sm"
+              >
                 <template v-if="hasBenefits">
                   <div
                     v-for="(benefit, index) in defaultInformation.benefits.items"
@@ -164,18 +237,30 @@
 
           <template v-if="isfacilityActive">
             <tr>
-              <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
+              <td
+                headers="general-information"
+                class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm"
+              >
                 Judul Fasilitas Layanan
               </td>
-              <td class="font-lato text-blue-gray-500 text-sm">
+              <td
+                headers="general-information"
+                class="font-lato text-blue-gray-500 text-sm"
+              >
                 <p>{{ defaultInformation.facilities?.title || '-' }}</p>
               </td>
             </tr>
             <tr>
-              <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
+              <td
+                headers="general-information"
+                class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm"
+              >
                 Fasilitas Layanan
               </td>
-              <td class="font-lato text-blue-gray-500 text-sm">
+              <td
+                headers="general-information"
+                class="font-lato text-blue-gray-500 text-sm"
+              >
                 <template v-if="hasFacilities">
                   <div
                     v-for="(facility, index) in defaultInformation.facilities.items"
@@ -200,10 +285,16 @@
             </tr>
           </template>
           <tr>
-            <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
+            <td
+              headers="general-information"
+              class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm"
+            >
               Alamat Website Informasi Resmi
             </td>
-            <td class="font-lato text-blue-gray-500 font-bold text-sm">
+            <td
+              headers="general-information"
+              class="font-lato text-blue-gray-500 font-bold text-sm"
+            >
               <template v-if="!!defaultInformation.website">
                 <a
                   :href="defaultInformation.website"
@@ -220,10 +311,16 @@
             </td>
           </tr>
           <tr>
-            <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
+            <td
+              headers="general-information"
+              class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm"
+            >
               Kustomisasi URL Informasi Layanan Portal Jabar
             </td>
-            <td class="font-lato text-blue-gray-500 text-sm">
+            <td
+              headers="general-information"
+              class="font-lato text-blue-gray-500 text-sm"
+            >
               {{ 'http://www.jabarprov.go.id/layanan/' + defaultInformation.slug || '-' }}
             </td>
           </tr>
