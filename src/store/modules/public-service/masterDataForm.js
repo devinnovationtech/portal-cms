@@ -255,42 +255,34 @@ export default {
       // remove duplicate values from list
       const uniqueList = [...new Set(originalList)];
 
-      const options = uniqueList.map((item) => ({
+      return uniqueList.map((item) => ({
         value: item,
         label: item,
       }));
-
-      return options;
     },
     subGovernmentAffairOptions(state) {
       if (state.stepOne.services.information.government_affair !== '') {
         const filteredList = state.governmentAffairOptions.filter((item) => item.main_affair === state.stepOne.services.information.government_affair);
 
-        const options = filteredList.map((item) => ({
+        return filteredList.map((item) => ({
           value: item.sub_main_affair,
           label: item.sub_main_affair,
         }));
-
-        return options;
       }
 
       return [];
     },
     spbeRALOptions(state) {
-      const options = state.spbeRALOptions.map((item) => ({
+      return state.spbeRALOptions.map((item) => ({
         value: item.ral_code_2,
         label: item.item,
       }));
-
-      return options;
     },
     organizationOptions(state) {
-      const options = state.organizationLists.map((item) => ({
+      return state.organizationLists.map((item) => ({
         value: item.cbg_name,
         label: item.cbg_name,
       }));
-
-      return options;
     },
   },
   mutations: {
@@ -718,7 +710,7 @@ export default {
         stepTwoState = { ...state.stepTwo };
       }
 
-      const formData = {
+      return {
         services: {
           service_detail: {
             ...state.stepOne.services.service_detail,
@@ -744,8 +736,6 @@ export default {
         additional_information: { ...state.stepThree.additional_information },
         status,
       };
-
-      return formData;
     },
     closeConfirmation({ commit }) {
       commit('SET_SUBMIT_STATUS', FORM_SUBMIT_STATUS.NONE);

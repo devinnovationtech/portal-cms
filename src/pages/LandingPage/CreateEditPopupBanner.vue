@@ -554,13 +554,9 @@ export default {
     async fetchData(id) {
       try {
         const response = await bannerRepository.getBannerById(id);
-        return new Promise((resolve) => {
-          resolve(response);
-        });
+        return Promise.resolve(response);
       } catch (error) {
-        return new Promise(() => {
-          throw new Error(error);
-        });
+        return Promise.reject(new Error(error));
       }
     },
     async handleUploadByType(file, type) {
@@ -660,14 +656,9 @@ export default {
           key: fileName,
           domain: 'pop-up-banners',
         });
-
-        return new Promise((resolve) => {
-          resolve(response);
-        });
+        return Promise.resolve(response);
       } catch (error) {
-        return new Promise(() => {
-          throw new Error(error);
-        });
+        return Promise.reject(new Error(error));
       }
     },
     async validateSelectedImage(file, type) {
@@ -755,7 +746,6 @@ export default {
       }
     },
     async updateForm() {
-      // @todo: add update form functionality
       try {
         this.submitStatus = FORM_SUBMIT_STATUS.LOADING;
         this.submitProgress = 25;
@@ -845,7 +835,7 @@ export default {
     generateFormData() {
       const normalizedStartDate = this.normalizeDate(this.form.scheduler.startDate);
 
-      const formData = {
+      return {
         ...this.form,
         image: {
           desktop: this.form.image.desktop.url,
@@ -861,8 +851,6 @@ export default {
           start_date: formatDate(normalizedStartDate, 'yyyy-MM-dd'),
         },
       };
-
-      return formData;
     },
   },
 };

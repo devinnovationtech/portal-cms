@@ -333,12 +333,10 @@ export default {
       return !!state.masterDataId;
     },
     masterDataOptions(state) {
-      const options = state.masterDataList.map((item) => ({
+      return state.masterDataList.map((item) => ({
         value: item.id,
         label: item.service_name,
       }));
-
-      return options;
     },
     /**
      * Map state to mock `Publication Get By Slug` API Response
@@ -347,7 +345,7 @@ export default {
      * @returns {Object}
      */
     previewData(state) {
-      const previewData = {
+      return {
         opd_name: state.stepOne.default_information.opd_name,
         logo: state.stepOne.default_information.logo,
         portal_category: state.stepOne.default_information.portal_category,
@@ -386,8 +384,6 @@ export default {
         },
         updated_at: new Date(),
       };
-
-      return previewData;
     },
   },
   mutations: {
@@ -523,7 +519,6 @@ export default {
           upload_status: item.image.file_download_uri ? IMAGE_UPLOAD_STATUS.HASDEFAULT : IMAGE_UPLOAD_STATUS.NONE,
         },
       }));
-      // @todo: API didn't prove website data
       state.stepOne.default_information.website = payload.default_information.website;
       state.stepOne.default_information.slug = payload.default_information.slug;
 
@@ -1421,14 +1416,9 @@ export default {
           key: fileName,
           domain: 'publication',
         });
-
-        return new Promise((resolve) => {
-          resolve(response);
-        });
+        return Promise.resolve(response);
       } catch (error) {
-        return new Promise(() => {
-          throw new Error(error);
-        });
+        return Promise.reject(new Error(error));
       }
     },
     async handleDeleteUpload({ commit, dispatch }, { fileName, index }) {

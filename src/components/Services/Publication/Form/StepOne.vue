@@ -555,8 +555,7 @@ export default {
         'NOT-ACTIVE': 'Tidak Aktif',
       };
 
-      const label = OPERATIONAL_STATUS_MAP[this.$store.state.publicationForm.stepOne.default_information.operational_status] ?? '';
-      return label;
+      return OPERATIONAL_STATUS_MAP[this.$store.state.publicationForm.stepOne.default_information.operational_status] ?? '';
     },
     technical() {
       const TECHNICAL_MAP = {
@@ -564,8 +563,7 @@ export default {
         ONLINE: 'Online',
       };
 
-      const label = TECHNICAL_MAP[this.$store.state.publicationForm.stepOne.default_information.technical] ?? '';
-      return label;
+      return TECHNICAL_MAP[this.$store.state.publicationForm.stepOne.default_information.technical] ?? '';
     },
     isBenefitSectionActive: {
       get() {

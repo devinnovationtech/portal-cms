@@ -406,13 +406,9 @@ export default {
     async fetchData(id) {
       try {
         const response = await bannerRepository.getBannerById(id);
-        return new Promise((resolve) => {
-          resolve(response);
-        });
+        return Promise.resolve(response);
       } catch (error) {
-        return new Promise(() => {
-          throw new Error(error);
-        });
+        return Promise.reject(new Error(error));
       }
     },
     async handleUploadByType(file, type) {
@@ -512,14 +508,9 @@ export default {
           key: fileName,
           domain: 'infographic-banners',
         });
-
-        return new Promise((resolve) => {
-          resolve(response);
-        });
+        return Promise.resolve(response);
       } catch (error) {
-        return new Promise(() => {
-          throw new Error(error);
-        });
+        return Promise.reject(new Error(error));
       }
     },
     async validateSelectedImage(file, type) {
@@ -687,15 +678,13 @@ export default {
       this.imageMobileUploadStatus = IMAGE_UPLOAD_STATUS.NONE;
     },
     generateFormData() {
-      const formData = {
+      return {
         ...this.form,
         image: {
           desktop: this.form.image.desktop.url,
           mobile: this.form.image.mobile.url,
         },
       };
-
-      return formData;
     },
     onToggleClick() {
       if (this.isEditMode) {
