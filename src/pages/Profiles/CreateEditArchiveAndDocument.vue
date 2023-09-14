@@ -348,6 +348,7 @@ import Dropzone from '@/common/components/Dropzone';
 import DropzoneUploadProgress from '@/common/components/DropzoneUploadProgress';
 import PublishIcon from '@/assets/icons/plane.svg?inline';
 import SaveIcon from '@/assets/icons/uil-save.svg?inline';
+import mime from 'mime-types';
 
 import '@/common/helpers/vee-validate.js';
 import { ValidationProvider, ValidationObserver } from 'vee-validate';
@@ -527,9 +528,15 @@ export default {
         this.documentUploadProgress = 0;
         this.documentUploadStatus = DOCUMENT_UPLOAD_STATUS.UPLOADING;
 
+        const uploadParams = {
+          domain: 'archives',
+          type: mime.extension(file.type),
+          is_set_alias_url: true,
+        };
+
         const response = await mediaRepository.uploadMediaWithProgress(formData, (progress) => {
           this.documentUploadProgress = progress;
-        });
+        }, uploadParams);
 
         this.documentUploadStatus = DOCUMENT_UPLOAD_STATUS.SUCCESS;
         if (this.isEditMode) {
@@ -574,11 +581,10 @@ export default {
     },
     async deleteUploadedDocument(fileName) {
       try {
-        const response = await mediaRepository.deleteMedia({
+        return await mediaRepository.deleteMedia({
           key: fileName,
           domain: 'archives',
         });
-        return response;
       } catch (error) {
         return new Error(error);
       }
