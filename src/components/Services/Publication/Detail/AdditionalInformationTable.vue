@@ -5,6 +5,7 @@
         <thead>
           <tr>
             <th
+              id="news-information"
               colspan="2"
               class="!font-roboto !text-sm"
             >
@@ -14,10 +15,16 @@
         </thead>
         <tbody>
           <tr>
-            <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
+            <td
+              headers="news-information"
+              class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm"
+            >
               Keyword Berita
             </td>
-            <td class="w-full font-lato text-blue-gray-500 text-sm">
+            <td
+              headers="news-information"
+              class="w-full font-lato text-blue-gray-500 text-sm"
+            >
               <template v-if="additionalInformation.keywords.length > 0">
                 <div class="flex flex-row flex-wrap gap-4 w-full h-full">
                   <div
@@ -47,6 +54,7 @@
         <thead>
           <tr>
             <th
+              id="faq"
               colspan="2"
               class="font-roboto text-sm"
             >
@@ -60,20 +68,32 @@
               <tr
                 :key="`question-${index}`"
               >
-                <td class="min-w-[280px] font-lato text-green-700 font-bold text-sm">
+                <td
+                  headers="faq"
+                  class="min-w-[280px] font-lato text-green-700 font-bold text-sm"
+                >
                   Pertanyaan ke {{ index + 1 }}
                 </td>
-                <td class="w-full font-lato text-blue-gray-500 text-sm">
+                <td
+                  headers="faq"
+                  class="w-full font-lato text-blue-gray-500 text-sm"
+                >
                   {{ item.question || '-' }}
                 </td>
               </tr>
               <tr
                 :key="`answer-${index}`"
               >
-                <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
+                <td
+                  headers="faq"
+                  class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm"
+                >
                   Jawaban ke {{ index + 1 }}
                 </td>
-                <td class="w-full font-lato text-blue-gray-500 text-sm">
+                <td
+                  headers="faq"
+                  class="w-full font-lato text-blue-gray-500 text-sm"
+                >
                   {{ item.answer || '-' }}
                 </td>
               </tr>
@@ -82,18 +102,30 @@
 
           <template v-else>
             <tr>
-              <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
+              <td
+                headers="faq"
+                class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm"
+              >
                 Pertanyaan
               </td>
-              <td class="w-full font-lato text-blue-gray-500 text-sm">
+              <td
+                headers="faq"
+                class="w-full font-lato text-blue-gray-500 text-sm"
+              >
                 -
               </td>
             </tr>
             <tr>
-              <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
+              <td
+                headers="faq"
+                class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm"
+              >
                 Jawaban
               </td>
-              <td class="w-full font-lato text-blue-gray-500 text-sm">
+              <td
+                headers="faq"
+                class="w-full font-lato text-blue-gray-500 text-sm"
+              >
                 -
               </td>
             </tr>

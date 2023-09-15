@@ -18,6 +18,7 @@
             href="agenda/tambah"
             title="Tambah Agenda"
             class="ml-auto"
+            data-cy="agenda__add-button"
           >
             <template #icon-left>
               <JdsIcon
@@ -72,6 +73,7 @@
         <div class="flex gap-4 justify-end">
           <BaseButton
             class="border-green-700 hover:bg-green-50 text-sm text-green-700"
+            data-cy="agenda__modal-button--cancel"
             @click="closeDeletePrompt"
           >
             Batal
@@ -79,6 +81,7 @@
           <BaseButton
             class="bg-red-500 hover:bg-red-400 text-sm text-white"
             :disabled="deleteLoading"
+            data-cy="agenda__modal-button--delete"
             @click="deleteEvent(eventDetail.id)"
           >
             <p v-if="!deleteLoading">
@@ -157,7 +160,7 @@ export default {
   computed: {
     items() {
       if (Array.isArray(this.events) && !!this.events.length) {
-        const items = this.events.map((event) => ({
+        return this.events.map((event) => ({
           id: event.id,
           title: event.title,
           category: event.category,
@@ -166,8 +169,6 @@ export default {
           status: this.getEventStatus(event.status),
           type: event.type,
         }));
-
-        return items;
       }
 
       return [];
@@ -300,8 +301,7 @@ export default {
      * @returns {Object}
      */
     filterEventsById(id) {
-      const eventDetail = this.events.filter((event) => event.id === id)[0];
-      return eventDetail;
+      return this.events.filter((event) => event.id === id)[0];
     },
 
     /**

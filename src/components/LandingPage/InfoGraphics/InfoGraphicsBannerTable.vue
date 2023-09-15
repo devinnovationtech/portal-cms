@@ -5,10 +5,12 @@
         <tr>
           <th
             v-show="sorting"
-            width="50"
+            id="infographics-sorting"
+            class="w-[50px]"
           />
           <th
             v-for="header in tableHeader"
+            :id="`infographics-${header.key}`"
             :key="header.key"
           >
             {{ header.text }}
@@ -17,7 +19,10 @@
       </thead>
       <tbody v-if="loading">
         <tr>
-          <td colspan="6" class="text-center">
+          <td
+            colspan="6"
+            class="text-center"
+          >
             <JdsSpinner
               size="56px"
               class="py-14"
@@ -48,12 +53,12 @@
           >
             <td
               v-show="sorting"
-              width="50"
-              class="iconHandle cursor-pointer"
+              class="iconHandle cursor-pointer w-[50px]"
+              headers="infographics-sorting"
             >
               <DragIcon />
             </td>
-            <td>
+            <td headers="infographics-title">
               <p
                 class="px-2 line-clamp-2"
                 :title="item.title"
@@ -61,7 +66,7 @@
                 {{ item.title }}
               </p>
             </td>
-            <td>
+            <td headers="infographics-preview">
               <div class="w-[172px] h-[63px] rounded-md overflow-hidden">
                 <img
                   :src="item.image.desktop"
@@ -70,7 +75,7 @@
                 >
               </div>
             </td>
-            <td>
+            <td headers="infographics-sequence">
               <p
                 :title="item.sequence"
                 class="flex justify-center"
@@ -78,7 +83,10 @@
                 {{ item.sequence !== 0 ? item.sequence : '-' }}
               </p>
             </td>
-            <td class="px-2">
+            <td
+              class="px-2"
+              headers="infographics-link"
+            >
               <a
                 v-if="item.link"
                 :href="item.link"
@@ -90,14 +98,14 @@
               </a>
               <span v-else>-</span>
             </td>
-            <td>
+            <td headers="infographics-status">
               <JdsToggle
                 :label="getStatusLabel(item.is_active)"
                 :checked="item.is_active"
                 @change="$emit('change:status', item)"
               />
             </td>
-            <td>
+            <td headers="infographics-action">
               <InfoGraphicsBannerTableAction
                 :item="item"
                 @delete="$emit('delete', $event)"

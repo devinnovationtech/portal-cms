@@ -78,7 +78,10 @@
                 class="rounded-md aspect-w-16 aspect-h-9"
               >
                 <div class="grid place-content-center">
-                  <img :src="imagePreview">
+                  <img
+                    :src="imagePreview"
+                    alt="preview hero banner"
+                  >
                 </div>
               </div>
               <div
@@ -644,14 +647,12 @@ export default {
       return { name, unit: unit.name };
     },
     newsPreview() {
-      const data = {
+      return {
         ...this.form,
         id: this.newsId,
         image: this.imagePreview,
         content: this.isEditMode ? this.form.content : this.insertNewsPrefix(this.form.content),
       };
-
-      return data;
     },
     isSaveButtonDisabled() {
       if (this.isEditMode) {
@@ -1016,8 +1017,7 @@ export default {
       const formData = new FormData();
       formData.append('file', image, image.name);
       const response = await mediaRepository.uploadMedia(formData);
-      const fileUri = response.data?.file_download_uri || null;
-      return fileUri;
+      return response.data?.file_download_uri || null;
     },
     async getLocationOptions() {
       const params = {

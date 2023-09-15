@@ -669,7 +669,7 @@ body {
 .article__body h6,
 .article__body p,
 .article__body strong {
-  font-family: 'Lora';
+  font-family: 'Lora, Arial, Helvetica, sans-serif';
   color: #424242 ;
 }
 
@@ -734,7 +734,7 @@ body {
 }
 
 .article__body blockquote p {
-  font-family: 'Lora';
+  font-family: 'Lora, sans-serif, cursive';
   font-size: 1rem;
   line-height: 1.5rem;
   color: #616161;

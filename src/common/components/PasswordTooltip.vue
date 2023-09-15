@@ -10,8 +10,10 @@
         :class="[mediumBarClassName]"
       />
       <div
-        class="h-1 rounded-lg w-14"
-        :class="[strongBarClassName]"
+        :class="{
+          'h-1 rounded-lg w-14 bg-gray-600': true,
+          'bg-green-600': passwordStrength.type === 'strong'
+        }"
       />
     </div>
     <p>Kata sandi Anda <span :class="passwordStrengthLabelClassName">{{ passwordStrength.label }}</span></p>
@@ -53,14 +55,6 @@ export default {
       switch (this.passwordStrength.type) {
         case 'medium':
           return 'bg-yellow-600';
-        case 'strong':
-          return 'bg-green-600';
-        default:
-          return 'bg-gray-600';
-      }
-    },
-    strongBarClassName() {
-      switch (this.passwordStrength.type) {
         case 'strong':
           return 'bg-green-600';
         default:

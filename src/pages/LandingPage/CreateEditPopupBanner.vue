@@ -373,6 +373,7 @@ import BaseModal from '@/common/components/BaseModal';
 import ProgressModal from '@/common/components/ProgressModal';
 
 import { formatDate, addDay } from '@/common/helpers/date.js';
+import { compressImage } from '@/common/helpers/image-compressor';
 import '@/common/helpers/vee-validate.js';
 import { ValidationProvider, ValidationObserver } from 'vee-validate';
 import { POPUP_BANNER_SCHEDULE_OPTIONS } from '@/common/constants';
@@ -553,13 +554,9 @@ export default {
     async fetchData(id) {
       try {
         const response = await bannerRepository.getBannerById(id);
-        return new Promise((resolve) => {
-          resolve(response);
-        });
+        return Promise.resolve(response);
       } catch (error) {
-        return new Promise(() => {
-          throw new Error(error);
-        });
+        return Promise.reject(new Error(error));
       }
     },
     async handleUploadByType(file, type) {
@@ -576,17 +573,28 @@ export default {
       }
     },
     async uploadDesktopImage(file) {
-      const formData = new FormData();
-      formData.append('file', file, file.name);
+      let compressedImage;
+      let formData;
 
       try {
-        this.imageDesktopFile = file;
+        compressedImage = await compressImage(file);
+        formData = new FormData();
+        formData.append('file', compressedImage, compressedImage.name);
+      } catch (error) {
+        this.$toast({
+          type: 'error',
+          message: 'Gagal melakukan kompresi gambar!',
+        });
+      }
+
+      try {
+        this.imageDesktopFile = compressedImage;
         this.imageDesktopUploadProgress = 0;
         this.imageDesktopUploadStatus = IMAGE_UPLOAD_STATUS.UPLOADING;
 
         const response = await mediaRepository.uploadMediaWithProgress(formData, (progress) => {
           this.imageDesktopUploadProgress = progress;
-        });
+        }, { domain: 'pop-up-banners' });
 
         this.imageDesktopUploadStatus = IMAGE_UPLOAD_STATUS.SUCCESS;
 
@@ -604,17 +612,28 @@ export default {
       }
     },
     async uploadMobileImage(file) {
-      const formData = new FormData();
-      formData.append('file', file, file.name);
+      let compressedImage;
+      let formData;
 
       try {
-        this.imageMobileFile = file;
+        compressedImage = await compressImage(file);
+        formData = new FormData();
+        formData.append('file', compressedImage, compressedImage.name);
+      } catch (error) {
+        this.$toast({
+          type: 'error',
+          message: 'Gagal melakukan kompresi gambar!',
+        });
+      }
+
+      try {
+        this.imageMobileFile = compressedImage;
         this.imageMobileUploadProgress = 0;
         this.imageMobileUploadStatus = IMAGE_UPLOAD_STATUS.UPLOADING;
 
         const response = await mediaRepository.uploadMediaWithProgress(formData, (progress) => {
           this.imageMobileUploadProgress = progress;
-        });
+        }, { domain: 'pop-up-banners' });
 
         this.imageMobileUploadStatus = IMAGE_UPLOAD_STATUS.SUCCESS;
 
@@ -637,14 +656,9 @@ export default {
           key: fileName,
           domain: 'pop-up-banners',
         });
-
-        return new Promise((resolve) => {
-          resolve(response);
-        });
+        return Promise.resolve(response);
       } catch (error) {
-        return new Promise(() => {
-          throw new Error(error);
-        });
+        return Promise.reject(new Error(error));
       }
     },
     async validateSelectedImage(file, type) {
@@ -732,7 +746,6 @@ export default {
       }
     },
     async updateForm() {
-      // @todo: add update form functionality
       try {
         this.submitStatus = FORM_SUBMIT_STATUS.LOADING;
         this.submitProgress = 25;
@@ -822,7 +835,7 @@ export default {
     generateFormData() {
       const normalizedStartDate = this.normalizeDate(this.form.scheduler.startDate);
 
-      const formData = {
+      return {
         ...this.form,
         image: {
           desktop: this.form.image.desktop.url,
@@ -838,8 +851,6 @@ export default {
           start_date: formatDate(normalizedStartDate, 'yyyy-MM-dd'),
         },
       };
-
-      return formData;
     },
   },
 };

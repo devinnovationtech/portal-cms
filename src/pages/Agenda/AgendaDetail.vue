@@ -5,15 +5,16 @@
         <!-- Delete Button -->
         <BaseButton
           class="border-red-500 hover:bg-red-50 font-lato text-sm text-red-500"
+          data-cy="agenda-detail__button--delete"
           @click="toggleDeletePrompt"
         >
           Hapus
         </BaseButton>
         <!-- Edit Button -->
-        <!-- TODO: Add edit action on button click -->
         <LinkButton
           :href="`/agenda/detail/${$route.params.id}/ubah`"
           variant="secondary"
+          data-cy="agenda-detail__button--update"
           class="hover:bg-green-50"
         >
           <template #icon-left>
@@ -30,6 +31,7 @@
         <!-- Preview Button -->
         <BaseButton
           class="border-green-700 hover:bg-green-50 font-lato text-sm text-green-700"
+          data-cy="agenda-detail__button--preview"
           @click="togglePreviewModal"
         >
           <template #icon-left>
@@ -46,16 +48,23 @@
       </div>
     </HeaderMenu>
     <section class="px-6 py-4 rounded-lg bg-white mb-4">
-      <h1 class="font-roboto font-medium text-[21px] leading-[34px] text-green-700 mb-3">
+      <h1
+        data-cy="agenda-detail__title"
+        class="font-roboto font-medium text-[21px] leading-[34px] text-green-700 mb-3"
+      >
         Detail Agenda Jawa Barat
       </h1>
 
       <div class="flex flex-col gap-4">
-        <div class="rounded-lg overflow-hidden border border-gray-200">
+        <div
+          data-cy="agenda-detail__section-event"
+          class="rounded-lg overflow-hidden border border-gray-200"
+        >
           <JdsSimpleTable class="!table-auto">
             <thead>
               <tr>
                 <th
+                  id="about-agenda"
                   colspan="2"
                   class="!font-roboto !text-sm"
                 >
@@ -65,10 +74,16 @@
             </thead>
             <tbody>
               <tr>
-                <td class="min-w-[228px] font-lato text-blue-gray-500 font-bold text-sm">
+                <td
+                  headers="about-agenda"
+                  class="min-w-[228px] font-lato text-blue-gray-500 font-bold text-sm"
+                >
                   Judul Agenda/Event
                 </td>
-                <td class="w-full font-lato text-blue-gray-500 text-sm">
+                <td
+                  headers="about-agenda"
+                  class="w-full font-lato text-blue-gray-500 text-sm"
+                >
                   <div
                     v-if="loading"
                     class="h-4 w-1/4 rounded-lg animate-pulse bg-gray-200"
@@ -79,10 +94,16 @@
                 </td>
               </tr>
               <tr>
-                <td class="min-w-[228px] font-lato text-blue-gray-500 font-bold text-sm">
+                <td
+                  headers="about-agenda"
+                  class="min-w-[228px] font-lato text-blue-gray-500 font-bold text-sm"
+                >
                   Tipe Kategori
                 </td>
-                <td class="w-full font-lato text-blue-gray-500 text-sm">
+                <td
+                  headers="about-agenda"
+                  class="w-full font-lato text-blue-gray-500 text-sm"
+                >
                   <div
                     v-if="loading"
                     class="h-4 w-1/5 rounded-lg animate-pulse bg-gray-200"
@@ -93,10 +114,16 @@
                 </td>
               </tr>
               <tr>
-                <td class="font-lato text-blue-gray-500 font-bold text-sm">
+                <td
+                  headers="about-agenda"
+                  class="font-lato text-blue-gray-500 font-bold text-sm"
+                >
                   Kategori
                 </td>
-                <td class="font-lato text-blue-gray-500 text-sm">
+                <td
+                  headers="about-agenda"
+                  class="font-lato text-blue-gray-500 text-sm"
+                >
                   <div
                     v-if="loading"
                     class="h-4 w-1/4 rounded-lg animate-pulse bg-gray-200"
@@ -110,11 +137,15 @@
           </JdsSimpleTable>
         </div>
 
-        <div class="rounded-lg overflow-hidden border border-gray-200">
+        <div
+          data-cy="agenda-detail__section-date"
+          class="rounded-lg overflow-hidden border border-gray-200"
+        >
           <JdsSimpleTable class="!table-auto">
             <thead>
               <tr>
                 <th
+                  id="date"
                   colspan="2"
                   class="!font-roboto !text-sm"
                 >
@@ -124,10 +155,16 @@
             </thead>
             <tbody>
               <tr>
-                <td class="min-w-[228px] font-lato text-blue-gray-500 font-bold text-sm">
+                <td
+                  headers="date"
+                  class="min-w-[228px] font-lato text-blue-gray-500 font-bold text-sm"
+                >
                   Tanggal
                 </td>
-                <td class="w-full font-lato text-blue-gray-500 text-sm">
+                <td
+                  headers="date"
+                  class="w-full font-lato text-blue-gray-500 text-sm"
+                >
                   <div
                     v-if="loading"
                     class="h-4 w-1/4 rounded-lg animate-pulse bg-gray-200"
@@ -138,10 +175,16 @@
                 </td>
               </tr>
               <tr>
-                <td class="font-lato text-blue-gray-500 font-bold text-sm">
+                <td
+                  headers="date"
+                  class="font-lato text-blue-gray-500 font-bold text-sm"
+                >
                   Waktu
                 </td>
-                <td class="font-lato text-blue-gray-500 text-sm">
+                <td
+                  headers="date"
+                  class="font-lato text-blue-gray-500 text-sm"
+                >
                   <div
                     v-if="loading"
                     class="h-4 w-1/5 rounded-lg animate-pulse bg-gray-200"
@@ -155,11 +198,15 @@
           </JdsSimpleTable>
         </div>
 
-        <div class="rounded-lg overflow-hidden border border-gray-200">
+        <div
+          data-cy="agenda-detail__section-place"
+          class="rounded-lg overflow-hidden border border-gray-200"
+        >
           <JdsSimpleTable class="!table-auto">
             <thead>
               <tr>
                 <th
+                  id="location-agenda"
                   colspan="2"
                   class="!font-roboto !text-sm"
                 >
@@ -169,10 +216,16 @@
             </thead>
             <tbody>
               <tr>
-                <td class="min-w-[228px] font-lato text-blue-gray-500 font-bold text-sm">
+                <td
+                  headers="location-agenda"
+                  class="min-w-[228px] font-lato text-blue-gray-500 font-bold text-sm"
+                >
                   Tipe Event
                 </td>
-                <td class="w-full font-lato text-blue-gray-500 text-sm">
+                <td
+                  headers="location-agenda"
+                  class="w-full font-lato text-blue-gray-500 text-sm"
+                >
                   <div
                     v-if="loading"
                     class="h-4 w-1/5 rounded-lg animate-pulse bg-gray-200"
@@ -186,10 +239,16 @@
                 </td>
               </tr>
               <tr v-if="event.type === 'online'">
-                <td class="font-lato text-blue-gray-500 font-bold text-sm">
+                <td
+                  headers="location-agenda"
+                  class="font-lato text-blue-gray-500 font-bold text-sm"
+                >
                   Link Meeting
                 </td>
-                <td class="font-lato text-blue-gray-500 text-sm">
+                <td
+                  headers="location-agenda"
+                  class="font-lato text-blue-gray-500 text-sm"
+                >
                   <div
                     v-if="loading"
                     class="h-4 w-1/3 rounded-lg animate-pulse bg-gray-200"
@@ -207,10 +266,16 @@
                 </td>
               </tr>
               <tr v-else>
-                <td class="font-lato text-blue-gray-500 font-bold text-sm">
+                <td
+                  headers="location-agenda"
+                  class="font-lato text-blue-gray-500 font-bold text-sm"
+                >
                   Alamat
                 </td>
-                <td class="font-lato text-blue-gray-500 text-sm">
+                <td
+                  headers="location-agenda"
+                  class="font-lato text-blue-gray-500 text-sm"
+                >
                   <div
                     v-if="loading"
                     class="h-4 w-1/3 rounded-lg animate-pulse bg-gray-200"
@@ -237,6 +302,7 @@
     <!-- Delete Action Prompt -->
     <BaseModal
       :open="isDeletePromptOpen"
+      data-cy="agenda-detail__modal"
       @close="toggleDeletePrompt"
     >
       <div class="w-full h-full">
@@ -246,7 +312,10 @@
         <p class="font-lato text-sm text-gray-800 mb-2">
           Apakah Anda yakin akan menghapus agenda ini?
         </p>
-        <h2 class="font-lato text-md font-bold text-gray-800">
+        <h2
+          data-cy="agenda-detail__modal-title"
+          class="font-lato text-md font-bold text-gray-800"
+        >
           {{ event.title }}
         </h2>
       </div>
@@ -254,6 +323,7 @@
         <div class="flex gap-4 justify-end">
           <BaseButton
             class="border-green-700 hover:bg-green-50 text-sm text-green-700"
+            data-cy="agenda-detail__modal-button--cancel"
             @click="toggleDeletePrompt"
           >
             Batal
@@ -261,6 +331,7 @@
           <BaseButton
             class="bg-red-500 hover:bg-red-400 text-sm text-white"
             :disabled="deleteLoading"
+            data-cy="agenda-detail__modal-button--delete"
             @click="deleteEvent(event.id)"
           >
             <p v-if="!deleteLoading">

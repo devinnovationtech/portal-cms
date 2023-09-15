@@ -4,6 +4,7 @@
       <thead>
         <tr>
           <th
+            id="generalService"
             colspan="2"
             class="!font-roboto !text-sm"
           >
@@ -13,10 +14,16 @@
       </thead>
       <tbody>
         <tr>
-          <td class="min-w-[228px] font-lato text-blue-gray-500 font-bold text-sm">
+          <td
+            headers="generalService"
+            class="min-w-[228px] font-lato text-blue-gray-500 font-bold text-sm"
+          >
             Status Ketersediaan Aplikasi
           </td>
-          <td class="w-full font-lato">
+          <td
+            headers="generalService"
+            class="w-full font-lato"
+          >
             <p
               :class="{
                 'w-fit font-bold text-[12px] leading-[23px]': true,
@@ -29,10 +36,16 @@
           </td>
         </tr>
         <tr>
-          <td class="min-w-[228px] font-lato text-blue-gray-500 font-bold text-sm">
+          <td
+            headers="generalService"
+            class="min-w-[228px] font-lato text-blue-gray-500 font-bold text-sm"
+          >
             Nama Aplikasi
           </td>
-          <td class="w-full font-lato text-blue-gray-500 text-sm">
+          <td
+            headers="generalService"
+            class="w-full font-lato text-blue-gray-500 text-sm"
+          >
             {{ application.name || '-' }}
           </td>
         </tr>
@@ -41,20 +54,32 @@
             <tr
               :key="`nama-${index}`"
             >
-              <td class="min-w-[228px] font-lato text-green-700 font-bold text-sm">
+              <td
+                headers="generalService"
+                class="min-w-[228px] font-lato text-green-700 font-bold text-sm"
+              >
                 Fitur Aplikasi ke {{ index + 1 }}
               </td>
-              <td class="w-full font-lato text-blue-gray-500 text-sm">
+              <td
+                headers="generalService"
+                class="w-full font-lato text-blue-gray-500 text-sm"
+              >
                 {{ feature.name || '-' }}
               </td>
             </tr>
             <tr
               :key="`deskripsi-${index}`"
             >
-              <td class="min-w-[228px] font-lato text-blue-gray-500 font-bold text-sm">
+              <td
+                headers="generalService"
+                class="min-w-[228px] font-lato text-blue-gray-500 font-bold text-sm"
+              >
                 Deskripsi Fitur Aplikasi
               </td>
-              <td class="w-full font-lato text-blue-gray-500 text-sm">
+              <td
+                headers="generalService"
+                class="w-full font-lato text-blue-gray-500 text-sm"
+              >
                 {{ feature.description || '-' }}
               </td>
             </tr>
@@ -62,18 +87,30 @@
         </template>
         <template v-else>
           <tr>
-            <td class="min-w-[228px] font-lato text-green-700 font-bold text-sm">
+            <td
+              headers="generalService"
+              class="min-w-[228px] font-lato text-green-700 font-bold text-sm"
+            >
               Fitur Aplikasi ke 1
             </td>
-            <td class="w-full font-lato text-blue-gray-500 text-sm">
+            <td
+              headers="generalService"
+              class="w-full font-lato text-blue-gray-500 text-sm"
+            >
               -
             </td>
           </tr>
           <tr>
-            <td class="min-w-[228px] font-lato text-blue-gray-500 font-bold text-sm">
+            <td
+              headers="generalService"
+              class="min-w-[228px] font-lato text-blue-gray-500 font-bold text-sm"
+            >
               Deskripsi Fitur Aplikasi
             </td>
-            <td class="w-full font-lato text-blue-gray-500 text-sm">
+            <td
+              headers="generalService"
+              class="w-full font-lato text-blue-gray-500 text-sm"
+            >
               -
             </td>
           </tr>

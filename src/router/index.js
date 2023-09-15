@@ -17,7 +17,7 @@ router.beforeEach((to, from, next) => {
    * this `isMaintenance` checking should be refactored and changed
    * dynamically using Feature Flag/Toggle
    */
-  const isMaintenance = true;
+  const isMaintenance = parseInt(process.env.VUE_APP_IS_MAINTENANCE, 10) || false;
 
   const isAuthenticated = store.getters['auth/isAuthenticated'];
   const privateRoute = to.matched.some((record) => !record.meta.public);

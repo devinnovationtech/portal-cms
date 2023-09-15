@@ -5,6 +5,7 @@
         <thead>
           <tr>
             <th
+              id="detail-information"
               colspan="2"
               class="!font-roboto !text-sm"
             >
@@ -14,10 +15,16 @@
         </thead>
         <tbody>
           <tr>
-            <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
+            <td
+              headers="detail-information"
+              class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm"
+            >
               Cover Gambar
             </td>
-            <td class="w-full font-lato text-blue-gray-500 text-sm">
+            <td
+              headers="detail-information"
+              class="w-full font-lato text-blue-gray-500 text-sm"
+            >
               <template v-if="(!!serviceDescription.cover.image.file_download_uri || !!serviceDescription.cover.video)">
                 <img
                   v-if="!!serviceDescription.cover.image.file_download_uri"
@@ -64,18 +71,30 @@
           </tr>
           <template v-if="istermAndConditionActive">
             <tr>
-              <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
+              <td
+                headers="detail-information"
+                class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm"
+              >
                 Judul Syarat Dan Ketentuan Layanan
               </td>
-              <td class="w-full font-lato text-blue-gray-500 text-sm">
+              <td
+                headers="detail-information"
+                class="w-full font-lato text-blue-gray-500 text-sm"
+              >
                 {{ serviceDescription.terms_and_conditions.title || '-' }}
               </td>
             </tr>
             <tr>
-              <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-[12px] leading-[23px]">
+              <td
+                headers="detail-information"
+                class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-[12px] leading-[23px]"
+              >
                 Syarat dan Ketentuan Layanan
               </td>
-              <td class="w-full font-lato text-blue-gray-500 text-sm">
+              <td
+                headers="detail-information"
+                class="w-full font-lato text-blue-gray-500 text-sm"
+              >
                 <template v-if="!!serviceDescription.terms_and_conditions.items">
                   <div
                     v-for="(item, index) in serviceDescription.terms_and_conditions.items"
@@ -99,10 +118,16 @@
               </td>
             </tr>
             <tr>
-              <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
+              <td
+                headers="detail-information"
+                class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm"
+              >
                 Cover Gambar Syarat dan Ketentuan Layanan
               </td>
-              <td class="w-full font-lato text-blue-gray-500 text-sm">
+              <td
+                headers="detail-information"
+                class="w-full font-lato text-blue-gray-500 text-sm"
+              >
                 <img
                   v-if="!!serviceDescription.terms_and_conditions.cover.file_download_uri"
                   :src="serviceDescription.terms_and_conditions.cover.file_download_uri"
@@ -114,20 +139,32 @@
               </td>
             </tr>
             <tr>
-              <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
+              <td
+                headers="detail-information"
+                class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm"
+              >
                 Judul Alur atau Prosedur Penggunaan Layanan
               </td>
-              <td class="w-full font-lato text-blue-gray-500 text-sm">
+              <td
+                headers="detail-information"
+                class="w-full font-lato text-blue-gray-500 text-sm"
+              >
                 {{ serviceDescription.service_procedures.title || '-' }}
               </td>
             </tr>
           </template>
           <template v-if="isProcedureActive">
             <tr>
-              <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
+              <td
+                headers="detail-information"
+                class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm"
+              >
                 Alur atau Prosedur Penggunaan Layanan
               </td>
-              <td class="w-full font-lato text-blue-gray-500 text-sm">
+              <td
+                headers="detail-information"
+                class="w-full font-lato text-blue-gray-500 text-sm"
+              >
                 <template v-if="!!serviceDescription.service_procedures.items">
                   <div
                     v-for="(item, index) in serviceDescription.service_procedures.items"
@@ -151,10 +188,16 @@
               </td>
             </tr>
             <tr>
-              <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
+              <td
+                headers="detail-information"
+                class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm"
+              >
                 Cover Gambar Alur atau Prosedur Penggunaan Layanan
               </td>
-              <td class="font-lato text-blue-gray-500 text-sm">
+              <td
+                headers="detail-information"
+                class="font-lato text-blue-gray-500 text-sm"
+              >
                 <img
                   v-if="!!serviceDescription.service_procedures.cover.file_download_uri"
                   :src="serviceDescription.service_procedures.cover.file_download_uri"
@@ -167,10 +210,16 @@
             </tr>
           </template>
           <tr>
-            <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
+            <td
+              headers="detail-information"
+              class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm"
+            >
               Waktu Operasional
             </td>
-            <td class="w-full font-lato text-blue-gray-500 text-sm">
+            <td
+              headers="detail-information"
+              class="w-full font-lato text-blue-gray-500 text-sm"
+            >
               <template v-if="serviceDescription.operational_times.length > 0">
                 <div
                   v-for="(item, index) in serviceDescription.operational_times"
@@ -184,27 +233,45 @@
             </td>
           </tr>
           <tr>
-            <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
+            <td
+              headers="detail-information"
+              class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm"
+            >
               Kontak Hotline (NomorHP/Telp)
             </td>
-            <td class="font-lato text-blue-gray-500 text-sm">
+            <td
+              headers="detail-information"
+              class="font-lato text-blue-gray-500 text-sm"
+            >
               {{ serviceDescription.hotline_number || '-' }}
             </td>
           </tr>
           <tr>
-            <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
+            <td
+              headers="detail-information"
+              class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm"
+            >
               Kontak Hotline (Alamat E-mail)
             </td>
-            <td class="font-lato text-blue-gray-500 text-sm">
+            <td
+              headers="detail-information"
+              class="font-lato text-blue-gray-500 text-sm"
+            >
               {{ serviceDescription.hotline_mail || '-' }}
             </td>
           </tr>
           <template v-if="isInfographicActive">
             <tr>
-              <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
+              <td
+                headers="detail-information"
+                class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm"
+              >
                 Infografis Terkait Layanan
               </td>
-              <td class="w-full font-lato text-blue-gray-500 text-sm flex flex-row gap-2">
+              <td
+                headers="detail-information"
+                class="w-full font-lato text-blue-gray-500 text-sm flex flex-row gap-2"
+              >
                 <template v-if="serviceDescription.infographics.images.length > 0">
                   <div
                     v-for="(item, index) in serviceDescription.infographics.images"
@@ -236,6 +303,7 @@
         <thead>
           <tr>
             <th
+              id="location"
               colspan="2"
               class="!font-roboto !text-sm"
             >
@@ -249,50 +317,86 @@
             :key="`location-${index}`"
           >
             <tr>
-              <td class="min-w-[280px] font-lato text-green-700 font-bold text-sm">
+              <td
+                headers="location"
+                class="min-w-[280px] font-lato text-green-700 font-bold text-sm"
+              >
                 Lokasi No
               </td>
-              <td class="w-full font-lato text-blue-gray-500 text-sm">
+              <td
+                headers="location"
+                class="w-full font-lato text-blue-gray-500 text-sm"
+              >
                 {{ index + 1 }}
               </td>
             </tr>
             <tr>
-              <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
+              <td
+                headers="location"
+                class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm"
+              >
                 Jenis Lokasi
               </td>
-              <td class="w-full font-lato text-blue-gray-500 text-sm">
+              <td
+                headers="location"
+                class="w-full font-lato text-blue-gray-500 text-sm"
+              >
                 {{ item.type || '-' }}
               </td>
             </tr>
             <tr>
-              <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
+              <td
+                headers="location"
+                class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm"
+              >
                 Penanggung Jawab Lokasi
               </td>
-              <td class="w-full font-lato text-blue-gray-500 text-sm">
+              <td
+                headers="location"
+                class="w-full font-lato text-blue-gray-500 text-sm"
+              >
                 {{ item.organization || '-' }}
               </td>
             </tr>
             <tr>
-              <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
+              <td
+                headers="location"
+                class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm"
+              >
                 Nama Lokasi
               </td>
-              <td class="w-full font-lato text-blue-gray-500 text-sm">
+              <td
+                headers="location"
+                class="w-full font-lato text-blue-gray-500 text-sm"
+              >
                 {{ item.name || '-' }}
               </td>
             </tr>
             <tr>
-              <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
+              <td
+                headers="location"
+                class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm"
+              >
                 Alamat Lokasi
               </td>
-              <td class="w-full font-lato text-blue-gray-500 text-sm">
+              <td
+                headers="location"
+                class="w-full font-lato text-blue-gray-500 text-sm"
+              >
                 {{ item.address || '-' }}
               </td>
             </tr>
             <tr>
-              <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
+              <td
+                headers="location"
+                class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm"
+              >
                 Kontak Lokasi (Nomor HP/Telp)
               </td>
-              <td class="w-full font-lato text-blue-gray-500 text-sm">
+              <td
+                headers="location"
+                class="w-full font-lato text-blue-gray-500 text-sm"
+              >
                 {{ item.phone_number || '-' }}
               </td>
             </tr>
@@ -306,6 +410,7 @@
         <thead>
           <tr>
             <th
+              id="application"
               colspan="2"
               class="font-roboto text-sm"
             >
@@ -315,10 +420,16 @@
         </thead>
         <tbody>
           <tr>
-            <td class="min-w-[228px] font-lato text-blue-gray-500 font-bold text-sm">
+            <td
+              headers="application"
+              class="min-w-[228px] font-lato text-blue-gray-500 font-bold text-sm"
+            >
               Status Ketersediaan Aplikasi
             </td>
-            <td class="w-full font-lato">
+            <td
+              headers="application"
+              class="w-full font-lato"
+            >
               <p
                 :class="{
                   'w-fit font-bold text-[12px] leading-[23px]': true,
@@ -331,18 +442,30 @@
             </td>
           </tr>
           <tr>
-            <td class="min-w-[228px] font-lato text-blue-gray-500 font-bold text-sm">
+            <td
+              headers="application"
+              class="min-w-[228px] font-lato text-blue-gray-500 font-bold text-sm"
+            >
               Nama Aplikasi
             </td>
-            <td class="w-full font-lato text-blue-gray-500 text-sm">
+            <td
+              headers="application"
+              class="w-full font-lato text-blue-gray-500 text-sm"
+            >
               {{ serviceDescription.application.name || '-' }}
             </td>
           </tr>
           <tr>
-            <td class="min-w-[228px] font-lato text-blue-gray-500 font-bold text-sm">
+            <td
+              headers="application"
+              class="min-w-[228px] font-lato text-blue-gray-500 font-bold text-sm"
+            >
               Judul Fitur Aplikasi
             </td>
-            <td class="w-full font-lato">
+            <td
+              headers="application"
+              class="w-full font-lato"
+            >
               {{ serviceDescription.application?.title || '-' }}
             </td>
           </tr>
@@ -351,20 +474,32 @@
               <tr
                 :key="`nama-${index}`"
               >
-                <td class="min-w-[228px] font-lato text-green-700 font-bold text-sm">
+                <td
+                  headers="application"
+                  class="min-w-[228px] font-lato text-green-700 font-bold text-sm"
+                >
                   Fitur Aplikasi ke {{ index + 1 }}
                 </td>
-                <td class="w-full font-lato text-blue-gray-500 text-sm">
+                <td
+                  headers="application"
+                  class="w-full font-lato text-blue-gray-500 text-sm"
+                >
                   {{ feature.name || '-' }}
                 </td>
               </tr>
               <tr
                 :key="`deskripsi-${index}`"
               >
-                <td class="min-w-[228px] font-lato text-blue-gray-500 font-bold text-sm">
+                <td
+                  headers="application"
+                  class="min-w-[228px] font-lato text-blue-gray-500 font-bold text-sm"
+                >
                   Deskripsi Fitur Aplikasi
                 </td>
-                <td class="w-full font-lato text-blue-gray-500 text-sm">
+                <td
+                  headers="application"
+                  class="w-full font-lato text-blue-gray-500 text-sm"
+                >
                   {{ feature.description || '-' }}
                 </td>
               </tr>
@@ -372,27 +507,45 @@
           </template>
           <template v-else>
             <tr>
-              <td class="min-w-[228px] font-lato text-green-700 font-bold text-sm">
+              <td
+                headers="application"
+                class="min-w-[228px] font-lato text-green-700 font-bold text-sm"
+              >
                 Fitur Aplikasi ke 1
               </td>
-              <td class="w-full font-lato text-blue-gray-500 text-sm">
+              <td
+                headers="application"
+                class="w-full font-lato text-blue-gray-500 text-sm"
+              >
                 -
               </td>
             </tr>
             <tr>
-              <td class="min-w-[228px] font-lato text-blue-gray-500 font-bold text-sm">
+              <td
+                headers="application"
+                class="min-w-[228px] font-lato text-blue-gray-500 font-bold text-sm"
+              >
                 Deskripsi Fitur Aplikasi
               </td>
-              <td class="w-full font-lato text-blue-gray-500 text-sm">
+              <td
+                headers="application"
+                class="w-full font-lato text-blue-gray-500 text-sm"
+              >
                 -
               </td>
             </tr>
           </template>
           <tr>
-            <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
+            <td
+              headers="application"
+              class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm"
+            >
               Tautan Layanan
             </td>
-            <td class="w-full flex flex-wrap font-lato text-blue-gray-500 font-bold text-sm">
+            <td
+              headers="application"
+              class="w-full flex flex-wrap font-lato text-blue-gray-500 font-bold text-sm"
+            >
               <template v-if="serviceDescription.links.length">
                 <div
                   v-for="(link, index) in serviceDescription.links"
@@ -401,6 +554,7 @@
                 >
                   <img
                     :src="getServiceLinkIcon(link.type)"
+                    alt="icon tautan layanan"
                     width="36"
                     height="23"
                     class="w-full h-full object-contain object-center mr-2"
@@ -433,6 +587,7 @@
         <thead>
           <tr>
             <th
+              id="social-media"
               colspan="2"
               class="!font-roboto !text-sm"
             >
@@ -446,18 +601,30 @@
             :key="`social-media-${index}`"
           >
             <tr>
-              <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm">
+              <td
+                headers="social-media"
+                class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm"
+              >
                 Nama Sosial Media
               </td>
-              <td class="w-full font-lato text-blue-gray-500 text-sm">
+              <td
+                headers="social-media"
+                class="w-full font-lato text-blue-gray-500 text-sm"
+              >
                 {{ socialMedia.name || '-' }}
               </td>
             </tr>
             <tr>
-              <td class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm capitalize">
+              <td
+                headers="social-media"
+                class="min-w-[280px] font-lato text-blue-gray-500 font-bold text-sm capitalize"
+              >
                 {{ socialMedia.type.toLowerCase() || '-' }}
               </td>
-              <td class="w-full font-lato font-bold text-blue-gray-500 text-sm">
+              <td
+                headers="social-media"
+                class="w-full font-lato font-bold text-blue-gray-500 text-sm"
+              >
                 <template v-if="!!socialMedia.link">
                   <a
                     :href="socialMedia.link"

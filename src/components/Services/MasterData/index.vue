@@ -304,7 +304,7 @@ export default {
     },
     items() {
       if (Array.isArray(this.services)) {
-        const items = this.services.map((item) => ({
+        return this.services.map((item) => ({
           id: item.id,
           opd_name: item.opd_name,
           service_name: item.service_name,
@@ -313,7 +313,6 @@ export default {
           status: item.status,
           updated_at: item.updated_at,
         }));
-        return items;
       }
       return [];
     },

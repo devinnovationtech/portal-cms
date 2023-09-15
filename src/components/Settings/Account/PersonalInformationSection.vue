@@ -174,7 +174,7 @@ export default {
         action: '',
         title: '',
         description: '',
-        buttonClick: () => {},
+        buttonClick: () => null,
       },
       isPromptOpen: false,
     };
@@ -220,7 +220,7 @@ export default {
         action: '',
         title: '',
         description: '',
-        buttonClick: () => {},
+        buttonClick: () => null,
       };
     },
     clearUpdatedUser() {

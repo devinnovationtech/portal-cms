@@ -8,16 +8,19 @@
       <h1
         ref="agenda-preview-title"
         class="font-roboto text-xl leading-8 font-medium text-green-700 mb-4"
+        data-cy="agenda-preview__title"
       >
         {{ event.title || '-' }}
       </h1>
       <section
         ref="agenda-preview-body"
         class="w-full grid grid-cols-2"
+        data-cy="agenda-preview__body"
       >
         <div
           ref="agenda-preview-category"
           class="flex gap-2 mb-6"
+          data-cy="agenda-preview__category-container"
         >
           <CategoryIcon class="w-4 h-4 fill-green-700" />
           <div class="flex flex-col gap-1">
@@ -27,6 +30,7 @@
             <div
               class="w-fit py-1 px-4 bg-green-50 rounded-lg text-sm text-green-700 line-clamp-1"
               :title="event.category"
+              data-cy="agenda-preview__category"
             >
               {{ event.category || '-' }}
             </div>
@@ -36,6 +40,7 @@
         <div
           ref="agenda-preview-event-type"
           class="mb-6"
+          data-cy="agenda-preview__type-container"
         >
           <div class="flex flex-col gap-1">
             <h2 class="text-xs text-blue-gray-200">
@@ -48,6 +53,7 @@
                 'text-pink-700 bg-pink-50': event.type === 'offline',
               }"
               :title="event.type"
+              data-cy="agenda-preview__type"
             >
               {{ event.type || '-' }}
             </div>
@@ -57,6 +63,7 @@
         <div
           ref="agenda-preview-date"
           class="flex gap-2 mb-6"
+          data-cy="agenda-preview__date-container"
         >
           <CalendarIcon class="w-4 h-4 fill-green-700" />
           <div class="flex flex-col gap-1">
@@ -65,6 +72,7 @@
             </h2>
             <p
               class="text-sm text-gray-800 line-clamp-1 capitalize"
+              data-cy="agenda-preview__date"
             >
               {{ date }}
             </p>
@@ -74,6 +82,7 @@
         <div
           ref="agenda-preview-time"
           class="mb-6"
+          data-cy="agenda-preview__time-container"
         >
           <div class="flex flex-col gap-1">
             <h2 class="text-xs text-blue-gray-200">
@@ -81,6 +90,7 @@
             </h2>
             <p
               class="text-sm text-gray-800 line-clamp-1"
+              data-cy="agenda-preview__time"
             >
               {{ time }}
             </p>
@@ -91,6 +101,7 @@
           v-if="event.type === 'online'"
           ref="agenda-preview-link"
           class="flex gap-2 col-span-2 mb-6"
+          data-cy="agenda-preview__type-online-container"
         >
           <LinkIcon class="w-4 h-4 fill-green-700" />
           <div class="flex flex-col gap-1">
@@ -102,6 +113,7 @@
               target="_blank"
               rel="noopener noreferrer"
               class="text-blue-500 hover:text-blue-400 underline"
+              data-cy="agenda-preview__link"
             >
               {{ event.url || '-' }}
             </a>
@@ -112,6 +124,7 @@
           v-else
           ref="agenda-preview-address"
           class="flex gap-2 col-span-2 mb-6"
+          data-cy="agenda-preview__type-offline-container"
         >
           <LocationIcon class="w-4 h-4 fill-green-700" />
           <div class="flex flex-col gap-1">
@@ -120,6 +133,7 @@
             </h2>
             <p
               class="text-sm text-gray-800 line-clamp-1 capitalize"
+              data-cy="agenda-preview__location"
             >
               {{ event.address || '-' }}
             </p>
@@ -130,17 +144,21 @@
           v-if="hasTags"
           ref="agenda-preview-tags"
           class="flex gap-2 col-span-2"
+          data-cy="agenda-preview__tags-container"
         >
           <TagIcon class="w-4 h-4 fill-green-700" />
           <div class="flex flex-col gap-1">
             <h2 class="text-xs text-blue-gray-200">
               Tags
             </h2>
-            <div class="min-w-0 flex gap-2 flex-wrap items-center">
+            <div
+              class="min-w-0 flex gap-2 flex-wrap items-center"
+            >
               <span
-                v-for="tag in event.tags"
+                v-for="(tag, index) in event.tags"
                 :key="tag.id"
                 class="px-[10px] py-[6px] rounded-full bg-gray-200 text-gray-700 text-sm"
+                :data-cy="`agenda-preview__tag-item-${index + 1}`"
               >
                 {{ tag.tag_name }}
               </span>

@@ -9,6 +9,7 @@
         v-on-clickaway="closeDropdown"
         class="py-[6px] px-4 rounded-lg border border-green-700 flex items-center font-lato
         font-bold text-sm leading-5 text-green-700 hover:bg-green-50"
+        data-cy="agenda__table-action-button"
         @click="toggleDropdown"
       >
         Aksi
@@ -28,6 +29,7 @@
           <router-link
             :to="`/agenda/detail/${item.id}`"
             class="font-lato text-sm leading-4 text-gray-800"
+            data-cy="agenda__action-button--detail"
           >
             Lihat Detail
           </router-link>
@@ -35,6 +37,7 @@
         <li>
           <button
             class="font-lato text-sm leading-4 text-gray-800"
+            data-cy="agenda__action-button--preview"
             @click="$emit('open-preview', item.id)"
           >
             Pratinjau
@@ -44,6 +47,7 @@
           <router-link
             :to="`/agenda/detail/${item.id}/ubah`"
             class="font-lato text-sm leading-4 text-gray-800"
+            data-cy="agenda__action-button--update"
           >
             Ubah
           </router-link>
@@ -51,6 +55,7 @@
         <li>
           <button
             class="font-lato text-sm leading-4 text-gray-800"
+            data-cy="agenda__action-button--delete"
             @click="$emit('delete', item.id)"
           >
             Hapus

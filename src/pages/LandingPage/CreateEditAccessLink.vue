@@ -78,7 +78,10 @@
                 v-slot="{ errors }"
                 rules="required"
               >
-                <input type="hidden" v-model="form.image">
+                <input
+                  v-model="form.image"
+                  type="hidden"
+                >
                 <span class="font-lato text-[13px] text-red-700 mt-3">
                   {{ errors[0] }}
                 </span>
@@ -476,13 +479,9 @@ export default {
     async fetchData(id) {
       try {
         const response = await quickLinkRepository.getLinkById(id);
-        return new Promise((resolve) => {
-          resolve(response);
-        });
+        return Promise.resolve(response);
       } catch (error) {
-        return new Promise(() => {
-          throw new Error(error);
-        });
+        return Promise.reject(new Error(error));
       }
     },
     onToggleClick() {
