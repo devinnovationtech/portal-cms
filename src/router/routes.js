@@ -428,6 +428,15 @@ export default [
     },
   },
   {
+    path: '/maintenance',
+    name: 'Maintenance',
+    component: () => import('@/pages/Maintenance'),
+    meta: {
+      public: true,
+      layout: 'AppLayoutPublic',
+    },
+  },
+  {
     path: '*',
     redirect: '/',
   },
