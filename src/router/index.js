@@ -24,8 +24,8 @@ router.beforeEach((to, from, next) => {
   const publicRoute = to.matched.some((record) => record.meta.public);
 
   if (isMaintenance && to.path !== '/maintenance') next('/maintenance');
-  else if (privateRoute && !isAuthenticated) next('/login');
-  else if (publicRoute && isAuthenticated) next('/');
+  else if (!isMaintenance && privateRoute && !isAuthenticated) next('/login');
+  else if (!isMaintenance && publicRoute && isAuthenticated) next('/');
   else next();
 });
 
